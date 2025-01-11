@@ -1,0 +1,71 @@
+.layoutContainer {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  .sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    height: 100%;
+  }
+  .mainContainer {
+    position: absolute;
+    top: 0;
+    left: 250px;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    background-color: #0b1128;
+    border-radius: 1.5rem 0 0 1.5rem;
+    padding: 1rem;
+    overflow: hidden;
+
+    .card{
+        position: absolute;
+        top: 100px;
+        left: 0;
+    }
+  }
+}
+
+
+.tableStyle{
+  border: 0.5px solid rgb(48, 48, 48);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.statIcon{
+  border: 1px solid #2f2f2f;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center ;
+}
+
+.chip{
+  color: rgb(243, 121, 50);
+  border: 1px solid rgb(243, 121, 50);
+  border-radius: 15px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successTd{
+  color: rgb(5 150 105 )
+}
+
+.dangerTd{
+  color: red
+}
+
+.warningTd{
+  color: rgb(255 193 7)
+}

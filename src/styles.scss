@@ -1,1 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../node_modules/primeflex/primeflex.css";
+@import "primeicons/primeicons.css";
+
+body {
+  background-color: #060a1c !important;
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  padding: 12px 16px 12px 36px;
+  border: none;
+  border-radius: 0.7rem;
+  background-color: #191f38;
+}
+
+ p-floatlabel > label{
+    background-color: transparent !important;
+    color: gray !important;
+
+ }
+.p-multiselect {
+  background-color: #191f38 !important;
+  border: none !important;
+  border-radius: 0.7rem !important;
+
+  .p-multiselect-label-container{
+    padding: 3px;
+  }
+}
+
+.p-datepicker-input{
+  background-color: #191f38 !important;
+  border: none !important;
+  border-radius: 0.7rem !important;
+  padding: 11px !important;
+}
+
+
+.p-datatable-thead > tr > th{
+  background-color: #020518 !important;
+  border-color: #020518 !important;
+  color: #9CA3AF !important;
+}
+
+
+.p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #0B1128 !important;
+  border-color:#0B1128 !important;
+}
+
+.p-datatable-tbody > tr:nth-child(even) {
+  background-color: #030712 !important;
+  border-color:#030712 !important;
+}
+
+
+.lightClr{
+  color: #9CA3AF !important;
+}

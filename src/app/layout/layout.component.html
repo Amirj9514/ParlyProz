@@ -1,0 +1,193 @@
+<div class="layoutContainer">
+  <div class="sidebar">
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="mainContainer">
+    <app-header></app-header>
+
+    <div class="card w-full px-3">
+      <div>
+        <div class="grid">
+          <div class="col-6">
+            <p-iconfield id="iconfield" class="w-full">
+              <p-inputicon class="w-full" styleClass="pi pi-search" />
+              <input
+                type="text"
+                placeholder="Search player or team..."
+                class="w-full"
+                pInputText
+              />
+            </p-iconfield>
+          </div>
+
+          <div class="col-3">
+            <p-floatlabel class="w-full md:w-80" variant="on">
+              <p-multiselect
+                id="on_label"
+                [(ngModel)]="value"
+                [options]="products"
+                optionLabel="name"
+                filter
+                [maxSelectedLabels]="3"
+                styleClass="w-full"
+              />
+              <label for="on_label">Apps</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="col-3">
+            <p-floatlabel class="w-full md:w-80" variant="on">
+              <p-multiselect
+                id="on_label"
+                [(ngModel)]="value"
+                [options]="products"
+                optionLabel="name"
+                filter
+                [maxSelectedLabels]="3"
+                styleClass="w-full"
+              />
+              <label for="on_label">Modifiers</label>
+            </p-floatlabel>
+          </div>
+
+        
+
+          <div class="col-3">
+            <p-floatlabel class="w-full md:w-80" variant="on">
+              <p-multiselect
+                id="on_label"
+                [(ngModel)]="value"
+                [options]="products"
+                optionLabel="name"
+                filter
+                [maxSelectedLabels]="3"
+                styleClass="w-full"
+              />
+              <label for="on_label">All Games</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="col-3">
+            <p-floatlabel class="w-full md:w-80" variant="on">
+              <p-datepicker styleClass="w-full" [(ngModel)]="date" />
+              <label for="on_label">Game Date</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="col-6">
+            <p-floatlabel class="w-full md:w-80" variant="on">
+              <p-multiselect
+                id="on_label"
+                [(ngModel)]="value"
+                [options]="products"
+                optionLabel="name"
+                filter
+                [maxSelectedLabels]="3"
+                display="chip" 
+                styleClass="w-full"
+              />
+              <label for="on_label">Select Stats</label>
+            </p-floatlabel>
+          </div>
+        </div>
+      </div>
+      <div class="tableStyle">
+        <p-table
+          [value]="products"
+          stripedRows
+          [tableStyle]="{ 'min-width': '50rem' }"
+        >
+          <ng-template #header>
+            <tr>
+              <th>Player</th>
+              <th>Line</th>
+              <th>App</th>
+              <th>Def Rank</th>
+              <th>Avg L10</th>
+              <th>Diff</th>
+              <th>L5</th>
+              <th>L10</th>
+              <th>L15</th>
+              <th>H2H</th>
+              <th>Streak</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-product>
+            <tr>
+              <td>
+                <div class="flex gap-2">
+                  <div class="statIcon">
+                    <i class="pi pi-star flex justify-content-center align-items-center" style="font-size: 1.2rem"></i>
+                  </div>
+
+                  <div class="playerDetail">
+                    <div class="flex align-items-center gap-2 playerName" >
+                      <div class="text-md font-semibold">Ladd McConkey(WR)</div>
+                      <small class="team lightClr">{{"LAC @ HOU"}}</small>
+                    </div>
+                    <div class="place lightClr text-sm">49.5 Rec Yards</div>
+                  </div>
+                </div>
+              </td>
+              <td>49.5</td>
+              <td>
+                <div class="flex gap-2">
+                  <div><img width="32px" height="32px" src="../../assets/app1.webp"/></div>
+                  <div><img width="32px" height="32px" src="../../assets/app2.svg"/></div>
+                </div>
+              </td>
+              <td>
+                <div class="flex">
+                  <div class="chip">
+                    7th
+                  </div>
+                </div>
+               
+              </td>
+              <td>
+                <div class="successTd h-full w-full">
+                  50.4%
+                </div>
+              </td>
+
+              <td>
+                <div class="dangerTd h-full w-full">
+                  10.4%
+                </div>
+              </td>
+
+              <td>
+                <div class=" h-full w-full">
+                  --
+                </div>
+              </td>
+
+              <td>
+                <div class="warningTd h-full w-full">
+                  40.4%
+                </div>
+              </td>
+              <td>
+                <div class=" h-full w-full">
+                  --
+                </div>
+              </td>
+
+              <td>
+                <div class="successTd h-full w-full">
+                  90.4%
+                </div>
+              </td>
+
+              <td>
+                <div class="warningTd h-full w-full">
+                60.4%
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>

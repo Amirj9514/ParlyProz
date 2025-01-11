@@ -1,0 +1,126 @@
+
+/* Google Font Link */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins" , sans-serif;
+}
+.sidebar{
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 250px;
+  background: #060A1C;
+  padding: 6px 14px;
+  z-index: 99;
+  transition: all 0.5s ease;
+}
+
+.sidebar .logo-details{
+  height: 60px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.sidebar .logo-details .icon{
+
+  transition: all 0.5s ease;
+}
+
+.sidebar .logo-details .logo_name{
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  transition: all 0.5s ease;
+}
+
+
+.sidebar i{
+  color: #fff;
+  height: 60px;
+  min-width: 50px;
+  font-size: 28px;
+  text-align: center;
+  line-height: 60px;
+}
+
+.sidebar li{
+  position: relative;
+  margin: 8px 0;
+  list-style: none;
+}
+
+.menu_title {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: gray;
+  white-space: nowrap;
+
+}
+
+
+.menu_items {
+  padding: 0;
+  list-style: none;
+}
+.navlink_icon {
+  position: relative;
+  font-size: 22px;
+  line-height: 40px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 6px;
+}
+
+.sidebar .nav_link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: hsl(240 4.8% 95.9%);
+  white-space: nowrap;
+}
+.sidebar.close .navlink {
+  display: none;
+}
+.nav_link:hover {
+  color: hsl(240 4.8% 95.9%);
+  background: hsl(228, 38%, 16%);
+  
+}
+
+.sidebar li.profile{
+  position: fixed;
+  height: 60px;
+  width: 250px;
+  left: 0;
+  bottom: -8px;
+  padding: 10px 14px;
+  background: #060A1C;
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+.sidebar li .profile-details{
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.sidebar li img{
+  height: 45px;
+  width: 45px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+
+
+
+

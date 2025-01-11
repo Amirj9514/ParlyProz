@@ -1,0 +1,30 @@
+.layoutContainer {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  .sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    height: 100%;
+  }
+  .mainContainer {
+    position: absolute;
+    top: 0;
+    left: 250px;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    background-color: #0b1128;
+    border-radius: 1.5rem 0 0 1.5rem;
+    padding: 1rem;
+    overflow: hidden;
+
+    .playerDetail {
+      position: absolute;
+      top: 65px;
+    }
+  }
+}
