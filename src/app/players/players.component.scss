@@ -17,7 +17,7 @@
     right: 0;
     bottom: 0;
     height: 100%;
-    background-color: #0b1128;
+    background-color: #191F38;
     border-radius: 1.5rem 0 0 1.5rem;
     padding: 1rem;
     overflow: hidden;
@@ -62,4 +62,19 @@
   transition: background-color 0.3s;
   background-color: hsla(228, 55%, 10%);
   color: rgb(74 222 128);
+}
+
+
+
+.firstGrap{
+  overflow: auto;
+  height: calc(100vh - 100px);
+
+}
+
+
+.cardBg{
+  border-radius: 10px;
+  background-color: #0B1128;
+  overflow: hidden;
 }

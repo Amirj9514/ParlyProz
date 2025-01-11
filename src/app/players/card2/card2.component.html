@@ -1,0 +1,32 @@
+<div class="tableStyle">
+  <div style="background-color: #161a31">
+    <div
+      class="flex justify-content-center align-items-center text-lg font-semibold py-3"
+    >
+      <div>Win Predictor</div>
+    </div>
+  </div>
+
+  <div class="grid gap-3 justify-content-center mx-3 align-items-center">
+    <div class="col-8 flex justify-content-center align-items-center">
+      <div class="flex justify-content-center align-items-center flex-column">
+        <div class="homeChip">MEM</div>
+        <div class="lightClr">Home</div>
+        <div class="successTd">94.7%</div>
+      </div>
+      <div>
+        <p-chart
+          type="doughnut"
+          [data]="data"
+          [options]="options"
+          class="w-full h-10rem md:w-[4rem]"
+        />
+      </div>
+      <div class="flex justify-content-center align-items-center flex-column">
+        <div class="awayChip">ECU</div>
+        <div class="lightClr">Away</div>
+        <div class="dangerTd">5.3%</div>
+      </div>
+    </div>
+  </div>
+</div>

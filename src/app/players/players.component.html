@@ -5,39 +5,70 @@
   <div class="mainContainer">
     <app-header></app-header>
 
-
     <div class="playerDetail w-full">
-       <div class="grid w-full">
+      <div class="grid w-full  ">
         <div class="col-6">
-            <div class="playerDetailCard">
-                <div class="flex gap-2">
-                    <div class="text-xl font-semibold">Ladd McConkey</div>
-                    <div class="text-lg font-semibold lightClr">(WR)</div>
-                    <div class="chip"> LAC</div>
-                </div>
-                
-
-                <div class="flex gap-2 mt-2">
-                    <small class="lightClr">{{"LAC @ HOC Sun @ 2:30 AM"}}</small>
-                    <div class="chip2">NFL</div>
-                </div>
+          <div class="playerDetailCard">
+            <div class="flex gap-2">
+              <div class="text-xl font-semibold">Ladd McConkey</div>
+              <div class="text-lg font-semibold lightClr">(WR)</div>
+              <div class="chip">LAC</div>
             </div>
 
-            <div class="firstGrap">
-              <div>
-                Rec Yards
-              </div>
+            <div class="flex gap-2 mt-2">
+              <small class="lightClr">{{ "LAC @ HOC Sun @ 2:30 AM" }}</small>
+              <div class="chip2">NFL</div>
+            </div>
+          </div>
 
-              <div>
-                <p-selectbutton [options]="paymentOptions" [(ngModel)]="value"  optionLabel="name" optionValue="value" />
+          <div class="firstGrap mt-4">
+            <div class="cardBg p-2">
+              <div class="flex w-full justify-content-between align-items-center ">
+                <div>Rec Yards</div>
+  
+                <div>
+                  <p-selectbutton
+                    [options]="paymentOptions"
+                    [(ngModel)]="value"
+                    optionLabel="name"
+                    optionValue="value"
+                  />
+                </div>
+              </div>
+  
+              <div class="card">
+                <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
               </div>
             </div>
-            
+           
+
+            <div class="cardBg mt-4">
+              <app-graph2></app-graph2>
+            </div>
+
+            <div class="cardBg mt-4">
+              <app-table></app-table>
+            </div>
+          </div>
         </div>
-        <div class="col-6">
-            Hello 2
+        <div class="col-6 firstGrap">
+          <div class="cardBg">
+            <app-card1></app-card1>
+          </div>
+
+          <div class="cardBg mt-4">
+            <app-card2></app-card2>
+          </div>
+
+          <div class="cardBg mt-4">
+            <app-card3></app-card3>
+          </div>
+
+          <div class="cardBg mt-4">
+            <app-table></app-table>
+          </div>
         </div>
-       </div>
+      </div>
     </div>
   </div>
 </div>
