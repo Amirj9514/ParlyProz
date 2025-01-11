@@ -28,3 +28,38 @@
     }
   }
 }
+
+
+.chip{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  padding: 2px 12px;
+  font-size: .6rem;
+  line-height: .8rem;
+  border-radius: 6px;
+  background-color: #0080c6;
+  border: 1px solid #9e9e9e;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.chip2{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  padding: 2px 12px;
+  font-size: .6rem;
+  line-height: .8rem;
+  border-radius: 6px;
+  border: 1px solid #9e9e9e;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  background-color: hsla(228, 55%, 10%);
+  color: rgb(74 222 128);
+}
