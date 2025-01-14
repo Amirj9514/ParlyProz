@@ -10,6 +10,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
 import { ChipModule } from 'primeng/chip';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-layout',
   standalone: true,
@@ -106,4 +107,16 @@ export class LayoutComponent {
       rating: 5,
     },
   ];
+
+
+  constructor(private router: Router){
+
+  }
+
+
+  redirectToPlayerDetail(){
+    this.router.navigate(['/players']);
+  }
 }
+
+
