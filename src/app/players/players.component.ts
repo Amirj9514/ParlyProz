@@ -11,11 +11,15 @@ import { TableComponent } from "./table/table.component";
 import { Card1Component } from "./card1/card1.component";
 import { Card2Component } from "./card2/card2.component";
 import { Card3Component } from "./card3/card3.component";
-
+import { PlayerProfileComponent } from "./player-profile/player-profile.component";
+import { PlayerService } from '../Shared/services/player.service';
+import { registerables, Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+Chart.register(...registerables, ChartDataLabels);
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [SidebarComponent, HeaderComponent, SelectButtonModule, FormsModule, ChartModule, Graph2Component, TableComponent, Card1Component, Card2Component, Card3Component],
+  imports: [SidebarComponent, HeaderComponent, SelectButtonModule, FormsModule, ChartModule, Graph2Component, TableComponent, Card1Component, Card2Component, Card3Component, PlayerProfileComponent],
   templateUrl: './players.component.html',
   styleUrl: './players.component.scss'
 })
@@ -36,65 +40,86 @@ export class PlayersComponent {
 
     platformId = inject(PLATFORM_ID);
 
-    constructor(private cd: ChangeDetectorRef) {}
+    constructor(private cd: ChangeDetectorRef, private playerS:PlayerService) {}
 
 
     ngOnInit() {
-        this.initChart();
+        this.getSinglePlayerStas();
+        
     }
 
-    initChart() {
+    initChart(data:any) {
         if (isPlatformBrowser(this.platformId)) {
             const documentStyle = getComputedStyle(document.documentElement);
             const textColor = documentStyle.getPropertyValue('--p-text-color');
             const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
             const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
-            this.basicData = {
-                labels: ['11/26/24 MSU', '11/26/24 MSU', '11/26/24 MSU', '11/26/24 MSU' , '11/26/24 MSU','11/26/24 MSU', '11/26/24 MSU', '11/26/24 MSU', '11/26/24 MSU' , '11/26/24 MSU'],
-                datasets: [
-                    {
-                        label: 'Matches',
-                        data: [540, 325, 702, 620 , 420, 300, 500, 100, 200, 300],
-                        backgroundColor: [
-                            '#10B981',
-                        ],
-                        borderColor: ['#10B981'],
-                        borderWidth: 1,
-                    },
-                ],
-            };
+            this.basicData = data;
 
             this.basicOptions = {
                 plugins: {
                     legend: {
+                        display:false,
                         labels: {
                             color: textColor,
                         },
                     },
+
+                    datalabels: {
+                        display: (context: any) => {
+                            // Only show labels for bar datasets
+                            return context.dataset.type === 'bar';
+                        },
+                        color: '#fff', // Label color
+                        anchor: 'center', // Label position
+                        align: 'center', // Label alignment
+                        formatter: (value: any) => value, // Display the value
+
+                        // formatter: (value: any, context: any) => {
+                        //     const datasetLabel = context.dataset.label || ''; // Get the dataset label
+                        //     return `${datasetLabel}: ${value}`; // Combine label and value
+                        // },
+                    },
                 },
                 scales: {
                     x: {
+                        stacked: true,
                         ticks: {
-                            color: textColorSecondary,
+                            color: textColorSecondary
                         },
                         grid: {
                             color: surfaceBorder,
-                        },
+                            drawBorder: false,
+                            display: false
+                        }
                     },
                     y: {
-                        beginAtZero: true,
+                        stacked: true,
                         ticks: {
-                            color: textColorSecondary,
+                            color: textColorSecondary
                         },
                         grid: {
                             color: surfaceBorder,
-                        },
-                    },
+                            drawBorder: false,
+                            
+                        }
+                    }
                 },
             };
             this.cd.markForCheck()
         }
     }
 
+    getSinglePlayerStas(){
+      const {players , graphData } =  this.playerS.applyFilterByPlayerStats('PRA' , 15);
+
+      console.log(graphData);
+      
+       this.initChart(graphData);
+       
+    }
+
+
+  
 }
