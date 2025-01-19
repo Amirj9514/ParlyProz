@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
+import { PlayerService } from '../../Shared/services/player.service';
 
 @Component({
   selector: 'app-table',
@@ -8,6 +9,22 @@ import { TableModule } from 'primeng/table';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
-export class TableComponent {
-  products:any[]=[1,2,3,4,5,6,7,8,9,10];
+export class TableComponent implements OnInit {
+  players: any[] = [];
+  constructor(private playerS:PlayerService){}
+
+  ngOnInit(): void {
+    this.getPlayerList();
+  }
+
+
+  getPlayerList() {
+    this.players =  this.playerS.getPlayers(15);
+    console.log(this.players[0]);
+  }
+
+  roundValue(value: number) {
+    return (value).toFixed(1);
+  }
+ 
 }

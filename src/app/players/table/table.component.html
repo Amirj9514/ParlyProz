@@ -7,15 +7,13 @@
 
   </div>
   <p-table
-    [value]="products"
+    [value]="players"
     stripedRows
     [tableStyle]="{ 'min-width': '50rem' }"
   >
     <ng-template #header>
       <tr>
-        <th>Date</th>
         <th>Opponent</th>
-        <th>Min</th>
         <th>Pts</th>
         <th>Rebs</th>
         <th>Asts</th>
@@ -23,29 +21,27 @@
         <th>PR</th>
         <th>RA</th>
         <th>PRA</th>
-        <th>BLKS</th>
+        <th>TO</th>
       </tr>
     </ng-template>
-    <ng-template #body let-product>
+    <ng-template #body let-stats>
       <tr>
-        <td>2021-10-10</td>
-        <td>UNT</td>
-        <td>38</td>
-        <td>27</td>
-        <td>5</td>
+        <td>{{stats?.opponent}}</td>
+        <td>{{stats?.points}}</td>
+        <td>{{stats?.rebounds}}</td>
 
-        <td>1</td>
+        <td>{{stats?.assists}}</td>
 
-        <td>28</td>
+        <td>{{roundValue(stats?.points + stats?.assists)}}</td>
 
-        <td>32</td>
+        <td>{{roundValue(stats?.points + stats?.rebounds)}}</td>
         <td>
-          <div class="h-full w-full">--</div>
+          {{roundValue(stats?.assists + stats?.rebounds)}}
         </td>
 
-        <td>6</td>
+        <td> {{roundValue(stats?.assists + stats?.rebounds + stats?.points)}}</td>
 
-        <td>33</td>
+        <td>{{stats?.turnovers}}</td>
       </tr>
     </ng-template>
   </p-table>

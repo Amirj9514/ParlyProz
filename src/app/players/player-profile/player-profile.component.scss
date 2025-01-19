@@ -40,6 +40,14 @@
     font-size: 12px;
     font-weight: bold;
   }
+  .chip3 {
+    background-color: #93c5fd33;
+    color: #5957f9;
+    padding: 2px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+  }
 }
 
 .middle-container {
@@ -94,9 +102,7 @@
   border-left: 2px solid #5957f9;
   display: flex;
   align-items: center;
-}
-.recent-border:hover {
-  border-bottom: 1px solid #dee2e6 !important;
+  cursor: none;
 }
 
 .recent-orders {

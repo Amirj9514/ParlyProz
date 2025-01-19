@@ -73,6 +73,11 @@ input {
   background-color: #888; /* Thumb background */
 }
 
+/* Horizontal Scrollbar */
+::-webkit-scrollbar:horizontal {
+  height: 2px; /* Horizontal scrollbar height */
+}
+
 .successTd{
   color: rgb(5 150 105 )
 }
@@ -87,4 +92,13 @@ input {
 
 .blueClr{
   color: #3B82F6;
+}
+
+.p-tablist-tab-list{
+  background-color: #1D3156 !important;
+}
+
+
+.borderClr{
+  border-color: #1D3156 !important;
 }
