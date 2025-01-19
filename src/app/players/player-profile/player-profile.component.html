@@ -5,11 +5,11 @@
 		<div class="top-container">
 			<div class="profile-image">{{getInitials(playerProfile.name)}}</div>
 			<div class="ml-3">
-				<div class="name">{{playerProfile.name}} <span class="lightClr">( {{playerProfile.position}} )</span> </div>
+				<div class="name">{{playerProfile?.name}} <span class="lightClr">( {{playerProfile.position}} )</span> </div>
 				<div class="flex gap-2 mt-2">
-                    <div class="chip1">{{playerProfile.team}}</div>
+                    <div class="chip1">{{playerProfile?.team}}</div>
                     <div class="chip2">NFL</div>
-                    <div class="chip3">{{playerProfile.season}}</div>
+                    <div class="chip3">{{playerProfile?.season}}</div>
                 </div>
 			</div>
 		</div>
@@ -31,22 +31,22 @@
 
 			<div class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr">
 				<div class="text-sm font-semibold lightClr">Steals</div>
-				<div>{{playerProfile.steals}}</div>
+				<div>{{playerProfile?.steals}}</div>
 			</div>
 
 			<div class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr">
 				<div class="text-sm font-semibold lightClr">Assists</div>
-				<div>{{playerProfile.assists}}</div>
+				<div>{{playerProfile?.assists}}</div>
 			</div>
 
 			<div class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr">
 				<div class="text-sm font-semibold lightClr">Rebounds</div>
-				<div>{{playerProfile.rebounds}}</div>
+				<div>{{playerProfile?.rebounds}}</div>
 			</div>
 
 			<div class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr">
 				<div class="text-sm font-semibold lightClr">Defensive Rebounds</div>
-				<div>{{playerProfile.defensive_rebounds}}</div>
+				<div>{{playerProfile?.defensive_rebounds}}</div>
 			</div>
 		</div>
 
@@ -60,7 +60,7 @@
 				</div>
 				<div class="flex flex-column ml-2">
 					<div class="current-balance">Match Played</div>
-					<div class="amount"><span class="dollar-sign"></span>{{playerProfile.totalMatches}}</div>
+					<div class="amount"><span class="dollar-sign"></span>{{playerProfile?.totalMatches}}</div>
 					
 				</div>
 		</div>
