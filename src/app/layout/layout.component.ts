@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { TableModule } from 'primeng/table';
@@ -11,6 +11,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
 import { ChipModule } from 'primeng/chip';
 import { Router } from '@angular/router';
+import { SharedService } from '../Shared/services/shared.service';
 @Component({
   selector: 'app-layout',
   standalone: true,
@@ -18,7 +19,7 @@ import { Router } from '@angular/router';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   value:any;
   date:any;
   products: any[] = [
@@ -109,11 +110,25 @@ export class LayoutComponent {
   ];
 
 
-  constructor(private router: Router){
+  constructor(private router: Router , private sharedS:SharedService){
+  }
 
+  ngOnInit(): void {
+    this.getProjections();
   }
 
 
+  getProjections(){
+    this.sharedS.sendGetRequest('nba/players/stats?name=&stat_fields=field_goals_made,two_pointers_made,three_pointers_made')
+    .subscribe({
+      next:(res:any)=>{
+        console.log(res);
+      },
+      error:(err:any)=>{
+        console.log(err);
+      }
+    })
+  }
   redirectToPlayerDetail(){
     this.router.navigate(['/players']);
   }

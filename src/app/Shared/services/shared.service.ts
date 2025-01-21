@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 
 @Injectable({
@@ -47,8 +46,7 @@ export class SharedService {
 
   public sendGetRequest2(target: string, token: any): Observable<any[]> {
     var headers_object = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'ngrok-skip-browser-warning': '69420',
+      Authorization: `Bearer ${token}`
     });
 
     const httpOptions = {
@@ -61,6 +59,4 @@ export class SharedService {
   public sendPostRequest(target: string, data: any): Observable<any[]> {
     return this.httpClient.post<any[]>(environment.apiUrl + target, data);
   }
-
- 
 }
