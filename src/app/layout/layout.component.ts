@@ -160,7 +160,7 @@ export class LayoutComponent implements OnInit {
     } else if (value > max) {
       return 'success';
     } else {
-      return 'warn';
+      return 'secondary';
     }
   }
   roundValue(value: any) {

@@ -107,25 +107,25 @@
             <tr>
               <th>Player</th>
               <th>Line</th>
-              <th
+              <th  class="cursor-pointer text-center"
                 pTooltip="Average over last 10 games"
                 tooltipPosition="bottom"
               >
                 Avg L10
               </th>
-              <th
+              <th  class="cursor-pointer text-center"
                 pTooltip="Difference of projection and average over last 10 games"
                 tooltipPosition="bottom"
               >
                 Diff
               </th>
-              <th
+              <th  class="cursor-pointer text-center"
                 pTooltip="Percentage of last 5 games going over projection"
                 tooltipPosition="bottom"
               >
                 L5
               </th>
-              <th
+              <th  class="cursor-pointer text-center"
                 pTooltip="Percentage of last 10 games going over projection"
                 tooltipPosition="bottom"
               >
@@ -137,7 +137,8 @@
               >
                 L15
               </th>
-              <th class="cursor-pointer text-center"
+              <th
+                class="cursor-pointer text-center"
                 pTooltip="Current game streak over projection"
                 tooltipPosition="bottom"
               >
@@ -186,20 +187,20 @@
                 </div>
               </td>
               <td>{{ player?.stats?.line }}</td>
-              <td
-                [ngClass]="
-                  returnClass(player?.stats?.average_last_10, 'avgLast10')
-                "
-              >
+              <td class="text-center">
                 <p-tag
                   class="w-5rem"
                   [severity]="
-                    returnSeverity(player?.stats?.average_last_10, 'avgLast10' ,player?.stats?.line )
+                    returnSeverity(
+                      player?.stats?.average_last_10,
+                      'avgLast10',
+                      player?.stats?.line
+                    )
                   "
-                  [value]="roundValue(player.stats?.average_last_10) "
+                  [value]="roundValue(player.stats?.average_last_10)"
                 />
               </td>
-              <td>
+              <td class="text-center">
                 <p-tag
                   class="w-5rem"
                   [severity]="
@@ -208,13 +209,11 @@
                       'diff'
                     )
                   "
-                  [value]="
-                    roundValue(player.stats?.average_last_10_line_diff)
-                  "
+                  [value]="roundValue(player.stats?.average_last_10_line_diff)"
                 />
               </td>
 
-              <td>
+              <td class="text-center">
                 <p-tag
                   class="w-5rem"
                   [severity]="
@@ -229,7 +228,7 @@
                 />
               </td>
 
-              <td>
+              <td class="text-center">
                 <p-tag
                   class="w-5rem"
                   [severity]="
