@@ -8,6 +8,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { FloatLabel } from 'primeng/floatlabel';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Skeleton } from 'primeng/skeleton';
+import { TooltipModule } from 'primeng/tooltip';
 import {
   FormControl,
   FormGroup,
@@ -19,11 +20,13 @@ import { Router } from '@angular/router';
 import { SharedService } from '../Shared/services/shared.service';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { TagModule } from 'primeng/tag';
 @Component({
   selector: 'app-layout',
   standalone: true,
   imports: [
     HeaderComponent,
+    TooltipModule,
     ChipModule,
     SidebarComponent,
     DatePickerModule,
@@ -32,6 +35,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     InputIcon,
     MultiSelectModule,
     FloatLabel,
+    TagModule,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
@@ -78,7 +82,7 @@ export class LayoutComponent implements OnInit {
   getProjections(stats: string, search: string, showLoader: boolean) {
     if (showLoader) {
       this.projectionLoader = true;
-      this.projectionData = Array.from({ length: 10 }).map((_, i) => `Item #${i}`);
+      this.projectionData = Array.from({ length: 14 }).map((_, i) => `Item #${i}`);
     }
     this.sharedS
       .sendGetRequest(`nba/players/stats?name=${search}&stat_fields=${stats}`)
@@ -130,6 +134,35 @@ export class LayoutComponent implements OnInit {
     }
   }
 
+
+  returnSeverity(value: any, type: string) {
+    let min: number = 0;
+    let max: number = 0;
+
+    if (type === 'avgLast10') {
+      min = 0;
+      max = 100000;
+    } else if (type === 'diff') {
+      min = 0;
+      max = 100000;
+    } else if (type === 'streak') {
+      min = 2;
+      max = 3;
+    } else {
+      min = 49;
+      max = 55;
+    }
+
+    if (value <= min) {
+      return 'danger';
+    } else if (max === 100000) {
+      return 'success';
+    } else if (value > max) {
+      return 'success';
+    } else {
+      return 'warn';
+    }
+  }
   roundValue(value: any) {
     try {
       return value.toFixed(1);

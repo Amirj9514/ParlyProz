@@ -15,6 +15,8 @@ import { MainCompareGraphComponent } from "./main-compare-graph/main-compare-gra
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../Shared/services/shared.service';
 Chart.register(...registerables, ChartDataLabels);
+import { SkeletonModule } from 'primeng/skeleton';
+
 @Component({
   selector: 'app-players',
   standalone: true,
@@ -26,7 +28,8 @@ Chart.register(...registerables, ChartDataLabels);
     ChartModule,
     TableComponent,
     PlayerProfileComponent,
-    MainCompareGraphComponent
+    MainCompareGraphComponent,
+    SkeletonModule
 ],
   templateUrl: './players.component.html',
   styleUrl: './players.component.scss',
@@ -40,13 +43,28 @@ export class PlayersComponent {
   constructor(private route: ActivatedRoute , private sharedS:SharedService , private playerS:PlayerService) {}
   ngOnInit() {
     this.getParamID();
-    this.getPlayerData();
+    this.getLineStats();
   }
 
   getParamID() {
     this.route.paramMap.subscribe((params) => {
       this.paramValue = params.get('id');
     });
+  }
+
+
+  getLineStats() {
+    this.sharedS.sendGetRequest(`nba/stat/fields/lines`).subscribe({
+      next: (res:any) => {
+        if(res.status === 200) {
+          this.playerS.setLineStats(res.body);
+          this.getPlayerData();
+        }
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+      }
+    })
   }
 
 

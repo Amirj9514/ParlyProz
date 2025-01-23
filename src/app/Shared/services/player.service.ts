@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 export class PlayerService {
   constructor() {}
 
+  lineData:any[]=[];
+
   playerData = {
     status: 200,
     body: [
@@ -1146,6 +1148,25 @@ export class PlayerService {
     ],
   };
 
+
+  setLineStats = (data: any) => {
+    this.lineData = data;
+  }
+
+
+  getStatLineValuesByName = (statsKey:string) => {
+    const keys = this.getStatsKeyByStatsId(statsKey);
+    let totalVal = 0;
+    keys.map((key) => {
+      this.lineData.map((item: any) => {
+        if(item.stat_field === key) {
+          totalVal +=parseFloat(item.line_value);
+        }
+      });
+    })
+
+    return totalVal;
+  }
   setPlayerData = (data: any) => {
     this.playerData = data;
   }

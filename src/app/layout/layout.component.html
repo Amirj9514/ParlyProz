@@ -7,7 +7,11 @@
 
     <div class="card w-full px-3">
       <div>
-        <form [formGroup]="filterForm" (ngSubmit)="applyFilter(filterForm)" class="grid">
+        <form
+          [formGroup]="filterForm"
+          (ngSubmit)="applyFilter(filterForm)"
+          class="grid"
+        >
           <div class="col-6">
             <p-iconfield id="iconfield" class="w-full">
               <p-inputicon styleClass="pi pi-search" />
@@ -30,7 +34,6 @@
                 [loading]="statsLoader"
                 filter
                 formControlName="stats"
-                
                 display="chip"
                 [maxSelectedLabels]="10"
                 styleClass="w-full"
@@ -42,9 +45,8 @@
           <div class="col-3">
             <p-floatlabel class="w-full md:w-80" variant="on">
               <p-multiselect
-              [disabled]="true"
+                [disabled]="true"
                 id="on_label"
-            
                 [options]="[]"
                 optionLabel="name"
                 filter
@@ -58,9 +60,8 @@
           <div class="col-3">
             <p-floatlabel class="w-full md:w-80" variant="on">
               <p-multiselect
-              [disabled]="true"
+                [disabled]="true"
                 id="on_label"
-         
                 [options]="[]"
                 optionLabel="name"
                 filter
@@ -88,12 +89,10 @@
 
           <div class="col-3">
             <p-floatlabel class="w-full md:w-80" variant="on">
-              <p-datepicker styleClass="w-full"[disabled]="true" />
+              <p-datepicker styleClass="w-full" [disabled]="true" />
               <label for="on_label">Game Date</label>
             </p-floatlabel>
           </div>
-
-         
         </form>
       </div>
       <div class="tableStyle">
@@ -108,104 +107,168 @@
             <tr>
               <th>Player</th>
               <th>Line</th>
-              <th>Avg L10</th>
-              <th>Diff</th>
-              <th>L5</th>
-              <th>L10</th>
-              <th>L15</th>
-              <th>Streak</th>
+              <th
+                pTooltip="Average over last 10 games"
+                tooltipPosition="bottom"
+              >
+                Avg L10
+              </th>
+              <th
+                pTooltip="Difference of projection and average over last 10 games"
+                tooltipPosition="bottom"
+              >
+                Diff
+              </th>
+              <th
+                pTooltip="Percentage of last 5 games going over projection"
+                tooltipPosition="bottom"
+              >
+                L5
+              </th>
+              <th
+                pTooltip="Percentage of last 10 games going over projection"
+                tooltipPosition="bottom"
+              >
+                L10
+              </th>
+              <th
+                pTooltip="Percentage of last 15 games going over projection"
+                tooltipPosition="bottom"
+              >
+                L15
+              </th>
+              <th
+                pTooltip="Current game streak over projection"
+                tooltipPosition="bottom"
+              >
+                Streak
+              </th>
             </tr>
           </ng-template>
           <ng-template #body let-player>
             @if (projectionLoader) {
-              <tr>
-                <td><p-skeleton /></td>
-                <td><p-skeleton /></td>
-                <td><p-skeleton /></td>
-                <td><p-skeleton /></td>
-                <td><p-skeleton /></td>
-                <td><p-skeleton /></td>
-                <td><p-skeleton /></td>
-                <td><p-skeleton /></td>
+            <tr>
+              <td><p-skeleton /></td>
+              <td><p-skeleton /></td>
+              <td><p-skeleton /></td>
+              <td><p-skeleton /></td>
+              <td><p-skeleton /></td>
+              <td><p-skeleton /></td>
+              <td><p-skeleton /></td>
+              <td><p-skeleton /></td>
             </tr>
             }@else {
-              <tr>
-                <td>
-                  <div class="flex gap-2">
-                    <div class="statIcon">
-                      <i
-                        class="pi pi-star flex justify-content-center align-items-center"
-                        style="font-size: 1.2rem"
-                      ></i>
+            <tr>
+              <td>
+                <div class="flex gap-2">
+                  <div class="statIcon">
+                    <i
+                      class="pi pi-star flex justify-content-center align-items-center"
+                      style="font-size: 1.2rem"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="playerDetail cursor-pointer"
+                    (click)="redirectToPlayerDetail(player)"
+                  >
+                    <div class="flex align-items-center gap-2 playerName">
+                      <div class="text-md font-semibold">
+                        {{ player.first_name + " " + player.last_name }} ({{
+                          player.position
+                        }})
+                      </div>
                     </div>
-  
-                    <div
-                      class="playerDetail cursor-pointer"
-                      (click)="redirectToPlayerDetail(player)"
-                    >
-                      <div class="flex align-items-center gap-2 playerName">
-                        <div class="text-md font-semibold">
-                          {{ player.first_name + " " + player.last_name }} ({{
-                            player.position
-                          }})
-                        </div>
-                      </div>
-                      <div class="place lightClr text-sm">
-                        {{capatlizeStats(player?.stats?.field) }}
-                      </div>
+                    <div class="place lightClr text-sm">
+                      {{ capatlizeStats(player?.stats?.field) }}
                     </div>
                   </div>
-                </td>
-                <td>{{ player?.stats?.line }}</td>
-                <td
-                  [ngClass]="
-                    returnClass(player?.stats?.average_last_10, 'avgLast10')
+                </div>
+              </td>
+              <td>{{ player?.stats?.line }}</td>
+              <td
+                [ngClass]="
+                  returnClass(player?.stats?.average_last_10, 'avgLast10')
+                "
+              >
+                <p-tag
+                  class="w-5rem"
+                  [severity]="
+                    returnSeverity(player?.stats?.average_last_10, 'avgLast10')
                   "
-                >
-                  {{ roundValue(player?.stats?.average_last_10) }}
-                </td>
-                <td
-                  [ngClass]="
-                    returnClass(player?.stats?.average_last_10_line_diff, 'diff')
+                  [value]="roundValue(player.stats?.average_last_10) + ' %'"
+                />
+              </td>
+              <td>
+                <p-tag
+                  class="w-5rem"
+                  [severity]="
+                    returnSeverity(
+                      player?.stats?.average_last_10_line_diff,
+                      'diff'
+                    )
                   "
-                >
-                  {{ roundValue(player?.stats?.average_last_10_line_diff) }}
-                </td>
-  
-                <td
-                  [ngClass]="
-                    returnClass(player?.stats?.last_5_over_line_percentage, '')
+                  [value]="
+                    roundValue(player.stats?.average_last_10_line_diff) + ' %'
                   "
-                >
-                  {{ roundValue(player.stats?.last_5_over_line_percentage) }}%
-                </td>
-  
-                <td
-                  [ngClass]="
-                    returnClass(player?.stats?.last_10_over_line_percentage, '')
+                />
+              </td>
+
+              <td>
+                <p-tag
+                  class="w-5rem"
+                  [severity]="
+                    returnSeverity(
+                      player?.stats?.last_5_over_line_percentage,
+                      ''
+                    )
                   "
-                >
-                  {{ roundValue(player.stats?.last_10_over_line_percentage) }}%
-                </td>
-  
-                <td
-                  [ngClass]="
-                    returnClass(player?.stats?.last_15_over_line_percentage, '')
+                  [value]="
+                    roundValue(player.stats?.last_5_over_line_percentage) + ' %'
                   "
-                >
-                  {{ roundValue(player.stats?.last_15_over_line_percentage) }}%
-                </td>
-                <td
-                  [ngClass]="
-                    returnClass(player?.stats?.streak, 'streak')
+                />
+              </td>
+
+              <td>
+                <p-tag
+                  class="w-5rem"
+                  [severity]="
+                    returnSeverity(
+                      player?.stats?.last_10_over_line_percentage,
+                      ''
+                    )
                   "
-                >
-                  {{ player.stats?.streak }}
-                </td>
-              </tr>
+                  [value]="
+                    roundValue(player.stats?.last_10_over_line_percentage) +
+                    ' %'
+                  "
+                />
+              </td>
+
+              <td>
+                <p-tag
+                  class="w-5rem"
+                  [severity]="
+                    returnSeverity(
+                      player?.stats?.last_15_over_line_percentage,
+                      ''
+                    )
+                  "
+                  [value]="
+                    roundValue(player.stats?.last_15_over_line_percentage) +
+                    ' %'
+                  "
+                />
+              </td>
+              <td>
+                <p-tag
+                  class="w-5rem"
+                  [severity]="returnSeverity(player?.stats?.streak, 'streak')"
+                  [value]="player.stats?.streak"
+                />
+              </td>
+            </tr>
             }
-         
-          
           </ng-template>
         </p-table>
       </div>

@@ -13,7 +13,6 @@ import { ChartModule } from 'primeng/chart';
 import { TabsModule } from 'primeng/tabs';
 import { InputNumberModule } from 'primeng/inputnumber';
 
-
 @Component({
   selector: 'app-main-compare-graph',
   standalone: true,
@@ -24,7 +23,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 export class MainCompareGraphComponent implements OnInit {
   value: number = 1;
   numberOfPlayers: number = 5;
-  lineVal: number = 0.5;
+  lineVal: number = 0;
 
   statsList: any[] = [];
   selectedStats: any;
@@ -40,7 +39,8 @@ export class MainCompareGraphComponent implements OnInit {
   platformId = inject(PLATFORM_ID);
   constructor(private cd: ChangeDetectorRef, private playerS: PlayerService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    this.lineVal = this.playerS.getStatLineValuesByName('PTS'); 
     this.getStatsList();
   }
 
@@ -52,6 +52,7 @@ export class MainCompareGraphComponent implements OnInit {
 
   onStatsChange(stats: any) {
     this.selectedStats = stats;
+    this.lineVal = this.playerS.getStatLineValuesByName(stats.id);
     this.getSinglePlayerStas(stats.id , this.numberOfPlayers , this.lineVal);
   }
 
