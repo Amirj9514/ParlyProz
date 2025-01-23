@@ -135,13 +135,13 @@ export class LayoutComponent implements OnInit {
   }
 
 
-  returnSeverity(value: any, type: string) {
+  returnSeverity(value: any, type: string , line?: any) {
     let min: number = 0;
     let max: number = 0;
 
     if (type === 'avgLast10') {
-      min = 0;
-      max = 100000;
+      min = line;
+      max = line;
     } else if (type === 'diff') {
       min = 0;
       max = 100000;

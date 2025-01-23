@@ -137,7 +137,7 @@
               >
                 L15
               </th>
-              <th
+              <th class="cursor-pointer text-center"
                 pTooltip="Current game streak over projection"
                 tooltipPosition="bottom"
               >
@@ -194,9 +194,9 @@
                 <p-tag
                   class="w-5rem"
                   [severity]="
-                    returnSeverity(player?.stats?.average_last_10, 'avgLast10')
+                    returnSeverity(player?.stats?.average_last_10, 'avgLast10' ,player?.stats?.line )
                   "
-                  [value]="roundValue(player.stats?.average_last_10) + ' %'"
+                  [value]="roundValue(player.stats?.average_last_10) "
                 />
               </td>
               <td>
@@ -209,7 +209,7 @@
                     )
                   "
                   [value]="
-                    roundValue(player.stats?.average_last_10_line_diff) + ' %'
+                    roundValue(player.stats?.average_last_10_line_diff)
                   "
                 />
               </td>
@@ -245,7 +245,7 @@
                 />
               </td>
 
-              <td>
+              <td class="text-center">
                 <p-tag
                   class="w-5rem"
                   [severity]="
@@ -260,7 +260,7 @@
                   "
                 />
               </td>
-              <td>
+              <td class="text-center">
                 <p-tag
                   class="w-5rem"
                   [severity]="returnSeverity(player?.stats?.streak, 'streak')"
