@@ -15,51 +15,46 @@ input {
   background-color: #191f38;
 }
 
- p-floatlabel > label{
-    background-color: transparent !important;
-    color: gray !important;
-
- }
+p-floatlabel > label {
+  background-color: transparent !important;
+  color: gray !important;
+}
 .p-multiselect {
   background-color: #191f38 !important;
   border: none !important;
   border-radius: 0.7rem !important;
 
-  .p-multiselect-label-container{
+  .p-multiselect-label-container {
     padding: 3px;
   }
 }
 
-.p-datepicker-input{
+.p-datepicker-input {
   background-color: #191f38 !important;
   border: none !important;
   border-radius: 0.7rem !important;
   padding: 11px !important;
 }
 
-
-.p-datatable-thead > tr > th{
+.p-datatable-thead > tr > th {
   background-color: #020518 !important;
   border-color: #020518 !important;
-  color: #9CA3AF !important;
+  color: #9ca3af !important;
 }
 
-
 .p-datatable-tbody > tr:nth-child(odd) {
-  background-color: #0B1128 !important;
-  border-color:#0B1128 !important;
+  background-color: #0b1128 !important;
+  border-color: #0b1128 !important;
 }
 
 .p-datatable-tbody > tr:nth-child(even) {
   background-color: #030712 !important;
-  border-color:#030712 !important;
+  border-color: #030712 !important;
 }
 
-
-.lightClr{
-  color: #9CA3AF !important;
+.lightClr {
+  color: #9ca3af !important;
 }
-
 
 ::-webkit-scrollbar {
   width: 4px; /* Scrollbar width */
@@ -78,27 +73,29 @@ input {
   height: 2px; /* Horizontal scrollbar height */
 }
 
-.successTd{
-  color: rgb(5 150 105 )
+.successTd {
+  color: rgb(5 150 105);
 }
 
-.dangerTd{
-  color: red
+.dangerTd {
+  color: red;
 }
 
-.warningTd{
-  color: rgb(255 193 7)
+.warningTd {
+  color: rgb(255 193 7);
 }
 
-.blueClr{
-  color: #3B82F6;
+.blueClr {
+  color: #3b82f6;
 }
 
-.p-tablist-tab-list{
-  background-color: #1D3156 !important;
+.p-tablist-tab-list {
+  background-color: #1d3156 !important;
+}
+
+.borderClr {
+  border-color: #1d3156 !important;
+  height: calc(100vh - 500px);
 }
 
 
-.borderClr{
-  border-color: #1D3156 !important;
-}

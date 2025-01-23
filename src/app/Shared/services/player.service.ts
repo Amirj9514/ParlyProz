@@ -1146,6 +1146,9 @@ export class PlayerService {
     ],
   };
 
+  setPlayerData = (data: any) => {
+    this.playerData = data;
+  }
   getPlayers = (numberOfPlayers: number) => {
     return this.playerData.body.slice(0, numberOfPlayers);
   };

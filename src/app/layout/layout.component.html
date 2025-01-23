@@ -7,7 +7,7 @@
 
     <div class="card w-full px-3">
       <div>
-        <div class="grid">
+        <form [formGroup]="filterForm" (ngSubmit)="applyFilter(filterForm)" class="grid">
           <div class="col-6">
             <p-iconfield id="iconfield" class="w-full">
               <p-inputicon styleClass="pi pi-search" />
@@ -15,17 +15,37 @@
                 type="text"
                 placeholder="Search player or team..."
                 class="w-full"
+                formControlName="search"
                 pInputText
               />
             </p-iconfield>
           </div>
 
+          <div class="col-6">
+            <p-floatlabel class="w-full" variant="on">
+              <p-multiselect
+                id="on_label"
+                [options]="statsList"
+                optionLabel="name"
+                [loading]="statsLoader"
+                filter
+                formControlName="stats"
+                
+                display="chip"
+                [maxSelectedLabels]="10"
+                styleClass="w-full"
+              />
+              <label for="on_label">Select Stats</label>
+            </p-floatlabel>
+          </div>
+
           <div class="col-3">
             <p-floatlabel class="w-full md:w-80" variant="on">
               <p-multiselect
+              [disabled]="true"
                 id="on_label"
-                [(ngModel)]="value"
-                [options]="products"
+            
+                [options]="[]"
                 optionLabel="name"
                 filter
                 [maxSelectedLabels]="3"
@@ -38,9 +58,10 @@
           <div class="col-3">
             <p-floatlabel class="w-full md:w-80" variant="on">
               <p-multiselect
+              [disabled]="true"
                 id="on_label"
-                [(ngModel)]="value"
-                [options]="products"
+         
+                [options]="[]"
                 optionLabel="name"
                 filter
                 [maxSelectedLabels]="3"
@@ -50,14 +71,12 @@
             </p-floatlabel>
           </div>
 
-        
-
           <div class="col-3">
             <p-floatlabel class="w-full md:w-80" variant="on">
               <p-multiselect
                 id="on_label"
-                [(ngModel)]="value"
-                [options]="products"
+                [disabled]="true"
+                [options]="[]"
                 optionLabel="name"
                 filter
                 [maxSelectedLabels]="3"
@@ -69,31 +88,19 @@
 
           <div class="col-3">
             <p-floatlabel class="w-full md:w-80" variant="on">
-              <p-datepicker styleClass="w-full" [(ngModel)]="date" />
+              <p-datepicker styleClass="w-full"[disabled]="true" />
               <label for="on_label">Game Date</label>
             </p-floatlabel>
           </div>
 
-          <div class="col-6">
-            <p-floatlabel class="w-full md:w-80" variant="on">
-              <p-multiselect
-                id="on_label"
-                [(ngModel)]="value"
-                [options]="products"
-                optionLabel="name"
-                filter
-                [maxSelectedLabels]="3"
-                display="chip" 
-                styleClass="w-full"
-              />
-              <label for="on_label">Select Stats</label>
-            </p-floatlabel>
-          </div>
-        </div>
+         
+        </form>
       </div>
       <div class="tableStyle">
         <p-table
-          [value]="products"
+          [value]="projectionData"
+          [scrollable]="true"
+          scrollHeight="calc(100vh - 215px)"
           stripedRows
           [tableStyle]="{ 'min-width': '50rem' }"
         >
@@ -101,90 +108,104 @@
             <tr>
               <th>Player</th>
               <th>Line</th>
-              <th>App</th>
-              <th>Def Rank</th>
               <th>Avg L10</th>
               <th>Diff</th>
               <th>L5</th>
               <th>L10</th>
               <th>L15</th>
-              <th>H2H</th>
               <th>Streak</th>
             </tr>
           </ng-template>
-          <ng-template #body let-product>
-            <tr>
-              <td>
-                <div class="flex gap-2">
-                  <div class="statIcon">
-                    <i class="pi pi-star flex justify-content-center align-items-center" style="font-size: 1.2rem"></i>
-                  </div>
-
-                  <div class="playerDetail cursor-pointer"  (click)="redirectToPlayerDetail()">
-                    <div class="flex align-items-center gap-2 playerName ">
-                      <div class="text-md font-semibold">Ladd McConkey(WR)</div>
-                      <small class="team lightClr">{{"LAC @ HOU"}}</small>
-                    </div>
-                    <div class="place lightClr text-sm">49.5 Rec Yards</div>
-                  </div>
-                </div>
-              </td>
-              <td>49.5</td>
-              <td>
-                <div class="flex gap-2">
-                  <div><img width="32px" height="32px" src="../../assets/app1.webp"/></div>
-                  <div><img width="32px" height="32px" src="../../assets/app2.svg"/></div>
-                </div>
-              </td>
-              <td>
-                <div class="flex">
-                  <div class="chip">
-                    7th
-                  </div>
-                </div>
-               
-              </td>
-              <td>
-                <div class="successTd h-full w-full">
-                  50.4%
-                </div>
-              </td>
-
-              <td>
-                <div class="dangerTd h-full w-full">
-                  10.4%
-                </div>
-              </td>
-
-              <td>
-                <div class=" h-full w-full">
-                  --
-                </div>
-              </td>
-
-              <td>
-                <div class="warningTd h-full w-full">
-                  40.4%
-                </div>
-              </td>
-              <td>
-                <div class=" h-full w-full">
-                  --
-                </div>
-              </td>
-
-              <td>
-                <div class="successTd h-full w-full">
-                  90.4%
-                </div>
-              </td>
-
-              <td>
-                <div class="warningTd h-full w-full">
-                60.4%
-                </div>
-              </td>
+          <ng-template #body let-player>
+            @if (projectionLoader) {
+              <tr>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
             </tr>
+            }@else {
+              <tr>
+                <td>
+                  <div class="flex gap-2">
+                    <div class="statIcon">
+                      <i
+                        class="pi pi-star flex justify-content-center align-items-center"
+                        style="font-size: 1.2rem"
+                      ></i>
+                    </div>
+  
+                    <div
+                      class="playerDetail cursor-pointer"
+                      (click)="redirectToPlayerDetail(player)"
+                    >
+                      <div class="flex align-items-center gap-2 playerName">
+                        <div class="text-md font-semibold">
+                          {{ player.first_name + " " + player.last_name }} ({{
+                            player.position
+                          }})
+                        </div>
+                      </div>
+                      <div class="place lightClr text-sm">
+                        {{capatlizeStats(player?.stats?.field) }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ player?.stats?.line }}</td>
+                <td
+                  [ngClass]="
+                    returnClass(player?.stats?.average_last_10, 'avgLast10')
+                  "
+                >
+                  {{ roundValue(player?.stats?.average_last_10) }}
+                </td>
+                <td
+                  [ngClass]="
+                    returnClass(player?.stats?.average_last_10_line_diff, 'diff')
+                  "
+                >
+                  {{ roundValue(player?.stats?.average_last_10_line_diff) }}
+                </td>
+  
+                <td
+                  [ngClass]="
+                    returnClass(player?.stats?.last_5_over_line_percentage, '')
+                  "
+                >
+                  {{ roundValue(player.stats?.last_5_over_line_percentage) }}%
+                </td>
+  
+                <td
+                  [ngClass]="
+                    returnClass(player?.stats?.last_10_over_line_percentage, '')
+                  "
+                >
+                  {{ roundValue(player.stats?.last_10_over_line_percentage) }}%
+                </td>
+  
+                <td
+                  [ngClass]="
+                    returnClass(player?.stats?.last_15_over_line_percentage, '')
+                  "
+                >
+                  {{ roundValue(player.stats?.last_15_over_line_percentage) }}%
+                </td>
+                <td
+                  [ngClass]="
+                    returnClass(player?.stats?.streak, 'streak')
+                  "
+                >
+                  {{ player.stats?.streak }}
+                </td>
+              </tr>
+            }
+         
+          
           </ng-template>
         </p-table>
       </div>

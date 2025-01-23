@@ -5,25 +5,24 @@
   <div class="mainContainer">
     <app-header></app-header>
 
-    <div class="playerDetail w-full">
-      <div class="grid w-full  ">
-        <div class="col-9">
-
-          <div class="firstGrap mt-4">
-            <app-main-compare-graph></app-main-compare-graph>
-            <!-- <div class="cardBg mt-4">
-              <app-graph2></app-graph2>
-            </div> -->
-
-            <div class="cardBg mt-4">
-              <app-table></app-table>
+    @if(playerData.length){
+      <div class="playerDetail w-full">
+        <div class="grid w-full  ">
+          <div class="col-9">
+  
+            <div class="firstGrap mt-4">
+              <app-main-compare-graph></app-main-compare-graph>
+              <div class="cardBg mt-4">
+                <app-table></app-table>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-3 firstGrap">
-          <app-player-profile></app-player-profile>
+          <div class="col-3 firstGrap">
+            <app-player-profile></app-player-profile>
+          </div>
         </div>
       </div>
-    </div>
+    }
+
   </div>
 </div>

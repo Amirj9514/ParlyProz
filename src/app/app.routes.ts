@@ -8,7 +8,7 @@ export const routes: Routes = [
         component:LayoutComponent
     },
     {
-        path:'players',
+        path:'players/:id',
         component:PlayersComponent
     }
 ];
