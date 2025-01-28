@@ -1,14 +1,16 @@
 import { Routes } from '@angular/router';
-import { PlayersComponent } from './players/players.component';
 import { LayoutComponent } from './layout/layout.component';
+import { ProjectionsComponent } from './projections/projections.component';
 
 export const routes: Routes = [
     {
-        path: '',
-        component:LayoutComponent
-    },
-    {
-        path:'players/:id',
-        component:PlayersComponent
+        path:'',
+        component: LayoutComponent,
+        children:[
+            {
+                path:'',
+                component:ProjectionsComponent
+            }
+        ]
     }
 ];

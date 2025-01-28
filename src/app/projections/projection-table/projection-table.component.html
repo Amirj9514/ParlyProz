@@ -1,0 +1,164 @@
+<div class="tableStyle">
+  <p-table
+    [value]="projectionData"
+    [scrollable]="true"
+    scrollHeight="calc(100vh - 181px)"
+    stripedRows
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template #header>
+      <tr>
+        <th>Player</th>
+        <th>Line</th>
+        <th
+          class="cursor-pointer text-center"
+          pTooltip="Average over last 10 games"
+          tooltipPosition="bottom"
+        >
+          Avg L10
+        </th>
+        <th
+          class="cursor-pointer text-center"
+          pTooltip="Difference of projection and average over last 10 games"
+          tooltipPosition="bottom"
+        >
+          Diff
+        </th>
+        <th
+          class="cursor-pointer text-center"
+          pTooltip="Percentage of last 5 games going over projection"
+          tooltipPosition="bottom"
+        >
+          L5
+        </th>
+        <th
+          class="cursor-pointer text-center"
+          pTooltip="Percentage of last 10 games going over projection"
+          tooltipPosition="bottom"
+        >
+          L10
+        </th>
+        <th
+          class="cursor-pointer text-center"
+          pTooltip="Percentage of last 15 games going over projection"
+          tooltipPosition="bottom"
+        >
+          L15
+        </th>
+        <th
+          class="cursor-pointer text-center"
+          pTooltip="Current game streak over projection"
+          tooltipPosition="bottom"
+        >
+          Streak
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-player>
+      @if (projectionLoader) {
+      <tr>
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+      </tr>
+      }@else {
+      <tr>
+        <td>
+          <div class="flex gap-2">
+            <div class="statIcon font-semibold primaryTextClr">
+             {{getInitials(player.first_name + " " + player.last_name)}}
+            </div>
+
+            <div
+              class="playerDetail cursor-pointer"
+              (click)="redirectToPlayerDetail(player)"
+            >
+              <div class="flex align-items-center gap-2 playerName">
+                <div class="text-md font-semibold">
+                  {{ player.first_name + " " + player.last_name }} ({{
+                    player.position
+                  }})
+                </div>
+              </div>
+              <div class="place lightClr text-sm">
+                {{ capatlizeStats(player?.stats?.field) }}
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>{{ player?.stats?.line }}</td>
+        <td class="text-center">
+          <p-tag
+            class="w-5rem"
+            [severity]="
+              returnSeverity(
+                player?.stats?.average_last_10,
+                'avgLast10',
+                player?.stats?.line
+              )
+            "
+            [value]="roundValue(player.stats?.average_last_10)"
+          />
+        </td>
+        <td class="text-center">
+          <p-tag
+            class="w-5rem"
+            [severity]="
+              returnSeverity(player?.stats?.average_last_10_line_diff, 'diff')
+            "
+            [value]="roundValue(player.stats?.average_last_10_line_diff)"
+          />
+        </td>
+
+        <td class="text-center">
+          <p-tag
+            class="w-5rem"
+            [severity]="
+              returnSeverity(player?.stats?.last_5_over_line_percentage, '')
+            "
+            [value]="
+              roundValue(player.stats?.last_5_over_line_percentage) + ' %'
+            "
+          />
+        </td>
+
+        <td class="text-center">
+          <p-tag
+            class="w-5rem"
+            [severity]="
+              returnSeverity(player?.stats?.last_10_over_line_percentage, '')
+            "
+            [value]="
+              roundValue(player.stats?.last_10_over_line_percentage) + ' %'
+            "
+          />
+        </td>
+
+        <td class="text-center">
+          <p-tag
+            class="w-5rem"
+            [severity]="
+              returnSeverity(player?.stats?.last_15_over_line_percentage, '')
+            "
+            [value]="
+              roundValue(player.stats?.last_15_over_line_percentage) + ' %'
+            "
+          />
+        </td>
+        <td class="text-center">
+          <p-tag
+            class="w-5rem"
+            [severity]="returnSeverity(player?.stats?.streak, 'streak')"
+            [value]="player.stats?.streak"
+          />
+        </td>
+      </tr>
+      }
+    </ng-template>
+  </p-table>
+</div>

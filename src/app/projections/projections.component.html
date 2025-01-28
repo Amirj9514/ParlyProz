@@ -1,1 +1,46 @@
-<p>projections works!</p>
+@if (!showPlayerDetail) {
+  <div class="w-full">
+    <app-header (onGameChange)="onGameChange($event)"></app-header>
+  
+    @if (!comingSoon) {
+      <div class="projection-container">
+        <form class="m-0 mt-2 p-0 grid" [formGroup]="filterForm" >
+          <div class="col-4 "> 
+            <p-iconfield>
+              <p-inputicon styleClass="pi pi-search" />
+              <input id="search" class="w-full" formControlName="search" type="text" pInputText placeholder="Search player by name..." />
+          </p-iconfield>
+          </div>
+    
+          <div class="col-4">
+            <p-floatlabel class="w-full" variant="on">
+              <p-multiselect id="on_label"  [options]="statsList" formControlName="stats" optionLabel="name" filter [maxSelectedLabels]="3" styleClass="w-full" />
+              <label for="on_label">Select Stats</label>
+          </p-floatlabel>
+          
+          </div>
+    
+          <div class="col-4 opacity-30">
+            <p-floatlabel class="w-full" variant="on" >
+              <p-multiselect id="on_label" [disabled]="true"   [options]="[]" optionLabel="name" filter [maxSelectedLabels]="3" styleClass="w-full" />
+              <label for="on_label">Select App</label>
+          </p-floatlabel>
+          
+          </div>
+        </form>
+        <div>
+          <app-projection-table [projectionData]="projectionData" [projectionLoader]="statsLoader" (onPlayerClick)="openPlayerDetail($event)"></app-projection-table>
+        </div>
+    
+    
+      </div>
+    }@else {
+      <app-coming-soon></app-coming-soon>
+    }
+    
+  </div>
+}@else {
+  <app-single-player-detail [selectedPlayerId]="selectedPlayer" (onClose)="showPlayerDetail = false; selectedPlayer = 0"></app-single-player-detail>
+}
+
+

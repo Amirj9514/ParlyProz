@@ -1,0 +1,10 @@
+.cardBg{
+    border-radius: 10px;
+    background-color: #ffffff;
+    overflow: hidden;
+
+    .statsList{
+        overflow: auto;
+        background-color: #ffffff;
+    }
+}

@@ -1,0 +1,27 @@
+<div class="flex justify-content-between align-items-center">
+  <div class="flex-1">
+    <div class="textClr-600 font-medium leading-normal">Welcome to</div>
+    <div class="text-color text-3xl font-semibold leading-normal">
+      Parly Proz
+    </div>
+  </div>
+
+  <div class="boxShadow1">
+    <p-selectbutton
+      [options]="games"
+      [(ngModel)]="selectedGame"
+      optionLabel="label"
+      (ngModelChange)="onChange($event)"
+    >
+      <ng-template #item let-item>
+        <div class="flex align-items-center">
+          <div
+            class="flex justify-content-center align-items-center"
+            [appSvgIcon]="item.icon"
+          ></div>
+          <div class="pl-1">{{ item.label }}</div>
+        </div>
+      </ng-template>
+    </p-selectbutton>
+  </div>
+</div>
