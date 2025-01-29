@@ -11,6 +11,10 @@ export const routes: Routes = [
                 path:'',
                 component:ProjectionsComponent
             }
+            // {
+            //     path:'player',
+            //     component:''
+            // }
         ]
     }
 ];

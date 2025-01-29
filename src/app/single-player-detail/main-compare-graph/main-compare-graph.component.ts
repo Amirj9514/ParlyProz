@@ -16,7 +16,13 @@ import { PlayerService } from '../../../Shared/services/player.service';
 @Component({
   selector: 'app-main-compare-graph',
   standalone: true,
-  imports: [SelectButtonModule, FormsModule, ChartModule, TabsModule , InputNumberModule],
+  imports: [
+    SelectButtonModule,
+    FormsModule,
+    ChartModule,
+    TabsModule,
+    InputNumberModule,
+  ],
   templateUrl: './main-compare-graph.component.html',
   styleUrl: './main-compare-graph.component.scss',
 })
@@ -39,30 +45,46 @@ export class MainCompareGraphComponent implements OnInit {
   platformId = inject(PLATFORM_ID);
   constructor(private cd: ChangeDetectorRef, private playerS: PlayerService) {}
 
-  ngOnInit(): void { 
-    this.lineVal = this.playerS.getStatLineValuesByName('PTS'); 
+  ngOnInit(): void {
+    this.lineVal = this.playerS.getStatLineValuesByName('PTS');
     this.getStatsList();
   }
 
   getStatsList() {
     this.statsList = this.playerS.getStatsList();
     this.selectedStats = this.statsList[0];
-    this.getSinglePlayerStas(this.selectedStats.id , this.numberOfPlayers , this.lineVal);
+
+    if(this.statsList.length){
+      this.getSinglePlayerStas(
+        this.selectedStats.id,
+        this.numberOfPlayers,
+        this.lineVal
+      );
+    }
+      // this.getSinglePlayerStas(
+      //   this.selectedStats.id,
+      //   this.numberOfPlayers,
+      //   this.lineVal
+      // );
+  
   }
 
   onStatsChange(stats: any) {
     this.selectedStats = stats;
     this.lineVal = this.playerS.getStatLineValuesByName(stats.id);
-    this.getSinglePlayerStas(stats.id , this.numberOfPlayers , this.lineVal);
+    this.getSinglePlayerStas(stats.id, this.numberOfPlayers, this.lineVal);
   }
 
-  onLineValueChange(event: any) { 
+  onLineValueChange(event: any) {
     this.lineVal = event;
-    this.getSinglePlayerStas(this.selectedStats.id , this.numberOfPlayers , this.lineVal);
+    this.getSinglePlayerStas(
+      this.selectedStats.id,
+      this.numberOfPlayers,
+      this.lineVal
+    );
   }
 
   onPlayerMatchChange(event: any) {
-  
     switch (event) {
       case 1:
         this.numberOfPlayers = 5;
@@ -80,7 +102,11 @@ export class MainCompareGraphComponent implements OnInit {
         break;
     }
 
-    this.getSinglePlayerStas(this.selectedStats.id , this.numberOfPlayers , this.lineVal);
+    this.getSinglePlayerStas(
+      this.selectedStats.id,
+      this.numberOfPlayers,
+      this.lineVal
+    );
   }
 
   initChart(data: any) {
@@ -149,10 +175,10 @@ export class MainCompareGraphComponent implements OnInit {
     }
   }
 
-  getSinglePlayerStas(stats: any , numOfPlayers: number , lineVal: number) {
+  getSinglePlayerStas(stats: any, numOfPlayers: number, lineVal: number) {
     const { players, graphData } = this.playerS.applyFilterByPlayerStats(
       stats,
-      numOfPlayers , 
+      numOfPlayers,
       lineVal
     );
     this.initChart(graphData);

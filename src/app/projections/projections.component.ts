@@ -11,6 +11,10 @@ import { SharedService } from '../../Shared/services/shared.service';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { ComingSoonComponent } from "./coming-soon/coming-soon.component";
 import { SinglePlayerDetailComponent } from "../single-player-detail/single-player-detail.component";
+import { registerables, Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+Chart.register(...registerables, ChartDataLabels);
 
 @Component({
   selector: 'app-projections',

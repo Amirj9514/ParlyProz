@@ -13,6 +13,13 @@
     <div class="col-9">
       <div class="firstGrap mt-4">
         <app-main-compare-graph></app-main-compare-graph>
+
+        @if (!teamGraphLoader) {
+          <div class="mt-4">
+            <app-team-graph></app-team-graph>
+          </div>
+        }
+       
         <div class="cardBg mt-4">
           <app-table></app-table>
         </div>
