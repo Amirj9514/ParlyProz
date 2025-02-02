@@ -127,9 +127,6 @@ export class ProjectionsComponent implements OnInit {
   openPlayerDetail(playerId: number) {
     this.selectedPlayer = playerId;
     this.showPlayerDetail = true;
-
-    console.log('Player ID:', playerId);
-    
   }
 
   onGameChange(endpoint: string | null) {

@@ -1,12 +1,54 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SharedService } from '../../Shared/services/shared.service';
+import { HeaderComponent } from "../projections/header/header.component";
+import { JerseyDirective } from '../../Shared/directives/jersey.directive';
+import { TagModule } from 'primeng/tag';
+import { SkeletonModule } from 'primeng/skeleton';
+import {SinglePlayerDetailComponent} from '../single-player-detail/single-player-detail.component'
 
 @Component({
   selector: 'app-player-list',
   standalone: true,
-  imports: [],
+  imports: [HeaderComponent , JerseyDirective , TagModule , SkeletonModule , SinglePlayerDetailComponent],
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss'
 })
-export class PlayerListComponent {
+export class PlayerListComponent implements OnInit {
 
+  selectedGame: string = 'nba';
+  playerList: any[] = [];
+  playerListLoader: boolean = false;
+
+  seletedPlayer: number =0;
+
+  constructor(private sharedS: SharedService) {}
+  ngOnInit(): void {
+    this.getPlayersList();
+  }
+
+  onGameChange(event: any) {
+    if(event){
+      this.selectedGame = event;
+      this.getPlayersList();
+      return;
+    }
+
+  }
+
+  getPlayersList() {
+    this.playerListLoader = true;
+    this.sharedS.sendGetRequest(`nba/players/list`).subscribe({
+      next: (res: any) => {
+        this.playerListLoader = false;
+        if (res.status === 200) {
+          console.log(res.body);
+          
+          this.playerList = res.body ?? [];
+        }
+      },
+      error: (error) => {
+        this.playerListLoader = false;
+      },
+    });
+  }
 }

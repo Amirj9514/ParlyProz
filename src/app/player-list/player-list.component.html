@@ -1,1 +1,96 @@
-<p>player-list works!</p>
+@if (!seletedPlayer) {
+<div class="w-full">
+  <app-header (onGameChange)="onGameChange($event)"></app-header>
+
+  <div class="playerList-container">
+    @if(!playerListLoader){
+    <div class="grid player-list m-0 p-0">
+      @for (player of playerList; track $index) {
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="player-card p-2" (click)="seletedPlayer = player?.id || 0">
+          <div class="flex gap-2 align-items-center">
+            <div appJersey [jerseyNumber]="player?.jersey_number"></div>
+            <div>
+              <div class="text-base font-semibold">
+                {{ player?.first_name + " " + player?.last_name }}
+                <span class="lightClr">( {{ player?.position }} )</span>
+              </div>
+              <div class="flex align-items-center gap-2 pt-1">
+                <div>{{ player?.team_name }}</div>
+                <div class="chip3">{{ player?.team_abbreviation }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex mt-3">
+            <div style="width: 60px"></div>
+            <div class="w-full">
+              <div class="flex justify-content-center w-full">
+                <div class="w-6">
+                  <div class="text-xs">College</div>
+                  <div class="text-sm font-semibold">{{ player?.college }}</div>
+                </div>
+
+                <div class="w-6">
+                  <div class="text-xs">Country</div>
+                  <div class="text-sm font-semibold">{{ player?.country }}</div>
+                </div>
+              </div>
+              <div class="flex justify-content-between w-full mt-2">
+                <div class="w-6">
+                  <div class="text-xs">Height</div>
+                  <div class="text-sm font-semibold">{{ player?.height }}</div>
+                </div>
+
+                <div class="w-6">
+                  <div class="text-xs">Weight</div>
+                  <div class="text-sm font-semibold">{{ player?.weight }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    }@else {
+
+    <div class="grid m-0 p-0">
+      @for (item of [1,2,3,4,5,6,7,8,9,0,1,2]; track $index) {
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rounded border player-card p-2">
+          <div class="flex mb-4">
+            <p-skeleton width="60px" height="60px" styleClass="mr-2" />
+            <div class="w-full mt-2">
+              <p-skeleton width="100%" styleClass="mb-2" />
+              <p-skeleton width="30%" styleClass="mb-2" />
+            </div>
+          </div>
+          <div class="flex">
+            <div style="width: 70px"></div>
+            <div class="flex justify-content-between w-full">
+              <div class="w-5">
+                <p-skeleton width="100%" styleClass="mb-2" />
+                <p-skeleton width="100%" styleClass="mb-2" />
+              </div>
+              <div class="w-5">
+                <p-skeleton width="100%" styleClass="mb-2" />
+                <p-skeleton width="100%" styleClass="mb-2" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    }
+  </div>
+</div>
+}@else {
+
+<app-single-player-detail
+  [selectedPlayerId]="seletedPlayer"
+  (onClose)="seletedPlayer = 0"
+></app-single-player-detail>
+}
