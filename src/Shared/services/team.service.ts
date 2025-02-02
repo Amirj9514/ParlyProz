@@ -90,6 +90,8 @@ export class TeamService {
 
   getStatsKeyByStatsId(statsId: string) {
     switch (statsId) {
+      case 'MIN':
+        return ['minutes'];
       case 'PTS':
         return ['points'];
       case 'TO':
@@ -106,6 +108,8 @@ export class TeamService {
         return ['offensive_rebounds'];
       case '3PM':
         return ['three_pointers_made'];
+        case '3PA':
+        return ['three_pointers_attempted'];
       case '2PA':
         return ['two_pointers_made'];
       case 'PA':
@@ -123,10 +127,16 @@ export class TeamService {
 
   getStatsList() {
     return [
+    
       {
         id: 'PTS',
         name: 'Points',
       },
+      {
+        id:'MIN',
+        name: 'Minutes Played'
+      },
+     
       {
         id: 'TO',
         name: 'Turnovers',
@@ -154,6 +164,10 @@ export class TeamService {
       {
         id: '3PM',
         name: 'Three Pointers Made',
+      },
+      {
+        id: '3PA',
+        name: '3-PT Attempts',
       },
       {
         id: '2PA',

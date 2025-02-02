@@ -45,9 +45,7 @@ export class PlayerService {
   };
 
   prepareGraphData = (players: any[], statsOf: string, lineVal: number) => {
-    const labels = players.map((player) => player?.opponent || player?.opponent_tricode || "N/A");
-    console.log(players);
-    
+    const labels = players.map((player) => player?.opponent || player?.opponent_tricode || "N/A");    
     const statsKeys = this.getStatsKeyByStatsId(statsOf);
     const baseValue = lineVal;
     const playerData = players.map((player) => {
@@ -56,8 +54,11 @@ export class PlayerService {
         return acc;
       }, {});
 
-      const totalValue = statsKeys.reduce((sum, key) => sum + player[key], 0);
-
+      const totalValue = statsKeys.reduce((sum, key) => {
+        const value = player[key];
+        return sum + (typeof value === 'string' ? parseFloat(value) : value);
+      }, 0);
+      
       const color =
         totalValue > baseValue ? 'rgba(16, 185, 129, 1)' : 'rgba(255, 0, 0, 1)';
 
@@ -102,13 +103,18 @@ export class PlayerService {
           )
         ),
         borderRadius: 10,
-        data: data.map((item: any) => item.Stats[statKey]),
+        data: data.map((item: any) => {
+          const value = item.Stats[statKey];
+          return typeof value === 'string' ? parseFloat(value) : value;
+        }),
       };
     });
   };
 
   getStatsKeyByStatsId(statsId: string) {
     switch (statsId) {
+      case 'MIN':
+        return ['minutes'];
       case 'PTS':
         return ['points'];
       case 'TO':
@@ -125,6 +131,8 @@ export class PlayerService {
         return ['offensive_rebounds'];
       case '3PM':
         return ['three_pointers_made'];
+        case '3PA':
+        return ['three_pointers_attempted'];
       case '2PA':
         return ['two_pointers_made'];
       case 'PA':
@@ -142,10 +150,16 @@ export class PlayerService {
 
   getStatsList() {
     return [
+    
       {
         id: 'PTS',
         name: 'Points',
       },
+      {
+        id:'MIN',
+        name: 'Minutes Played'
+      },
+     
       {
         id: 'TO',
         name: 'Turnovers',
@@ -173,6 +187,10 @@ export class PlayerService {
       {
         id: '3PM',
         name: 'Three Pointers Made',
+      },
+      {
+        id: '3PA',
+        name: '3-PT Attempts',
       },
       {
         id: '2PA',
