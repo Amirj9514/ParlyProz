@@ -30,3 +30,30 @@
 .textClr-800{
     color: var(--p-surface-800);
 }
+
+
+
+
+.danger-td{
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border-bottom: 2px solid #B91C1C !important;
+    border-right: 2px solid white !important;
+    font-weight: 600;
+}
+
+.success-td{
+    background-color: #D1FAE5;
+    color: #065F46;
+    border-bottom: 2px solid #6ee7b7 !important;
+    border-right: 2px solid white !important;
+    font-weight: 600;
+}
+
+.warning-td{
+    background-color: #F1F5F9;
+    color: #475569;
+    border-bottom: 2px solid #475569 !important;
+    border-right: 2px solid white !important;
+    font-weight: 600;
+}

@@ -12,11 +12,12 @@ import { TagModule } from 'primeng/tag';
 import { Skeleton } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-projection-table',
   standalone:true,
-  imports: [TableModule, TagModule, Skeleton, TooltipModule],
+  imports: [TableModule, TagModule, Skeleton, TooltipModule , CommonModule],
   templateUrl: './projection-table.component.html',
   styleUrl: './projection-table.component.scss',
 })
@@ -59,13 +60,13 @@ export class ProjectionTableComponent implements OnChanges {
     }
 
     if (value <= min) {
-      return 'danger';
+      return 'danger-td';
     } else if (max === 100000) {
-      return 'success';
+      return 'success-td';
     } else if (value > max) {
-      return 'success';
+      return 'success-td';
     } else {
-      return 'secondary';
+      return 'warning-td';
     }
   }
   roundValue(value: any) {
