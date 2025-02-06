@@ -11,23 +11,64 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Skeleton } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-projection-table',
-  standalone:true,
-  imports: [TableModule, TagModule, Skeleton, TooltipModule , CommonModule],
+  standalone: true,
+  imports: [TableModule, TagModule, Skeleton, TooltipModule, CommonModule],
   templateUrl: './projection-table.component.html',
   styleUrl: './projection-table.component.scss',
 })
 export class ProjectionTableComponent implements OnChanges {
   @Input() projectionData: any[] = [];
   @Input() projectionLoader: boolean = false;
-
   @Output() onPlayerClick = new EventEmitter<number>();
 
-  constructor(private router: Router) {}
+  tableHeader:{key:string, tooltipMsg:string , tooltipPosition:string}[] = [
+    {
+      key: 'player',
+      tooltipMsg: 'Player Name',
+      tooltipPosition: 'top'
+    },
+    {
+      key: 'opponent',
+      tooltipMsg: 'Opponent',
+      tooltipPosition: 'top'
+    },
+    {
+      key: 'position',
+      tooltipMsg: 'Position',
+      tooltipPosition: 'top'
+    },
+    {
+      key: 'salary',
+      tooltipMsg: 'Salary',
+      tooltipPosition: 'top'
+    },
+    {
+      key: 'projection',
+      tooltipMsg: 'Projection',
+      tooltipPosition: 'top'
+    },
+    {
+      key: 'avgLast10',
+      tooltipMsg: 'Avg Last 10',
+      tooltipPosition: 'top'
+    },
+    {
+      key: 'diff',
+      tooltipMsg: 'Diff',
+      tooltipPosition: 'top'
+    },
+    {
+      key: 'streak',
+      tooltipMsg: 'Streak',
+      tooltipPosition: 'top'
+    }
+  ]
+
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['projectionLoader']) {
@@ -76,7 +117,7 @@ export class ProjectionTableComponent implements OnChanges {
       }
       return parseFloat(value.toFixed(1));
     } catch (error) {
-      return '-';
+      return '--';
     }
   }
   redirectToPlayerDetail(player: any) {
@@ -91,9 +132,9 @@ export class ProjectionTableComponent implements OnChanges {
   getInitials(fullName: string): string {
     if (!fullName) return 'N/A';
     return fullName
-      .split(' ') // Split the name by spaces
-      .map((name) => name[0]) // Take the first letter of each part
-      .join('') // Combine the initials
-      .toUpperCase(); // Convert to uppercase
+      .split(' ')
+      .map((name) => name[0])
+      .join('')
+      .toUpperCase();
   }
 }

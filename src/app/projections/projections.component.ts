@@ -88,7 +88,7 @@ export class ProjectionsComponent implements OnInit {
         error: (err: any) => {
           this.statsLoader = false;
           this.stopFormTrigger = false;
-          console.error('Error:', err);
+          this.projectionData = [];
         },
       });
   }
