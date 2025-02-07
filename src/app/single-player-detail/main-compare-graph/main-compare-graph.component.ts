@@ -51,6 +51,15 @@ export class MainCompareGraphComponent implements OnInit {
     this.getStatsList();
   }
 
+  onValueChange(event: any) {
+    let newValue = event.value;
+    console.log(newValue);
+    
+    if (newValue % 0.5 !== 0) {
+        this.lineVal = Math.round(newValue * 2) / 2; // Ensure the value steps in 0.5 increments
+    }
+}
+
   getStatsList() {
     this.statsList = this.playerS.getStatsList();
     this.selectedStats = this.statsList[0];
@@ -154,6 +163,9 @@ export class MainCompareGraphComponent implements OnInit {
             stacked: true,
             ticks: {
               color: textColorSecondary,
+              formatter: (value:any) => {
+                return value.split('\n'); // Ensures labels break into multiple lines
+              }
             },
             grid: {
               color: surfaceBorder,

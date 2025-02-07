@@ -79,9 +79,16 @@ export class PlayerService {
   };
 
   prepareGraphData = (players: any[], statsOf: string, lineVal: number) => {
-    const labels = players.map(
-      (player) => player?.opponent || player?.opponent_tricode || 'N/A'
-    );
+    const labels = players.map((player) => {
+      const formattedDate = player?.date 
+          ? new Date(player.date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' }) 
+          : 'N/A';
+    
+      const teamName = player?.opponent || player?.opponent_tricode || 'N/A';
+    
+      return `${teamName} - ${formattedDate}`;
+    });
+  
     const statsKey = this.getStatsKeyByStatsId(statsOf);
 
     const baseValue = lineVal;
@@ -185,8 +192,8 @@ export class PlayerService {
           key: 'three_pointers_attempted',
           keyArr: ['three_pointers_attempted'],
         };
-      case '2PA':
-        return { key: 'two_pointers_made', keyArr: ['two_pointers_made'] };
+      // case '2PA':
+      //   return { key: 'two_pointers_made', keyArr: ['two_pointers_made'] };
       case 'PA':
         return { key: 'points_assists', keyArr: ['points', 'assists'] };
       case 'PR':
@@ -239,10 +246,10 @@ export class PlayerService {
         id: '3PA',
         name: '3-PT Attempts',
       },
-      {
-        id: '2PA',
-        name: 'Two Pointers Made',
-      },
+      // {
+      //   id: '2PA',
+      //   name: 'Two Pointers Made',
+      // },
       {
         id: 'PA',
         name: 'Points & Assists',

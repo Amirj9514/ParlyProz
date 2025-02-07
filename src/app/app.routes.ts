@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { ProjectionsComponent } from './projections/projections.component';
 import { PlayerListComponent } from './player-list/player-list.component';
+import { AuthComponent } from './auth/auth.component';
 
 export const routes: Routes = [
     {
@@ -17,5 +18,9 @@ export const routes: Routes = [
                 component:PlayerListComponent
             }
         ]
+    },
+    {
+        path:'login',
+        component:AuthComponent
     }
 ];

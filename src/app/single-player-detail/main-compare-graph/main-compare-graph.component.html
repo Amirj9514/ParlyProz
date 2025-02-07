@@ -31,7 +31,7 @@
   
       <div class="mb-5">
         <div class="text-sm lightClr pl-1 pb-1">Line</div>
-        <p-inputnumber [(ngModel)]="lineVal" class="text-center" (ngModelChange)="onLineValueChange($event)" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" inputId="vertical" [inputStyle]="{ width: '5rem' }">
+        <p-inputnumber (onInput)="onValueChange($event)" [(ngModel)]="lineVal"  class="text-center" (ngModelChange)="onLineValueChange($event)" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" inputId="vertical" [inputStyle]="{ width: '5rem' }">
           <ng-template #incrementbuttonicon>
               <span class="pi pi-plus"></span>
           </ng-template>
