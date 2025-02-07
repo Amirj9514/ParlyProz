@@ -46,7 +46,8 @@ export class MainCompareGraphComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef, private playerS: PlayerService) {}
 
   ngOnInit(): void {
-    this.lineVal = this.playerS.getStatLineValuesByName('PTS');
+    const lines = this.playerS.getStatLineValuesByName('PTS');
+    this.lineVal = lines.length?lines[0]:0;
     this.getStatsList();
   }
 
@@ -71,7 +72,8 @@ export class MainCompareGraphComponent implements OnInit {
 
   onStatsChange(stats: any) {
     this.selectedStats = stats;
-    this.lineVal = this.playerS.getStatLineValuesByName(stats.id);
+    const lines = this.playerS.getStatLineValuesByName(stats.id);
+    this.lineVal = lines.length?lines[0]:0;
     this.getSinglePlayerStas(stats.id, this.numberOfPlayers, this.lineVal);
   }
 

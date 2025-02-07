@@ -40,7 +40,7 @@ export class SinglePlayerDetailComponent implements OnInit {
   getPlayerDetailWithLineStats() {
     this.playerDetailLoader = true;
 
-    const lineStats$ = this.sharedS.sendGetRequest(`nba/stat/fields/lines`);
+    const lineStats$ = this.sharedS.sendGetRequest(`nba/players/${this.selectedPlayerId}/lines`);
     const playerDetail$ = this.sharedS.sendGetRequest(
       `nba/players/stats/${this.selectedPlayerId}?season=2024-25`
     ); // Example of another API call
@@ -48,7 +48,7 @@ export class SinglePlayerDetailComponent implements OnInit {
     forkJoin([lineStats$, playerDetail$]).subscribe({
       next: ([lineStatsRes, playerDetailRes]: any) => {
         this.playerDetailLoader = false;
-        if (lineStatsRes.status === 200 && playerDetailRes.status === 200) {
+        if (lineStatsRes.status === 200 && playerDetailRes.status === 200) { 
           this.playerS.setLineStats(lineStatsRes.body);
           this.playerDetail = playerDetailRes.body ?? [];
           this.playerS.setPlayerData(this.playerDetail);

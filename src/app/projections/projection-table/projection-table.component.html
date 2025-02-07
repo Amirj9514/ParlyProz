@@ -14,7 +14,7 @@
         <th
         [pSortableColumn]="col?.sortFeild"
           class="cursor-pointer text-sm"
-          [ngClass]="$index > 1 ? ' text-center' : ''"
+          [ngClass]="$index > 2 ? ' text-center' : ''"
           [pTooltip]="col.toolTip"
           [tooltipPosition]="col.toolTipPosition"
         >
@@ -30,13 +30,14 @@
       @if (projectionLoader) {
       <tr>
         <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
+        <td class="defaultTd"><p-skeleton /></td>
       </tr>
       }@else {
       <tr>
@@ -51,17 +52,27 @@
             >
               <div class="flex align-items-center gap-2 playerName">
                 <div class="text-sm font-semibold">
-                  {{ player.first_name + " " + player.last_name }} ({{
-                    player.position
-                  }})
+                  {{ player.first_name + " " + player.last_name }}
+                  <span>
+                    ({{
+                      player.position
+                    }})
+                  </span>
+                  <span class="text-xs font-medium textClr-400">{{player?.team + " @ "+ player?.opponent}}</span>
                 </div>
               </div>
-              <div class="place lightClr text-xs">
+              <div class="place lightClr text-xs textClr-500">
                 {{ capatlizeStats(player?.field) }}
               </div>
             </div>
           </div>
         </td>
+        <td class="text-sm">
+          <div>
+            <img width="40px" src="../../../assets/images/Stake_logo.svg"/>
+          </div>
+        </td>
+
         <td class="text-sm">{{ player?.line }}</td>
         <td
           class="text-center text-sm"
@@ -126,7 +137,7 @@
       [first]="first"
       [rows]="rows"
       [totalRecords]="totalRecords"
-      [rowsPerPageOptions]="[10, 20, 30]"
+      [rowsPerPageOptions]="[25, 50, 100]"
     />
   </div>
 </div>

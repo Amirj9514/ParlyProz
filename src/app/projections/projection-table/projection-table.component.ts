@@ -40,7 +40,7 @@ export class ProjectionTableComponent implements OnChanges {
   @Output() onPagination = new EventEmitter<{ pageNo: number; rows: number }>();
   @ViewChild('projectionTable') projectionTable!: Table;
   first: number = 0;
-  rows: number = 20;
+  rows: number = 50;
   page: number = 1;
   pageCount: number = 0;
   sortCol: { field: string|null; order: number } = { field: null, order: -1 };
@@ -48,6 +48,11 @@ export class ProjectionTableComponent implements OnChanges {
   tableColumns: any[] = [
     {
       header: 'Player',
+      toolTip: '',
+      toolTipPosition: 'bottom',
+    },
+    {
+      header: 'Apps',
       toolTip: '',
       toolTipPosition: 'bottom',
     },
@@ -97,6 +102,10 @@ export class ProjectionTableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     setTimeout(() => {
       this.projectionTable.reset();
+     
+        this.projectionTable.sortField = 'average_last_10_line_diff';
+        this.projectionTable.sortOrder = -1;
+    
       this.first = 0;
     }, 0);
     if (changes['projectionLoader']) {
@@ -188,7 +197,7 @@ export class ProjectionTableComponent implements OnChanges {
       .sendGetRequest(
         `${
           this.activeGameApiendpoint
-        }/dashboard/stats?name=${search}&stat_fields=${stats}&limit=${
+        }/dashboard/stats?name=${search ?? ''}&stat_fields=${stats ?? ''}&limit=${
           this.rows
         }&offset=${this.page}&order_field=${
           order_field
@@ -197,12 +206,11 @@ export class ProjectionTableComponent implements OnChanges {
       .subscribe({
         next: (res: any) => {
           this.projectionLoader = false;
-
-          console.log(res);
-
           if (res.status == 200) {
             this.totalRecords = res.body?.page_info?.total_records ?? 120;
             this.projectionData = res.body.stats ?? [];
+
+         
           }
         },
         error: (err: any) => {

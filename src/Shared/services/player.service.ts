@@ -1,35 +1,69 @@
 import { Injectable } from '@angular/core';
+type PlayerStat = {
+  player_id: number;
+  player_name: string;
+  stat_field: string;
+  line_value: number;
+};
 
+type TransformedStats = {
+  player_id: number;
+  player_name: string;
+  stats: { key: string; values: number[] }[];
+};
 @Injectable({
   providedIn: 'root',
 })
 export class PlayerService {
   constructor() {}
 
-  lineData:any[]=[];
-  playerData:any[]=[];
+  lineData: any[] = [];
+  playerData: any[] = [];
 
   setLineStats = (data: any) => {
-    this.lineData = data;
+    this.lineData = this.transformStats(data)?.stats ?? [];
+  };
+
+  transformStats(data: PlayerStat[]): TransformedStats {
+    const result: TransformedStats = {
+      player_id: data[0]?.player_id ?? '',
+      player_name: data[0]?.player_name ?? '',
+      stats: [],
+    };
+
+    const statMap: Record<string, number[]> = {};
+
+    for (const entry of data) {
+      if (!statMap[entry.stat_field]) {
+        statMap[entry.stat_field] = [];
+      }
+      statMap[entry.stat_field].push(entry.line_value);
+    }
+
+    result.stats = Object.entries(statMap).map(([key, values]) => ({
+      key,
+      values,
+    }));
+
+    return result;
   }
 
-
-  getStatLineValuesByName = (statsKey:string) => {
-    const keys = this.getStatsKeyByStatsId(statsKey);
-    let totalVal = 0;
-    keys.map((key) => {
+  getStatLineValuesByName = (statsKey: string) => {
+    const key = this.getStatsKeyByStatsId(statsKey);
+    let totalVal: any[] = [];
+    this.lineData.map((item: any) => {
       this.lineData.map((item: any) => {
-        if(item.stat_field === key) {
-          totalVal +=parseFloat(item.line_value);
+        if (item.key === key.key) {
+          return (totalVal = item.values);
         }
       });
-    })
+    });
 
     return totalVal;
-  }
+  };
   setPlayerData = (data: any) => {
     this.playerData = data;
-  }
+  };
   getPlayers = (numberOfPlayers: number) => {
     return this.playerData.slice(0, numberOfPlayers);
   };
@@ -45,22 +79,40 @@ export class PlayerService {
   };
 
   prepareGraphData = (players: any[], statsOf: string, lineVal: number) => {
-    const labels = players.map((player) => player?.opponent || player?.opponent_tricode || "N/A");    
-    const statsKeys = this.getStatsKeyByStatsId(statsOf);
+    const labels = players.map(
+      (player) => player?.opponent || player?.opponent_tricode || 'N/A'
+    );
+    const statsKey = this.getStatsKeyByStatsId(statsOf);
+
     const baseValue = lineVal;
+    let isExist: boolean = false;
+
+    this.lineData.map((item: any) => {
+      if (item.key === statsKey.key) {
+        if (item.values.includes(baseValue)) {
+          isExist = true;
+        }
+      }
+    });
+
     const playerData = players.map((player) => {
-      const stats = statsKeys.reduce((acc: any, key) => {
+      const stats = statsKey.keyArr.reduce((acc: any, key) => {
         acc[key] = player[key];
         return acc;
       }, {});
 
-      const totalValue = statsKeys.reduce((sum, key) => {
+      const totalValue = statsKey.keyArr.reduce((sum, key) => {
         const value = player[key];
         return sum + (typeof value === 'string' ? parseFloat(value) : value);
       }, 0);
-      
-      const color =
-        totalValue > baseValue ? 'rgba(16, 185, 129, 1)' : 'rgba(255, 0, 0, 1)';
+
+      let color = 'rgba(148, 163, 184, 1)';
+      if (isExist) {
+        color =
+          totalValue > baseValue
+            ? 'rgba(16, 185, 129, 1)'
+            : 'rgba(255, 0, 0, 1)';
+      }
 
       return { Stats: stats, color, total: totalValue };
     });
@@ -111,55 +163,57 @@ export class PlayerService {
     });
   };
 
-  getStatsKeyByStatsId(statsId: string) {
+  getStatsKeyByStatsId(statsId: string): { key: string; keyArr: string[] } {
     switch (statsId) {
       case 'MIN':
-        return ['minutes'];
+        return { key: 'minutes', keyArr: ['minutes'] };
       case 'PTS':
-        return ['points'];
+        return { key: 'points', keyArr: ['points'] };
       case 'TO':
-        return ['turnovers'];
+        return { key: 'turnovers', keyArr: ['turnovers'] };
       case 'STLS':
-        return ['steals'];
+        return { key: 'steals', keyArr: ['steals'] };
       case 'ASTS':
-        return ['assists'];
+        return { key: 'assists', keyArr: ['assists'] };
       case 'REBS':
-        return ['rebounds'];
-      case 'D-REB':
-        return ['defensive_rebounds'];
-      case 'O-REB':
-        return ['offensive_rebounds'];
+        return { key: 'rebounds', keyArr: ['rebounds'] };
+
       case '3PM':
-        return ['three_pointers_made'];
-        case '3PA':
-        return ['three_pointers_attempted'];
+        return { key: 'three_pointers_made', keyArr: ['three_pointers_made'] };
+      case '3PA':
+        return {
+          key: 'three_pointers_attempted',
+          keyArr: ['three_pointers_attempted'],
+        };
       case '2PA':
-        return ['two_pointers_made'];
+        return { key: 'two_pointers_made', keyArr: ['two_pointers_made'] };
       case 'PA':
-        return ['points', 'assists'];
+        return { key: 'points_assists', keyArr: ['points', 'assists'] };
       case 'PR':
-        return ['points', 'rebounds'];
+        return { key: 'points_rebounds', keyArr: ['points', 'rebounds'] };
       case 'RA':
-        return ['rebounds', 'assists'];
+        return { key: 'rebounds_assists', keyArr: ['rebounds', 'assists'] };
       case 'PRA':
-        return ['points', 'rebounds', 'assists'];
+        return {
+          key: 'points_rebounds_assists',
+          keyArr: ['points', 'rebounds', 'assists'],
+        };
       default:
-        return [];
+        return { key: '', keyArr: [] };
     }
   }
 
   getStatsList() {
     return [
-    
       {
         id: 'PTS',
         name: 'Points',
       },
       {
-        id:'MIN',
-        name: 'Minutes Played'
+        id: 'MIN',
+        name: 'Minutes Played',
       },
-     
+
       {
         id: 'TO',
         name: 'Turnovers',
@@ -176,14 +230,7 @@ export class PlayerService {
         id: 'REBS',
         name: 'Rebounds',
       },
-      {
-        id: 'D-REB',
-        name: 'Defensive Rebounds',
-      },
-      {
-        id: 'O-REB',
-        name: 'Offensive Rebounds',
-      },
+
       {
         id: '3PM',
         name: 'Three Pointers Made',

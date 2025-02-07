@@ -20,6 +20,8 @@ export class TableComponent implements OnInit {
 
   getPlayerList() {
     this.players =  this.playerS.getPlayers(15);
+    console.log(this.players);
+    
     console.log(this.players[0]);
   }
 
