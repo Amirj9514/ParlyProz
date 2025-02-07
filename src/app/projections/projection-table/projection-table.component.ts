@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  input,
   OnChanges,
   Output,
   SimpleChanges,
@@ -12,64 +11,87 @@ import { TagModule } from 'primeng/tag';
 import { Skeleton } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonModule } from '@angular/common';
+import { PaginatorModule } from 'primeng/paginator';
+import { FormGroup } from '@angular/forms';
+import { SharedService } from '../../../Shared/services/shared.service';
 
 @Component({
   selector: 'app-projection-table',
   standalone: true,
-  imports: [TableModule, TagModule, Skeleton, TooltipModule, CommonModule],
+  imports: [
+    TableModule,
+    TagModule,
+    Skeleton,
+    TooltipModule,
+    CommonModule,
+    PaginatorModule,
+  ],
   templateUrl: './projection-table.component.html',
   styleUrl: './projection-table.component.scss',
 })
 export class ProjectionTableComponent implements OnChanges {
   @Input() projectionData: any[] = [];
   @Input() projectionLoader: boolean = false;
+  @Input() totalRecords: number = 0;
+  @Input() filterForm!: FormGroup;
+  @Input() activeGameApiendpoint: string = 'nba';
   @Output() onPlayerClick = new EventEmitter<number>();
+  @Output() onPagination = new EventEmitter<{ pageNo: number; rows: number }>();
+  first: number = 0;
+  rows: number = 20;
+  page: number = 1;
+  pageCount: number = 0;
+  sortCol: { field: string|null; order: number } = { field: null, order: 1 };
 
-  tableHeader:{key:string, tooltipMsg:string , tooltipPosition:string}[] = [
+  tableColumns: any[] = [
     {
-      key: 'player',
-      tooltipMsg: 'Player Name',
-      tooltipPosition: 'top'
+      header: 'Player',
+      toolTip: '',
+      toolTipPosition: 'bottom',
     },
     {
-      key: 'opponent',
-      tooltipMsg: 'Opponent',
-      tooltipPosition: 'top'
+      header: 'Line',
+      toolTip: '',
+      toolTipPosition: 'bottom',
     },
     {
-      key: 'position',
-      tooltipMsg: 'Position',
-      tooltipPosition: 'top'
+      header: 'Avg L10',
+      toolTip: 'Average over last 10 games',
+      toolTipPosition: 'bottom',
     },
     {
-      key: 'salary',
-      tooltipMsg: 'Salary',
-      tooltipPosition: 'top'
+      header: 'Diff',
+      toolTip: ' Difference of projection and average over last 10 games',
+      toolTipPosition: 'bottom',
+      sortFeild: 'average_last_10_line_diff',
     },
     {
-      key: 'projection',
-      tooltipMsg: 'Projection',
-      tooltipPosition: 'top'
+      header: 'L5',
+      toolTip: 'Percentage of last 5 games going over projection',
+      toolTipPosition: 'bottom',
+      sortFeild: 'last_5_over_line_percentage',
     },
     {
-      key: 'avgLast10',
-      tooltipMsg: 'Avg Last 10',
-      tooltipPosition: 'top'
+      header: 'L10',
+      toolTip: 'Percentage of last 10 games going over projection',
+      toolTipPosition: 'bottom',
+      sortFeild: 'last_10_over_line_percentage',
     },
     {
-      key: 'diff',
-      tooltipMsg: 'Diff',
-      tooltipPosition: 'top'
+      header: 'L15',
+      toolTip: 'Percentage of last 15 games going over projection',
+      toolTipPosition: 'bottom',
+      sortFeild: 'last_15_over_line_percentage',
     },
     {
-      key: 'streak',
-      tooltipMsg: 'Streak',
-      tooltipPosition: 'top'
-    }
-  ]
+      header: 'Strk',
+      toolTip: 'Current game streak over projection',
+      toolTipPosition: 'bottom',
+      sortFeild: 'streak',
+    },
+  ];
 
-  constructor() {}
-
+  constructor(private sharedS: SharedService) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['projectionLoader']) {
       if (this.projectionLoader && !this.projectionData.length) {
@@ -120,6 +142,69 @@ export class ProjectionTableComponent implements OnChanges {
       return '--';
     }
   }
+
+  customSort(event: any) {
+    if (
+      this.sortCol.field === event.field &&
+      this.sortCol.order === event.order
+    ) {
+      return; // Prevent redundant API calls
+    }
+    this.sortCol = { field: event.field, order: event.order };
+    this.first = 0;
+    this.page = 1;
+    const formValue = this.filterForm.value;
+    const stats = formValue.stats.map((stat: any) => stat.code).join(',');
+    const search = formValue.search;
+    this.getProjections(stats, search);
+  }
+
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = event.page + 1;
+    this.pageCount = event.pageCount;
+    this.applyFilter(this.filterForm.value);
+  }
+
+  applyFilter(formValue: any) {
+    const stats = formValue.stats.map((stat: any) => stat.code).join(',');
+    const search = formValue.search;
+    this.getProjections(stats, search);
+  }
+
+  getProjections(stats: string, search: string) {
+    this.projectionLoader = true;
+    const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';
+    console.log(order_field);
+    
+    this.sharedS
+      .sendGetRequest(
+        `${
+          this.activeGameApiendpoint
+        }/dashboard/stats?name=${search}&stat_fields=${stats}&limit=${
+          this.rows
+        }&offset=${this.page}&order_field=${
+          order_field
+        }&order=${this.sortCol.order}`
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.projectionLoader = false;
+
+          console.log(res);
+
+          if (res.status == 200) {
+            this.totalRecords = res.body?.page_info?.total_records ?? 120;
+            this.projectionData = res.body.stats ?? [];
+          }
+        },
+        error: (err: any) => {
+          this.projectionLoader = false;
+        },
+      });
+  }
+
   redirectToPlayerDetail(player: any) {
     this.onPlayerClick.emit(player.player_id);
   }

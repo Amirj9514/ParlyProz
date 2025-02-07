@@ -9,7 +9,6 @@
 $primary-color: #9233DF;
 $surface-100:#e7e7e8;
 
-
 body{
     background-color:rgba(0, 0, 0, 0.1);
     font-family: 'Montserrat', sans-serif !important;
@@ -31,8 +30,16 @@ body{
 .p-datatable-thead > tr > th{
     background-color: #F3F3F3 !important;
     border-top: 1px solid #e2e8f0 !important;
+    padding: 8px !important;
+}
+.p-datatable-tbody > tr > td{
+  padding: 8px !important;
 }
 
+.p-sortable-column-icon{
+  width: 12px !important;
+  height: 12px !important;
+}
 
 ::-webkit-scrollbar {
     width: 4px; /* Scrollbar width */

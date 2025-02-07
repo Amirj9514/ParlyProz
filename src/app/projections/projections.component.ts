@@ -45,6 +45,7 @@ export class ProjectionsComponent implements OnInit {
   comingSoon: boolean = false;
   selectedPlayer:number = NaN;
   showPlayerDetail:boolean = false;
+  totalRecords: number = 0;
 
   constructor(private sharedS: SharedService) {
     this.filterForm = new FormGroup({
@@ -71,7 +72,7 @@ export class ProjectionsComponent implements OnInit {
               .map((stat: any) => stat.code)
               .join(',');
             return this.sharedS.sendGetRequest(
-              `${this.activeGameApiendpoint}/players/stats?name=${''}&stat_fields=${stats}`
+              `${this.activeGameApiendpoint}/dashboard/stats?name=${''}&stat_fields=${stats}`
             );
           }
           return of([]);
@@ -82,7 +83,8 @@ export class ProjectionsComponent implements OnInit {
           this.statsLoader = false;
           this.stopFormTrigger = false;
           if (res.status === 200) {
-            this.projectionData = res.body ?? [];
+            this.totalRecords = res.body?.page_info?.total_records ?? 120;
+            this.projectionData = res.body.stats ?? [];
           }
         },
         error: (err: any) => {
@@ -110,12 +112,13 @@ export class ProjectionsComponent implements OnInit {
 
   getProjections(stats: string, search: string) {
     this.sharedS
-      .sendGetRequest(`${this.activeGameApiendpoint}/players/stats?name=${search}&stat_fields=${stats}`)
+      .sendGetRequest(`${this.activeGameApiendpoint}/dashboard/stats?name=${search}&stat_fields=${stats}`)
       .subscribe({
         next: (res: any) => {
           this.projectionLoader = false;
           if (res.status == 200) {
-            this.projectionData = res.body ?? [];
+            this.totalRecords = res.body?.page_info?.total_records ?? 120;
+            this.projectionData = res.body.stats ?? [];
           }
         },
         error: (err: any) => {
