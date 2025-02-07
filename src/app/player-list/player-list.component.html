@@ -4,11 +4,11 @@
 
   @if (!showComingSoon) {
   <div class="playerList-container">
-    @if(!playerListLoader){
-    <div class="grid player-list m-0 p-0">
+    @if(!isLoading){
+    <div class="grid player-list m-0 p-0" (scroll)="onScroll()" >
       @for (player of playerList; track $index) {
       <div class="col-12 md:col-6 lg:col-4">
-        <div class="player-card p-2" (click)="seletedPlayer = player?.id || 0">
+        <div class="player-card h-full p-2" (click)="seletedPlayer = player?.id || 0">
           <div class="flex gap-2 align-items-center">
             <div appJersey [jerseyNumber]="player?.jersey_number"></div>
             <div>
@@ -53,6 +53,40 @@
         </div>
       </div>
       }
+
+      @if(!playerListLoader){
+        <div #scrollObserver class="loading-spinner text-center p-2">
+          <p style="visibility: hidden;">Loading more players...</p>
+        </div>
+      }@else {
+        @for (item of [1,2,3]; track $index) {
+          <div class="col-12 md:col-6 lg:col-4">
+            <div class="rounded border player-card p-2">
+              <div class="flex mb-4">
+                <p-skeleton width="60px" height="60px" styleClass="mr-2" />
+                <div class="w-full mt-2">
+                  <p-skeleton width="100%" styleClass="mb-2" />
+                  <p-skeleton width="30%" styleClass="mb-2" />
+                </div>
+              </div>
+              <div class="flex">
+                <div style="width: 70px"></div>
+                <div class="flex justify-content-between w-full">
+                  <div class="w-5">
+                    <p-skeleton width="100%" styleClass="mb-2" />
+                    <p-skeleton width="100%" styleClass="mb-2" />
+                  </div>
+                  <div class="w-5">
+                    <p-skeleton width="100%" styleClass="mb-2" />
+                    <p-skeleton width="100%" styleClass="mb-2" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+      }
+      
     </div>
     }@else {
 

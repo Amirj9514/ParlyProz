@@ -32,21 +32,50 @@
           <label for="on_label">Select App</label>
         </p-floatlabel>
       </div>
-    
-  
 
-      <div class="col-5 opacity-30">
+      <div class="col-5">
         <p-floatlabel class="w-full" variant="on">
-          <p-multiselect
-            id="on_label"
-            [disabled]="true"
-            [options]="[]"
-            optionLabel="name"
-            filter
-            [maxSelectedLabels]="3"
-            styleClass="w-full"
-          />
-          <label for="on_label">Select App</label>
+          <p-select
+            [options]="gameList"
+            formControlName="match"
+            class="w-full md:w-56"
+            [showClear]="true"
+            
+          >
+            <ng-template #selectedItem let-selectedOption>
+              @if (selectedOption) {
+                <div class="flex items-center gap-2">
+                  <div class="flex gap-2">
+                    <div class="flex align-items-center gap-2">
+                      <div class="text-xs font-semibold ">{{selectedOption.first_competitor_abbreviation}}</div>
+                      <div class="text-sm font-semibold">V/S</div>
+                      <div class="text-xs font-semibold">{{ selectedOption.second_competitor_abbreviation}}</div>
+                    </div>
+  
+                    <div class="text-xs textClr-400">{{'@'}}
+                      <span >{{selectedOption.start_time | date: 'MM-dd-yyyy hh:mm a'}}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </ng-template>
+            <ng-template let-country #item>
+              <div class="flex items-center gap-2">
+                <div class="flex gap-2">
+                  <div class="flex align-items-center gap-2">
+                    <div class="text-xs font-semibold ">{{country.first_competitor_abbreviation}}</div>
+                    <div class="text-sm font-semibold">V/S</div>
+                    <div class="text-xs font-semibold">{{ country.second_competitor_abbreviation}}</div>
+                  </div>
+
+                  <div class="text-xs textClr-400">{{'@'}}
+                    <span >{{country.start_time | date: 'MM-dd-yyyy hh:mm a'}}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-select>
+          <label for="on_label">Select Game</label>
         </p-floatlabel>
       </div>
       <div class="col-7">
@@ -64,7 +93,6 @@
           <label for="on_label">Select Stats</label>
         </p-floatlabel>
       </div>
-
     </form>
 
     <div>

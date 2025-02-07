@@ -1,5 +1,6 @@
 <div class="tableStyle">
   <p-table
+  #projectionTable
     [value]="projectionData"
     [scrollable]="true"
     scrollHeight="calc(100vh - 272px)"
@@ -117,7 +118,7 @@
     </ng-template>
   </p-table>
 
-  <div class="card flex justify-content-center">
+  <div class="card flex justify-content-center" [ngClass]="{ 'opacity-30': projectionLoader }">
     <p-paginator
       [showCurrentPageReport]="true"
       currentPageReportTemplate="Showing {first} to {last}"

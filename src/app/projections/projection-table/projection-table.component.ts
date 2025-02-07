@@ -5,8 +5,9 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Skeleton } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
@@ -37,11 +38,12 @@ export class ProjectionTableComponent implements OnChanges {
   @Input() activeGameApiendpoint: string = 'nba';
   @Output() onPlayerClick = new EventEmitter<number>();
   @Output() onPagination = new EventEmitter<{ pageNo: number; rows: number }>();
+  @ViewChild('projectionTable') projectionTable!: Table;
   first: number = 0;
   rows: number = 20;
   page: number = 1;
   pageCount: number = 0;
-  sortCol: { field: string|null; order: number } = { field: null, order: 1 };
+  sortCol: { field: string|null; order: number } = { field: null, order: -1 };
 
   tableColumns: any[] = [
     {
@@ -93,6 +95,10 @@ export class ProjectionTableComponent implements OnChanges {
 
   constructor(private sharedS: SharedService) {}
   ngOnChanges(changes: SimpleChanges): void {
+    setTimeout(() => {
+      this.projectionTable.reset();
+      this.first = 0;
+    }, 0);
     if (changes['projectionLoader']) {
       if (this.projectionLoader && !this.projectionData.length) {
         this.projectionData = Array.from({ length: 14 }).map(
