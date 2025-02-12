@@ -50,6 +50,7 @@ export class PlayerService {
 
   getStatLineValuesByName = (statsKey: string) => {
     const key = this.getStatsKeyByStatsId(statsKey);
+    
     let totalVal: any[] = [];
     this.lineData.map((item: any) => {
       this.lineData.map((item: any) => {
@@ -65,7 +66,11 @@ export class PlayerService {
     this.playerData = data;
   };
   getPlayers = (numberOfPlayers: number) => {
-    return this.playerData.slice(0, numberOfPlayers);
+    const players = this.playerData.slice(0, numberOfPlayers);
+    const sortPlayers = players.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+    return sortPlayers;
   };
 
   applyFilterByPlayerStats = (
@@ -80,27 +85,30 @@ export class PlayerService {
 
   prepareGraphData = (players: any[], statsOf: string, lineVal: number) => {
     const labels = players.map((player) => {
-      const formattedDate = player?.date 
-          ? new Date(player.date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' }) 
-          : 'N/A';
-    
+      const formattedDate = player?.date
+        ? new Date(player.date).toLocaleDateString('en-US', {
+            month: 'numeric',
+            day: 'numeric',
+          })
+        : 'N/A';
+
       const teamName = player?.opponent || player?.opponent_tricode || 'N/A';
-    
+
       return `${teamName} - ${formattedDate}`;
     });
-  
+
     const statsKey = this.getStatsKeyByStatsId(statsOf);
 
     const baseValue = lineVal;
-    let isExist: boolean = false;
+    // let isExist: boolean = false;
 
-    this.lineData.map((item: any) => {
-      if (item.key === statsKey.key) {
-        if (item.values.includes(baseValue)) {
-          isExist = true;
-        }
-      }
-    });
+    // this.lineData.map((item: any) => {
+    //   if (item.key === statsKey.key) {
+    //     if (item.values.includes(baseValue)) {
+    //       isExist = true;
+    //     }
+    //   }
+    // });
 
     const playerData = players.map((player) => {
       const stats = statsKey.keyArr.reduce((acc: any, key) => {
@@ -113,13 +121,8 @@ export class PlayerService {
         return sum + (typeof value === 'string' ? parseFloat(value) : value);
       }, 0);
 
-      let color = 'rgba(148, 163, 184, 1)';
-      if (isExist) {
-        color =
-          totalValue > baseValue
-            ? 'rgba(16, 185, 129, 1)'
-            : 'rgba(255, 0, 0, 1)';
-      }
+      let color =
+        totalValue > baseValue ? 'rgba(16, 185, 129, 1)' : 'rgba(255, 0, 0, 1)';
 
       return { Stats: stats, color, total: totalValue };
     });
@@ -129,9 +132,12 @@ export class PlayerService {
       label: 'Dataset 1',
       borderColor: 'purple',
       borderWidth: 2,
+      borderDash: [5, 5],
       fill: false,
+      pointRadius: 0, // Hides the dots
       tension: 1,
       data: playerData.map((item: any) => baseValue),
+      correctData: playerData.map((item: any) => baseValue),
     };
 
     return {
@@ -162,9 +168,15 @@ export class PlayerService {
           )
         ),
         borderRadius: 10,
-        data: data.map((item: any) => {
+        correctData: data.map((item: any) => {
           const value = item.Stats[statKey];
           return typeof value === 'string' ? parseFloat(value) : value;
+        }),
+        data: data.map((item: any) => {
+          const value = item.Stats[statKey];
+          return typeof value === 'string'
+            ? parseFloat(value) + 0.5
+            : value + 0.5;
         }),
       };
     });
@@ -180,11 +192,15 @@ export class PlayerService {
         return { key: 'turnovers', keyArr: ['turnovers'] };
       case 'STLS':
         return { key: 'steals', keyArr: ['steals'] };
+      case 'BLKS':
+        return { key: 'blocks', keyArr: ['blocks'] };
       case 'ASTS':
         return { key: 'assists', keyArr: ['assists'] };
       case 'REBS':
         return { key: 'rebounds', keyArr: ['rebounds'] };
 
+      case 'BS':
+        return { key: 'blocks_steals', keyArr: ['blocks', 'steals'] };
       case '3PM':
         return { key: 'three_pointers_made', keyArr: ['three_pointers_made'] };
       case '3PA':
@@ -213,31 +229,41 @@ export class PlayerService {
   getStatsList() {
     return [
       {
+        id: 'MIN',
+        name: 'Minutes Played',
+      },
+      {
         id: 'PTS',
         name: 'Points',
       },
       {
-        id: 'MIN',
-        name: 'Minutes Played',
-      },
-
-      {
-        id: 'TO',
-        name: 'Turnovers',
-      },
-      {
-        id: 'STLS',
-        name: 'Steals',
+        id: 'REBS',
+        name: 'Rebounds',
       },
       {
         id: 'ASTS',
         name: 'Assists',
       },
       {
-        id: 'REBS',
-        name: 'Rebounds',
+        id: 'PA',
+        name: 'Points & Assists',
       },
-
+      {
+        id: 'PR',
+        name: 'Points & Rebounds',
+      },
+      {
+        id: 'BLKS',
+        name: 'blocks',
+      },
+      {
+        id: 'STLS',
+        name: 'Steals',
+      },
+      {
+        id: 'TO',
+        name: 'Turnovers',
+      },
       {
         id: '3PM',
         name: 'Three Pointers Made',
@@ -246,17 +272,9 @@ export class PlayerService {
         id: '3PA',
         name: '3-PT Attempts',
       },
-      // {
-      //   id: '2PA',
-      //   name: 'Two Pointers Made',
-      // },
       {
-        id: 'PA',
-        name: 'Points & Assists',
-      },
-      {
-        id: 'PR',
-        name: 'Points & Rebounds',
+        id: 'BS',
+        name: 'Blocks & Steals',
       },
       {
         id: 'RA',
@@ -325,5 +343,50 @@ export class PlayerService {
       totalMatches: player.length,
     };
     return playerProfile;
+  }
+
+
+ calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
+    const ranges = [5, 10, 15, 20];
+    const results: any = {};
+
+    ranges.forEach((range) => {
+      let lineVal = 0;
+      const players = this.playerData.slice(0, range);
+
+      if (!baseLine) {
+        const lines = this.getStatLineValuesByName(stats);
+        lineVal = lines.length ? lines[0] : 0;
+      } else {
+        lineVal = baseLine;
+      }
+
+      let aboveBaseLineCount = 0;
+      let totalValue = 0;
+      let totalEntries = 0;
+
+      players.forEach((player: any) => {
+        const key = this.getStatsKeyByStatsId(stats);
+
+        key.keyArr.forEach((item) => {
+          const value = player[item] ? parseFloat(player[item]) : 0;
+          totalValue += value;
+          totalEntries++;
+          if (value > lineVal) {
+            aboveBaseLineCount++;
+          }
+        });
+      });
+
+      const average = totalEntries > 0 ? totalValue / totalEntries : 0;
+      const percentageAboveBaseLine = totalEntries > 0 ? (aboveBaseLineCount / totalEntries) * 100 : 0;
+
+      results[`L${range}`] = {
+        average: parseFloat(average.toFixed(1)),
+        percentageAboveBaseLine: parseFloat(percentageAboveBaseLine.toFixed(1)),
+        aboveBaseLineCount,
+      };
+    });
+    return results;
   }
 }

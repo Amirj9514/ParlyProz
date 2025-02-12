@@ -190,9 +190,7 @@ export class ProjectionTableComponent implements OnChanges {
 
   getProjections(stats: string, search: string) {
     this.projectionLoader = true;
-    const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';
-    console.log(order_field);
-    
+    const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';    
     this.sharedS
       .sendGetRequest(
         `${

@@ -10,9 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChartModule } from 'primeng/chart';
 import { TabsModule } from 'primeng/tabs';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { PlayerService } from '../../../Shared/services/player.service';
-
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-main-compare-graph',
   standalone: true,
@@ -21,7 +22,9 @@ import { PlayerService } from '../../../Shared/services/player.service';
     FormsModule,
     ChartModule,
     TabsModule,
-    InputNumberModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    ButtonModule,
   ],
   templateUrl: './main-compare-graph.component.html',
   styleUrl: './main-compare-graph.component.scss',
@@ -34,10 +37,10 @@ export class MainCompareGraphComponent implements OnInit {
   statsList: any[] = [];
   selectedStats: any;
   paymentOptions: any[] = [
-    { name: 'L5', value: 1 },
-    { name: 'L10', value: 2 },
-    { name: 'L15', value: 3 },
-    { name: 'L20', value: 4 },
+    { name: 'L5', value: 1 ,avg:0,hr:0 },
+    { name: 'L10', value: 2,avg:0,hr:0 },
+    { name: 'L15', value: 3,avg:0,hr:0 },
+    { name: 'L20', value: 4,avg:0,hr:0 },
   ];
 
   basicData: any;
@@ -46,53 +49,80 @@ export class MainCompareGraphComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef, private playerS: PlayerService) {}
 
   ngOnInit(): void {
-    const lines = this.playerS.getStatLineValuesByName('PTS');
-    this.lineVal = lines.length?lines[0]:0;
-    this.getStatsList();
-  }
+    const lines = this.playerS.getStatLineValuesByName('MIN');
 
-  onValueChange(event: any) {
-    let newValue = event.value;
-    console.log(newValue);
-    
-    if (newValue % 0.5 !== 0) {
-        this.lineVal = Math.round(newValue * 2) / 2; // Ensure the value steps in 0.5 increments
-    }
-}
+    this.lineVal = lines.length ? lines[0] : 0;
+    this.getStatsList();
+    const calStats = this.playerS.calculatePlayerAvgAndHR(null,'MIN');
+    this.paymentOptions.map((option) => {
+      option.avg= calStats[option.name].average ; 
+      option.hr= calStats[option.name].percentageAboveBaseLine;
+    })    
+  }
 
   getStatsList() {
     this.statsList = this.playerS.getStatsList();
     this.selectedStats = this.statsList[0];
 
-    if(this.statsList.length){
+    if (this.statsList.length) {
       this.getSinglePlayerStas(
         this.selectedStats.id,
         this.numberOfPlayers,
         this.lineVal
       );
     }
-      // this.getSinglePlayerStas(
-      //   this.selectedStats.id,
-      //   this.numberOfPlayers,
-      //   this.lineVal
-      // );
-  
   }
 
   onStatsChange(stats: any) {
     this.selectedStats = stats;
     const lines = this.playerS.getStatLineValuesByName(stats.id);
-    this.lineVal = lines.length?lines[0]:0;
+    this.lineVal = lines.length ? lines[0] : 0;
     this.getSinglePlayerStas(stats.id, this.numberOfPlayers, this.lineVal);
+    const calStats = this.playerS.calculatePlayerAvgAndHR(this.lineVal,this.selectedStats?.id);
+    this.paymentOptions.map((option) => {
+      option.avg= calStats[option.name].average ; 
+      option.hr= calStats[option.name].percentageAboveBaseLine;
+    }) 
   }
 
   onLineValueChange(event: any) {
-    this.lineVal = event;
+    const value = event.target.value;
+    if (value) {
+      const val = parseFloat(value);
+      this.lineVal = val;
+      this.getSinglePlayerStas(
+        this.selectedStats.id,
+        this.numberOfPlayers,
+        this.lineVal
+      );
+    } else {
+      this.lineVal = 0;
+    }
+
+    const calStats = this.playerS.calculatePlayerAvgAndHR(this.lineVal,this.selectedStats?.id);
+    this.paymentOptions.map((option) => {
+      option.avg= calStats[option.name].average ; 
+      option.hr= calStats[option.name].percentageAboveBaseLine;
+    }) 
+  }
+
+  handelLineChange(type: 'plus' | 'minus') {
+    const baseVal = 0.5;
+    if (type === 'plus') {
+      this.lineVal = this.lineVal + baseVal;
+    } else if (type === 'minus' && this.lineVal !== 0) {
+      this.lineVal = this.lineVal - baseVal;
+    }
     this.getSinglePlayerStas(
       this.selectedStats.id,
       this.numberOfPlayers,
       this.lineVal
     );
+    const calStats = this.playerS.calculatePlayerAvgAndHR(this.lineVal,this.selectedStats?.id);
+    this.paymentOptions.map((option) => {
+      option.avg= calStats[option.name].average ; 
+      option.hr= calStats[option.name].percentageAboveBaseLine;
+    }) 
   }
 
   onPlayerMatchChange(event: any) {
@@ -121,6 +151,55 @@ export class MainCompareGraphComponent implements OnInit {
   }
 
   initChart(data: any) {
+    let totalBlock = 0.5;
+    let maxBlock: number = 0;
+    if (data.datasets.length > 2) {
+   
+      const barDatasets = data.datasets.filter(
+        (dataset: any) => dataset.type === 'bar'
+      );
+      const total = barDatasets.reduce(
+        (acc: any, curr: any) =>
+          acc.map((num: any, index: any) => num + (curr.data[index] || 0)),
+        Array(barDatasets[0].data.length).fill(0)
+      );
+      maxBlock = Math.max(...total);
+
+      if (maxBlock > 15) {
+        totalBlock = 1;
+      } else if (maxBlock > 40) {
+        totalBlock = 1.5;
+      } else if (maxBlock > 60) {
+        totalBlock = 2;
+      } else if (maxBlock > 80) {
+        totalBlock = 2.5;
+      } else if (maxBlock > 100) {
+        totalBlock = 3;
+      } else if (maxBlock > 120) {
+        totalBlock = 4;
+      }
+      const totalData = data.datasets[0].data.map(
+        (value: any, index: any) => totalBlock
+      );
+      const totalBars = {
+        type: 'bar',
+        label: 'Total',
+        backgroundColor: 'transparent', // Hide column
+        borderColor: 'transparent', // Hide border
+        borderWidth: 0, // No border
+        data: totalData,
+        correctData: totalData,
+        datalabels: {
+          color: '#000', // Keep labels visible
+          font: {
+            weight: 'bold',
+          },
+        },
+      };
+
+      data.datasets.push(totalBars);
+    }
+
     if (isPlatformBrowser(this.platformId)) {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--p-text-color');
@@ -141,21 +220,47 @@ export class MainCompareGraphComponent implements OnInit {
               color: textColor,
             },
           },
+          // tooltip: {
+          //   callbacks: {
+          //     label: function (tooltipItem: any) {
+          //       let value = tooltipItem.raw;
+          //       let extraData = 'Hello';
+          //       return `Sales: ${value} | Category: ${extraData}`;
+          //     },
+          //   },
+          // },
 
           datalabels: {
             display: (context: any) => {
-              // Only show labels for bar datasets
               return context.dataset.type === 'bar';
             },
             color: '#fff', // Label color
             anchor: 'center', // Label position
             align: 'center', // Label alignment
-            formatter: (value: any) => value, // Display the value
-
-            // formatter: (value: any, context: any) => {
-            //     const datasetLabel = context.dataset.label || ''; // Get the dataset label
-            //     return `${datasetLabel}: ${value}`; // Combine label and value
-            // },
+            formatter: (value: any, context: any) => {
+              const datasetIndex = context.datasetIndex;
+              const dataIndex = context.dataIndex;
+              const datasets = context.chart.data.datasets;
+              // Calculate total for the stacked bars
+              let total = datasets.reduce((sum: any, dataset: any) => {
+                if (dataset.type !== 'line') {
+                  return sum + (dataset.correctData[dataIndex] || 0);
+                }
+                return sum; // Skip line datasets
+              }, 0);
+              if (datasetIndex === datasets.length - 1) {
+                if(datasets.length>2){
+                  return [total - totalBlock];
+                }else{
+                  return [value - 0.5];
+                }
+                
+              } else if (value != 0) {
+                return value  - 0.5
+              } else {
+                return '';
+              }
+            },
           },
         },
         scales: {
@@ -163,9 +268,9 @@ export class MainCompareGraphComponent implements OnInit {
             stacked: true,
             ticks: {
               color: textColorSecondary,
-              formatter: (value:any) => {
+              formatter: (value: any) => {
                 return value.split('\n'); // Ensures labels break into multiple lines
-              }
+              },
             },
             grid: {
               color: surfaceBorder,
@@ -176,12 +281,13 @@ export class MainCompareGraphComponent implements OnInit {
           y: {
             stacked: true,
             ticks: {
-              color: textColorSecondary,
+              display: false // Hides Y-axis labels (numbers)
             },
             grid: {
-              color: surfaceBorder,
               drawBorder: false,
-            },
+              display: false,
+              drawTicks: false // Hides tick marks on Y-axis
+            }
           },
         },
       };

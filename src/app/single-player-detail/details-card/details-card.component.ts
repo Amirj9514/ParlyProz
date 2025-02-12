@@ -19,8 +19,6 @@ export class DetailsCardComponent {
 
   getPlayerProfile(){
     this.playerProfile =this.playerS.preparePlayerProfile();
-    console.log(this.playerProfile);
-    
   }
 
 

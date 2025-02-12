@@ -68,9 +68,6 @@ export class SharedService {
     if (!jwtToken) {
       jwtToken = this.getToken();
     }
-
-    console.log(jwtToken);
-
     const headers_object = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
       'Content-Type': 'application/json',

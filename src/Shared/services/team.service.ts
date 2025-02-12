@@ -58,9 +58,7 @@ export class TeamService {
       datasets: [...this.createDataSet(playerData)],
     };
   };
-  createDataSet = (data: any) => {
-      console.log("dsddd" , data);
-      
+  createDataSet = (data: any) => {      
     const statKeys = Object.keys(data[0].Stats);
     const baseOpacity = 1;
 
