@@ -26,8 +26,8 @@
         <ng-template #item let-item>
          <div class="text-xs" style="text-align: left;">
           <div class="font-semibold">{{item?.name ?? ''}}</div>
-          <div>HR {{item?.hr ?? ''}}%</div>
-          <div>Avg {{item?.avg ?? ''}}</div>
+          <div [ngClass]="item && item?.hr && item.hr>50?'successClr': item.hr<40?'dangerClr':'secondaryClr'">HR {{item?.hr ?? ''}}%</div>
+          <div [ngClass]="item && item.avg && item.avg >= lineVal ?'successClr':'dangerClr'">Avg {{item?.avg ?? ''}}</div>
          </div>
       </ng-template>
       </p-selectbutton>

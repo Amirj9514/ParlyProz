@@ -5,7 +5,7 @@ import {
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChartModule } from 'primeng/chart';
@@ -25,6 +25,7 @@ import { ButtonModule } from 'primeng/button';
     InputGroupModule,
     InputGroupAddonModule,
     ButtonModule,
+    CommonModule,
   ],
   templateUrl: './main-compare-graph.component.html',
   styleUrl: './main-compare-graph.component.scss',
@@ -303,4 +304,6 @@ export class MainCompareGraphComponent implements OnInit {
     );
     this.initChart(graphData);
   }
+
+  
 }
