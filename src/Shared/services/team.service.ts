@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TeamService {
   teamData: any[] = [];
-  constructor() { }
+  constructor() {}
 
   setTeamData(data: any) {
+    console.log(data);
+
     this.teamData = data;
   }
 
   getTeamData(numberOfGame: number) {
-    if(numberOfGame){
+    if (numberOfGame) {
       return this.teamData.slice(0, numberOfGame);
-    }else{
+    } else {
       return this.teamData;
     }
   }
@@ -30,7 +32,9 @@ export class TeamService {
   };
 
   prepareGraphData = (players: any[], statsOf: string, lineVal: number) => {
-    const labels = players.map((player) => player?.opponent || player?.opponent_tricode || "N/A");
+    const labels = players.map(
+      (player) => player?.opponent || player?.opponent_tricode || 'N/A'
+    );
     const statsKeys = this.getStatsKeyByStatsId(statsOf);
     const baseValue = lineVal;
     const playerData = players.map((player) => {
@@ -39,7 +43,7 @@ export class TeamService {
         return acc;
       }, {});
       const totalValue = statsKeys.reduce((sum, key) => sum + player[key], 0);
-      const color ='rgba(124, 58, 237,1)';
+      const color = 'rgba(124, 58, 237,1)';
       return { Stats: stats, color, total: totalValue };
     });
 
@@ -58,7 +62,7 @@ export class TeamService {
       datasets: [...this.createDataSet(playerData)],
     };
   };
-  createDataSet = (data: any) => {      
+  createDataSet = (data: any) => {
     const statKeys = Object.keys(data[0].Stats);
     const baseOpacity = 1;
 
@@ -81,7 +85,10 @@ export class TeamService {
           )
         ),
         borderRadius: 10,
-        data: data.map((item: any) => item.Stats[statKey]),
+        data: data.map((item: any) => {
+          const value = item.Stats[statKey];
+          return typeof value === 'string' ? parseFloat(value) : value;
+        }),
       };
     });
   };
@@ -96,6 +103,8 @@ export class TeamService {
         return ['turnovers'];
       case 'STLS':
         return ['steals'];
+      case 'BLKS':
+        return ['blocks'];
       case 'ASTS':
         return ['assists'];
       case 'REBS':
@@ -106,7 +115,7 @@ export class TeamService {
         return ['offensive_rebounds'];
       case '3PM':
         return ['three_pointers_made'];
-        case '3PA':
+      case '3PA':
         return ['three_pointers_attempted'];
       case '2PA':
         return ['two_pointers_made'];
@@ -118,6 +127,8 @@ export class TeamService {
         return ['rebounds', 'assists'];
       case 'PRA':
         return ['points', 'rebounds', 'assists'];
+      case 'BS':
+        return ['blocks', 'steals'];
       default:
         return [];
     }
@@ -125,39 +136,41 @@ export class TeamService {
 
   getStatsList() {
     return [
-    
+      // {
+      //   id: 'MIN',
+      //   name: 'Minutes Played',
+      // },
       {
         id: 'PTS',
         name: 'Points',
-      },
-      {
-        id:'MIN',
-        name: 'Minutes Played'
-      },
-     
-      {
-        id: 'TO',
-        name: 'Turnovers',
-      },
-      {
-        id: 'STLS',
-        name: 'Steals',
-      },
-      {
-        id: 'ASTS',
-        name: 'Assists',
       },
       {
         id: 'REBS',
         name: 'Rebounds',
       },
       {
-        id: 'D-REB',
-        name: 'Defensive Rebounds',
+        id: 'ASTS',
+        name: 'Assists',
       },
       {
-        id: 'O-REB',
-        name: 'Offensive Rebounds',
+        id: 'PA',
+        name: 'Points & Assists',
+      },
+      {
+        id: 'PR',
+        name: 'Points & Rebounds',
+      },
+      {
+        id: 'BLKS',
+        name: 'blocks',
+      },
+      {
+        id: 'STLS',
+        name: 'Steals',
+      },
+      {
+        id: 'TO',
+        name: 'Turnovers',
       },
       {
         id: '3PM',
@@ -168,16 +181,8 @@ export class TeamService {
         name: '3-PT Attempts',
       },
       {
-        id: '2PA',
-        name: 'Two Pointers Made',
-      },
-      {
-        id: 'PA',
-        name: 'Points & Assists',
-      },
-      {
-        id: 'PR',
-        name: 'Points & Rebounds',
+        id: 'BS',
+        name: 'Blocks & Steals',
       },
       {
         id: 'RA',

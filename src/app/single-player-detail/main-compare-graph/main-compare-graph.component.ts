@@ -6,7 +6,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChartModule } from 'primeng/chart';
 import { TabsModule } from 'primeng/tabs';
@@ -14,6 +14,7 @@ import { PlayerService } from '../../../Shared/services/player.service';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
+import { debounceTime } from 'rxjs';
 @Component({
   selector: 'app-main-compare-graph',
   standalone: true,
@@ -26,6 +27,7 @@ import { ButtonModule } from 'primeng/button';
     InputGroupAddonModule,
     ButtonModule,
     CommonModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './main-compare-graph.component.html',
   styleUrl: './main-compare-graph.component.scss',
@@ -37,11 +39,12 @@ export class MainCompareGraphComponent implements OnInit {
 
   statsList: any[] = [];
   selectedStats: any;
+  lineValueControl = new FormControl<any>('');
   paymentOptions: any[] = [
-    { name: 'L5', value: 1 ,avg:0,hr:0 },
-    { name: 'L10', value: 2,avg:0,hr:0 },
-    { name: 'L15', value: 3,avg:0,hr:0 },
-    { name: 'L20', value: 4,avg:0,hr:0 },
+    { name: 'L5', value: 1, avg: 0, hr: 0 },
+    { name: 'L10', value: 2, avg: 0, hr: 0 },
+    { name: 'L15', value: 3, avg: 0, hr: 0 },
+    { name: 'L20', value: 4, avg: 0, hr: 0 },
   ];
 
   basicData: any;
@@ -53,12 +56,21 @@ export class MainCompareGraphComponent implements OnInit {
     const lines = this.playerS.getStatLineValuesByName('MIN');
 
     this.lineVal = lines.length ? lines[0] : 0;
+    this.lineValueControl.setValue(this.lineVal);
     this.getStatsList();
-    const calStats = this.playerS.calculatePlayerAvgAndHR(null,'MIN');
+    const calStats = this.playerS.calculatePlayerAvgAndHR(null, 'MIN');
     this.paymentOptions.map((option) => {
-      option.avg= calStats[option.name].average ; 
-      option.hr= calStats[option.name].percentageAboveBaseLine;
-    })    
+      option.avg = calStats[option.name].average;
+      option.hr = calStats[option.name].percentageAboveBaseLine;
+    });
+
+    this.lineValueControl.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((value) => {
+        const cleanedValue = this.cleanInput(value ?? '');
+        this.lineValueControl.setValue(cleanedValue, { emitEvent: false });
+        this.onLineValueChange(cleanedValue);
+      });
   }
 
   getStatsList() {
@@ -78,16 +90,18 @@ export class MainCompareGraphComponent implements OnInit {
     this.selectedStats = stats;
     const lines = this.playerS.getStatLineValuesByName(stats.id);
     this.lineVal = lines.length ? lines[0] : 0;
+    this.lineValueControl.setValue(this.lineVal);
     this.getSinglePlayerStas(stats.id, this.numberOfPlayers, this.lineVal);
-    const calStats = this.playerS.calculatePlayerAvgAndHR(this.lineVal,this.selectedStats?.id);
+    const calStats = this.playerS.calculatePlayerAvgAndHR(
+      this.lineVal,
+      this.selectedStats?.id
+    );
     this.paymentOptions.map((option) => {
-      option.avg= calStats[option.name].average ; 
-      option.hr= calStats[option.name].percentageAboveBaseLine;
-    }) 
+      option.avg = calStats[option.name].average;
+      option.hr = calStats[option.name].percentageAboveBaseLine;
+    });
   }
-
-  onLineValueChange(event: any) {
-    const value = event.target.value;
+  onLineValueChange(value: any) {
     if (value) {
       const val = parseFloat(value);
       this.lineVal = val;
@@ -98,13 +112,30 @@ export class MainCompareGraphComponent implements OnInit {
       );
     } else {
       this.lineVal = 0;
+      this.lineValueControl.setValue(this.lineVal);
+      
     }
+    console.log(this.lineVal);
+    
+    const calStats = this.playerS.calculatePlayerAvgAndHR(
+      this.lineVal,
+      this.selectedStats?.id
+    );
+    this.paymentOptions.forEach((option) => {
+      option.avg = calStats[option.name]?.average || 0;
+      option.hr = calStats[option.name]?.percentageAboveBaseLine || 0;
+    });
+  }
 
-    const calStats = this.playerS.calculatePlayerAvgAndHR(this.lineVal,this.selectedStats?.id);
-    this.paymentOptions.map((option) => {
-      option.avg= calStats[option.name].average ; 
-      option.hr= calStats[option.name].percentageAboveBaseLine;
-    }) 
+  cleanInput(value: string): string {
+    if (!value) return '';
+
+    // Allow only numbers and a single decimal point with max one digit after
+    const cleanedValue = value
+      .replace(/[^0-9.]/g, '') // Remove non-numeric characters except '.'
+      .replace(/^(\d*\.?\d?).*$/, '$1'); // Allow only one decimal place
+
+    return cleanedValue;
   }
 
   handelLineChange(type: 'plus' | 'minus') {
@@ -114,16 +145,20 @@ export class MainCompareGraphComponent implements OnInit {
     } else if (type === 'minus' && this.lineVal !== 0) {
       this.lineVal = this.lineVal - baseVal;
     }
+    this.lineValueControl.setValue(this.lineVal);
     this.getSinglePlayerStas(
       this.selectedStats.id,
       this.numberOfPlayers,
       this.lineVal
     );
-    const calStats = this.playerS.calculatePlayerAvgAndHR(this.lineVal,this.selectedStats?.id);
+    const calStats = this.playerS.calculatePlayerAvgAndHR(
+      this.lineVal,
+      this.selectedStats?.id
+    );
     this.paymentOptions.map((option) => {
-      option.avg= calStats[option.name].average ; 
-      option.hr= calStats[option.name].percentageAboveBaseLine;
-    }) 
+      option.avg = calStats[option.name].average;
+      option.hr = calStats[option.name].percentageAboveBaseLine;
+    });
   }
 
   onPlayerMatchChange(event: any) {
@@ -155,7 +190,6 @@ export class MainCompareGraphComponent implements OnInit {
     let totalBlock = 0.5;
     let maxBlock: number = 0;
     if (data.datasets.length > 2) {
-   
       const barDatasets = data.datasets.filter(
         (dataset: any) => dataset.type === 'bar'
       );
@@ -169,15 +203,15 @@ export class MainCompareGraphComponent implements OnInit {
       if (maxBlock > 15) {
         totalBlock = 1;
       } else if (maxBlock > 40) {
-        totalBlock = 1.5;
-      } else if (maxBlock > 60) {
         totalBlock = 2;
-      } else if (maxBlock > 80) {
-        totalBlock = 2.5;
-      } else if (maxBlock > 100) {
+      } else if (maxBlock > 60) {
         totalBlock = 3;
-      } else if (maxBlock > 120) {
+      } else if (maxBlock > 80) {
         totalBlock = 4;
+      } else if (maxBlock > 100) {
+        totalBlock = 5;
+      } else if (maxBlock > 120) {
+        totalBlock = 6;
       }
       const totalData = data.datasets[0].data.map(
         (value: any, index: any) => totalBlock
@@ -221,15 +255,14 @@ export class MainCompareGraphComponent implements OnInit {
               color: textColor,
             },
           },
-          // tooltip: {
-          //   callbacks: {
-          //     label: function (tooltipItem: any) {
-          //       let value = tooltipItem.raw;
-          //       let extraData = 'Hello';
-          //       return `Sales: ${value} | Category: ${extraData}`;
-          //     },
-          //   },
-          // },
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem: any) {
+                let value = tooltipItem.raw;
+                return `${tooltipItem?.dataset?.label}: ${value}`;
+              },
+            },
+          },
 
           datalabels: {
             display: (context: any) => {
@@ -250,14 +283,13 @@ export class MainCompareGraphComponent implements OnInit {
                 return sum; // Skip line datasets
               }, 0);
               if (datasetIndex === datasets.length - 1) {
-                if(datasets.length>2){
+                if (datasets.length > 2) {
                   return [total - totalBlock];
-                }else{
-                  return [value - 0.5];
+                } else {
+                  return [value];
                 }
-                
               } else if (value != 0) {
-                return value  - 0.5
+                return value;
               } else {
                 return '';
               }
@@ -282,13 +314,13 @@ export class MainCompareGraphComponent implements OnInit {
           y: {
             stacked: true,
             ticks: {
-              display: false // Hides Y-axis labels (numbers)
+              display: false, // Hides Y-axis labels (numbers)
             },
             grid: {
               drawBorder: false,
               display: false,
-              drawTicks: false // Hides tick marks on Y-axis
-            }
+              drawTicks: false, // Hides tick marks on Y-axis
+            },
           },
         },
       };
@@ -304,6 +336,4 @@ export class MainCompareGraphComponent implements OnInit {
     );
     this.initChart(graphData);
   }
-
-  
 }

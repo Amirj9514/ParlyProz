@@ -1,5 +1,12 @@
 @if(selectedStats){
 <div class="cardBg">
+  <div class="detailHead">
+    <div
+      class="flex justify-content-center align-items-center text-lg font-semibold py-3"
+    >
+      <div>Team - Stats</div>
+    </div>
+    </div>
   <div class="flex gap-3 statsList">
     <p-tabs [value]="selectedStats?.id" scrollable>
       <p-tablist>
@@ -27,29 +34,13 @@
       </div>
     </div>
 
-    <!-- <div class="mb-5">
-      <div class="text-sm lightClr pl-1 pb-1">Line</div>
-      <p-inputnumber
-        [(ngModel)]="lineVal"
-        class="text-center"
-        (ngModelChange)="onLineValueChange($event)"
-        [showButtons]="true"
-        buttonLayout="horizontal"
-        spinnerMode="horizontal"
-        inputId="vertical"
-        [inputStyle]="{ width: '5rem' }"
-      >
-        <ng-template #incrementbuttonicon>
-          <span class="pi pi-plus"></span>
-        </ng-template>
-        <ng-template #decrementbuttonicon>
-          <span class="pi pi-minus"></span>
-        </ng-template>
-      </p-inputnumber>
-    </div> -->
-
     <div class="card">
-      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+      <p-chart
+        height="350px"
+        type="bar"
+        [data]="basicData"
+        [options]="basicOptions"
+      />
     </div>
   </div>
 </div>
