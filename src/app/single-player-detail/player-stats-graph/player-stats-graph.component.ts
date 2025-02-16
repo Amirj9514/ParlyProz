@@ -1,81 +1,122 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  PLATFORM_ID,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import * as d3 from 'd3';
-import { FormsModule } from '@angular/forms';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { ChartModule } from 'primeng/chart';
-import { TabsModule } from 'primeng/tabs';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { PlayerStatsService } from '../../../Shared/services/player-stats.service';
 import { PlayerService } from '../../../Shared/services/player.service';
-import { TeamService } from '../../../Shared/services/team.service';
+import { TabsModule } from 'primeng/tabs';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ButtonModule } from 'primeng/button';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-team-graph',
+  selector: 'app-player-stats-graph',
   standalone: true,
   imports: [
-    SelectButtonModule,
-    FormsModule,
-    ChartModule,
     TabsModule,
-    InputNumberModule,
+    SelectButtonModule,
+    CommonModule,
+    FormsModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    ButtonModule,
   ],
-  templateUrl: './team-graph.component.html',
-  styleUrl: './team-graph.component.scss',
+  templateUrl: './player-stats-graph.component.html',
+  styleUrl: './player-stats-graph.component.scss',
 })
-export class TeamGraphComponent implements OnInit {
-  @ViewChild('TeamChart', { static: true }) chartContainer!: ElementRef;
+export class PlayerStatsGraphComponent {
+  @ViewChild('chart', { static: true }) chartContainer!: ElementRef;
+
   thresholdValue: number = 0;
   statsList: any[] = [];
+  selectedStats: any;
   value: number = 2;
-  numberOfPlayers: number = 15;
+  debounceSubject = new Subject<number>();
 
   graphData: any[] = [];
-  selectedStats: any;
   paymentOptions: any[] = [
-    { name: 'L5', value: 1 },
-    { name: 'L10', value: 2 },
-    { name: 'L15', value: 3 },
-    { name: 'L20', value: 4 },
+    { name: 'L5', value: 1, avg: 0, hr: 0 },
+    { name: 'L10', value: 2, avg: 0, hr: 0 },
+    { name: 'L15', value: 3, avg: 0, hr: 0 },
+    { name: 'L20', value: 4, avg: 0, hr: 0 },
   ];
 
-  basicData: any;
-  basicOptions: any;
-  constructor(private playerS: TeamService) {}
+  constructor(
+    private PlayerStatsS: PlayerStatsService,
+    private playerS: PlayerService
+  ) {}
 
-  ngOnInit(): void {
-    this.statsList = this.playerS.getStatsList();
+  ngOnInit() {
+    this.statsList = this.PlayerStatsS.getStatsList();
     this.selectedStats = this.statsList[0];
+    const lines = this.PlayerStatsS.getStatLineValuesByName('MIN');
+    this.thresholdValue = lines.length ? lines[0] : 0;
     this.getStatsList('MIN', 10);
+    this.debounceSubject.pipe(debounceTime(500)).subscribe((val) => {
+      this.thresholdValue = val ? val : 0;
+      this.getStatsList(this.selectedStats.id, this.value * 5 , this.thresholdValue);
+    });
   }
 
-  getStatsList(stats: string, numberOfStats: number, line?: number) {
+  getStatsList(stats: string, numberOfStats: number , line?:number) {
     const activeStats = stats;
-    this.graphData = this.playerS.preparePlayerStatsGraphData(
+
+    if (line) {
+      this.thresholdValue = line;
+    }else{
+      const lines = this.PlayerStatsS.getStatLineValuesByName(activeStats);
+      this.thresholdValue = lines.length ? lines[0] : 0;
+    }
+    this.graphData = this.PlayerStatsS.preparePlayerStatsGraphData(
       activeStats,
       numberOfStats,
       this.thresholdValue
     );
 
-    console.log(this.graphData);
-    
+    const calStats = this.PlayerStatsS.calculatePlayerAvgAndHR(
+      this.thresholdValue,
+      activeStats
+    );
+
+    this.paymentOptions.map((option) => {
+      option.avg = calStats[option.name].average;
+      option.hr = calStats[option.name].percentageAboveBaseLine;
+    });
     this.createChart();
   }
 
-  onStatsChange(stats: any) {
-    this.selectedStats = stats;
-    this.getStatsList(stats.id, this.value * 5);
+  onStatsChange(tab: any) {
+    this.selectedStats = tab;
+    this.getStatsList(tab.id, this.value * 5);
   }
 
   onPlayerMatchChange(event: any) {
     const numberOfStats = event * 5;
-    this.getStatsList(this.selectedStats.id, numberOfStats );
+    this.getStatsList(this.selectedStats.id, numberOfStats , this.thresholdValue);
+  }
+
+  handelLineChange(type: 'plus' | 'minus') {
+    const baseVal = 0.5;
+    if (type === 'plus') {
+      this.thresholdValue = this.thresholdValue + baseVal;
+    } else if (type === 'minus' && this.thresholdValue !== 0) {
+      this.thresholdValue = this.thresholdValue - baseVal;
+    }
+    this.getStatsList(this.selectedStats.id, this.value * 5 , this.thresholdValue);
+  }
+  onLineValueChange(event: KeyboardEvent) {
+    let input = (event.target as HTMLInputElement).value;
+
+    input = input.replace(/[^0-9.]/g, '').replace(/^(\d*\.\d?).*$/, '$1');
+    if (!/^0(\.|$)/.test(input)) {
+      input = input.replace(/^0+/, '');
+    }
+    (event.target as HTMLInputElement).value = input;
+    const lineVal = parseFloat(input ?? '0');
+    // Emit debounced value
+    this.debounceSubject.next(lineVal);
   }
 
   private createChart() {
@@ -135,14 +176,14 @@ export class TeamGraphComponent implements OnInit {
             .attr(
               'd',
               `M ${x},${height - smallBarHeight + barRadius} 
-                 A ${barRadius},${barRadius} 0 0 1 ${x + barRadius},${
+               A ${barRadius},${barRadius} 0 0 1 ${x + barRadius},${
                 height - smallBarHeight
               } 
-                 H ${x + xScale.bandwidth() - barRadius} 
-                 A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
+               H ${x + xScale.bandwidth() - barRadius} 
+               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
                 height - smallBarHeight + barRadius
               } 
-                 V ${height} H ${x} Z`
+               V ${height} H ${x} Z`
             )
             .attr('fill', '#d3d3d3');
 
@@ -162,7 +203,7 @@ export class TeamGraphComponent implements OnInit {
         const colorAbove = d3
           .scaleOrdinal()
           .domain(allKeys)
-          .range([  '#9233DF','#D0A7F1','#BB81EB']);
+          .range(['#2ecc71', '#27ae60', '#1e8449']);
         const colorBelow = d3
           .scaleOrdinal()
           .domain(allKeys)
@@ -195,11 +236,11 @@ export class TeamGraphComponent implements OnInit {
             ? `M ${x},${y + barRadius} A ${barRadius},${barRadius} 0 0 1 ${
                 x + barRadius
               },${y} 
-                 H ${x + xScale.bandwidth() - barRadius} 
-                 A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
+               H ${x + xScale.bandwidth() - barRadius} 
+               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
                 y + barRadius
               } 
-                 V ${y + barHeight} H ${x} Z`
+               V ${y + barHeight} H ${x} Z`
             : `M ${x},${y} H ${x + xScale.bandwidth()} V ${
                 y + barHeight
               } H ${x} Z`;
@@ -260,14 +301,14 @@ export class TeamGraphComponent implements OnInit {
 
     // svg.append('g').call(d3.axisLeft(yScale));
 
-    // svg
-    //   .append('line')
-    //   .attr('x1', 0)
-    //   .attr('x2', width)
-    //   .attr('y1', yScale(lineValue))
-    //   .attr('y2', yScale(lineValue))
-    //   .attr('stroke', 'gray')
-    //   .attr('stroke-dasharray', '10,10')
-    //   .attr('stroke-width', 2);
+    svg
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', width)
+      .attr('y1', yScale(lineValue))
+      .attr('y2', yScale(lineValue))
+      .attr('stroke', 'gray')
+      .attr('stroke-dasharray', '10,10')
+      .attr('stroke-width', 2);
   }
 }

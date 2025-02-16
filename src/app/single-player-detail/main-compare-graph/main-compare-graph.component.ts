@@ -115,7 +115,6 @@ export class MainCompareGraphComponent implements OnInit {
       this.lineValueControl.setValue(this.lineVal);
       
     }
-    console.log(this.lineVal);
     
     const calStats = this.playerS.calculatePlayerAvgAndHR(
       this.lineVal,

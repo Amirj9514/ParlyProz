@@ -1,4 +1,4 @@
-@if(selectedStats){
+
 <div class="cardBg">
   <div class="detailHead">
     <div
@@ -6,7 +6,7 @@
     >
       <div>Team - Stats</div>
     </div>
-    </div>
+  </div>
   <div class="flex gap-3 statsList">
     <p-tabs [value]="selectedStats?.id" scrollable>
       <p-tablist>
@@ -35,13 +35,8 @@
     </div>
 
     <div class="card">
-      <p-chart
-        height="350px"
-        type="bar"
-        [data]="basicData"
-        [options]="basicOptions"
-      />
+      <div #TeamChart></div>
     </div>
   </div>
 </div>
-}
+

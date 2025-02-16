@@ -383,6 +383,8 @@ export class PlayerService {
           aboveBaseLineCount++;
         }
       });
+
+      
   
       const average = totalEntries > 0 ? totalValue / totalEntries : 0;
       const percentageAboveBaseLine =
