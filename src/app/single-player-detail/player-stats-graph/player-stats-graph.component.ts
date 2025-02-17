@@ -248,7 +248,7 @@ export class PlayerStatsGraphComponent {
 
           d3.select(this)
             .append('text')
-            .text(`${value} Pts`)
+            .text(`${value} ${key}`)
             .attr('x', x + xScale.bandwidth() / 2)
             .attr('y', y + barHeight / 2 + 5)
             .attr('text-anchor', 'middle')

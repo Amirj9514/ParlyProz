@@ -30,7 +30,7 @@ export class TeamService {
         if (typeof value === 'string') {
           value = parseFloat(value);
         }
-        values[k] = value || 0;
+        values[this.returnShortName(k)] = value || 0;
       });
   
       const date = new Date(player.match_datetime);  
@@ -102,6 +102,33 @@ export class TeamService {
 
   addArrays(arr1: any, arr2: any) {
     return arr1.map((num: number, index: number) => num + (arr2[index] || 0));
+  }
+
+  
+  returnShortName(name: string) {
+    switch (name) {
+      case 'minutes':
+        return 'MIN';
+      case 'points':
+        return 'Pts';
+      case 'turnovers':
+        return 'TO';
+      case 'steals':
+        return 'Stl';
+      case 'blocks':
+        return 'Blk';
+      case 'assists':
+        return 'Ast';
+      case 'rebounds':
+        return 'Reb';
+      case 'three_pointers_made':
+        return '3PM';
+      case 'three_pointers_attempted':
+        return '3PA';
+      default:
+        return '';
+        break;
+    }
   }
 
   // ----------------- Stats Of NBA -----------------
