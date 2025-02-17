@@ -280,12 +280,24 @@ export class PlayerStatsService {
         name: 'Points & Rebounds',
       },
       {
+        id: 'RA',
+        name: 'Rebounds & Assists',
+      },
+      {
+        id: 'PRA',
+        name: 'Points, Rebounds & Assists',
+      },
+      {
         id: 'BLKS',
         name: 'blocks',
       },
       {
         id: 'STLS',
         name: 'Steals',
+      },
+      {
+        id: 'BS',
+        name: 'Blocks & Steals',
       },
       {
         id: 'TO',
@@ -298,18 +310,6 @@ export class PlayerStatsService {
       {
         id: '3PA',
         name: '3-PT Attempts',
-      },
-      {
-        id: 'BS',
-        name: 'Blocks & Steals',
-      },
-      {
-        id: 'RA',
-        name: 'Rebounds & Assists',
-      },
-      {
-        id: 'PRA',
-        name: 'Points, Rebounds & Assists',
       },
     ];
   }
