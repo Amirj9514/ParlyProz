@@ -128,7 +128,7 @@ export class PlayerStatsGraphComponent {
     const margin = { top: 40, right: 20, bottom: 40, left: 20 };
     const barRadius = 8;
     const minBarHeight = 20;
-    const smallBarHeight = 8;
+    const smallBarHeight = 18;
     const lineValue = this.thresholdValue;
 
     d3.select(this.chartContainer.nativeElement).selectAll('*').remove();
@@ -214,7 +214,15 @@ export class PlayerStatsGraphComponent {
           if (value === 0) return;
 
           let barHeight = height - yScale(value);
-          if (barHeight < minBarHeight) barHeight = minBarHeight;
+
+// Ensure very small values are still visible
+if (barHeight < minBarHeight) {
+  const scaleFactor = 5; // Increase this for more height difference
+  barHeight = minBarHeight + value * scaleFactor;
+}
+
+// Cap bar height to prevent overflow
+barHeight = Math.min(barHeight, height * 0.8);
 
           const y = yOffset - barHeight;
           yOffset = y;
@@ -252,12 +260,12 @@ export class PlayerStatsGraphComponent {
 
           d3.select(this)
             .append('text')
-            .text(value)
+            .text(`${value} ${allKeys.length>1?key:''}` )
             .attr('x', x + xScale.bandwidth() / 2)
             .attr('y', y + barHeight / 2 + 5)
             .attr('text-anchor', 'middle')
             .attr('fill', 'white')
-            .attr('font-size', '12px')
+            .attr('font-size', '10px')
             .attr('font-weight', 'bold');
         });
 

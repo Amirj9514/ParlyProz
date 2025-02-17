@@ -1,3 +1,8 @@
+.primary-txt{
+    color: #8D0EDF;
+}
+
+
 .textClr-100{
     color: var(--p-surface-100);
 }
@@ -43,7 +48,7 @@
 
 
 .danger-td{
-    background-color: #FEE2E2;
+    background-color: rgb(252 165 165);
     color: #B91C1C;
     border-bottom: 2px solid #B91C1C !important;
     border-right: 2px solid white !important;
@@ -52,8 +57,10 @@
 }
 
 .success-td{
-    background-color: #D1FAE5;
-    color: #065F46;
+    background: #194A45;
+
+    // background-color: #D1FAE5;
+    color: #6ee7b7;
     border-bottom: 2px solid #6ee7b7 !important;
     border-right: 2px solid white !important;
     font-weight: 600;
@@ -61,7 +68,7 @@
 }
 
 .warning-td{
-    background-color: #F1F5F9;
+    background-color: rgb(209 213 219);
     color: #475569;
     border-bottom: 2px solid #475569 !important;
     border-right: 2px solid white !important;

@@ -5,12 +5,12 @@
   @if (!comingSoon) {
   <div class="projection-container">
     <form class="m-0 mt-2 p-0 grid" [formGroup]="filterForm">
-      <div class="col-7">
+      <div class="col-7 pb-1">
         <p-iconfield>
           <p-inputicon styleClass="pi pi-search" />
           <input
             id="search"
-            class="w-full"
+            class="w-full Tableinput"
             formControlName="search"
             type="text"
             pInputText
@@ -18,28 +18,30 @@
           />
         </p-iconfield>
       </div>
-      <div class="col-5 opacity-30">
-        <p-floatlabel class="w-full" variant="on">
+      <div class="col-5 pb-1 opacity-30">
+        <!-- <p-floatlabel class="w-full" variant="on"> -->
           <p-multiselect
             id="on_label"
             [disabled]="true"
             [options]="[]"
             optionLabel="name"
+            placeholder="Select App"
             filter
             [maxSelectedLabels]="3"
             styleClass="w-full"
           />
-          <label for="on_label">Select App</label>
-        </p-floatlabel>
+          <!-- <label for="on_label">Select App</label> -->
+        <!-- </p-floatlabel> -->
       </div>
 
-      <div class="col-5">
-        <p-floatlabel class="w-full" variant="on">
+      <div class="col-5 pt-1">
+        <!-- <p-floatlabel class="w-full" variant="on"> -->
           <p-select
             [options]="gameList"
             formControlName="match"
             class="w-full md:w-56"
             [showClear]="true"
+            placeholder="Select Game"
             
           >
             <ng-template #selectedItem let-selectedOption>
@@ -75,23 +77,24 @@
               </div>
             </ng-template>
           </p-select>
-          <label for="on_label">Select Game</label>
-        </p-floatlabel>
+       
+        <!-- </p-floatlabel> -->
       </div>
-      <div class="col-7">
-        <p-floatlabel class="w-full" variant="on">
+      <div class="col-7 pt-1">
+        <!-- <p-floatlabel class="w-full" variant="on"> -->
           <p-multiselect
             id="on_label"
             display="chip"
             [options]="statsList"
             formControlName="stats"
             optionLabel="name"
+            placeholder="Select Stats"
             filter
             [maxSelectedLabels]="statsList.length"
             styleClass="w-full"
           />
-          <label for="on_label">Select Stats</label>
-        </p-floatlabel>
+        
+        <!-- </p-floatlabel> -->
       </div>
     </form>
 

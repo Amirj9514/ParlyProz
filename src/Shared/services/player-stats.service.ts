@@ -19,7 +19,6 @@ export class PlayerStatsService {
   private playerStats: any[] = [];
   private lineStats: any[] = [];
 
-
   // ----------------- Line Stats -----------------
   //====================================================================
 
@@ -83,92 +82,125 @@ export class PlayerStatsService {
     return sortPlayers;
   }
 
-preparePlayerStatsGraphData(stats: string, numberOfPlayers: number, lineVal: number) {
-  const players = this.getPlayerData(numberOfPlayers);
-  const key = this.getStatsKeyByStatsId(stats);
-
-  const datasets = players.map((player: any) => {
-    const values: Record<string, number> = {};
-
-    key.keyArr.forEach((k: string) => {
-      let value = player[k];
-      if (typeof value === 'string') {
-        value = parseFloat(value);
-      }
-      values[k] = value || 0;
-    });
-
-    const date = new Date(player.date);
-    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-
-    return {
-      category: `${formattedDate}_${player?.opponent ?? ""}`,
-      values,
-    };
-  });
-
-  return datasets;
-}
-
-
-calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
-  const ranges = [5, 10, 15, 20];
-  const results: any = {};
-
-  ranges.forEach((range) => {
-    let lineVal = 0;
-    const players = this.playerStats.slice(0, range);
-
-    if (!baseLine) {
-      const lines = this.getStatLineValuesByName(stats);
-      lineVal = lines.length ? lines[0] : 0;
-    } else {
-      lineVal = baseLine;
-    }
-
-    let totalArry: any[] = [];
+  preparePlayerStatsGraphData(
+    stats: string,
+    numberOfPlayers: number,
+    lineVal: number
+  ) {
+    const players = this.getPlayerData(numberOfPlayers);
     const key = this.getStatsKeyByStatsId(stats);
 
-    key.keyArr.forEach((item) => {
-      let prevArry: any[] = [];
-      players.forEach((player: any) => {
-        const value = player[item] ? parseFloat(player[item]) : 0;
-        prevArry.push(value);
+    const datasets = players.map((player: any) => {
+      const values: Record<string, number> = {};
+
+      key.keyArr.forEach((k: string) => {
+        let value = player[k];
+        if (typeof value === 'string') {
+          value = parseFloat(value);
+        }
+        values[this.returnShortName(k)] = value || 0;
       });
-      totalArry.push(prevArry);
+
+      const date = new Date(player.date);
+      const formattedDate = `${String(date.getMonth() + 1).padStart(
+        2,
+        '0'
+      )}-${String(date.getDate()).padStart(2, '0')}`;
+
+      return {
+        category: `${formattedDate}_${player?.opponent ?? ''}`,
+        values,
+      };
     });
 
-    const combinedArry = totalArry.reduce((acc, arr) => this.addArrays(acc, arr));
+    return datasets;
+  }
 
-    let aboveBaseLineCount = 0;
-    let totalValue = 0;
-    let totalEntries = 0;
+  calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
+    const ranges = [5, 10, 15, 20];
+    const results: any = {};
 
-    combinedArry.forEach((value:any) => {
-      totalValue += value;
-      totalEntries++;
-      if (value >= lineVal) {
-        aboveBaseLineCount++;
+    ranges.forEach((range) => {
+      let lineVal = 0;
+      const players = this.playerStats.slice(0, range);
+
+      if (!baseLine) {
+        const lines = this.getStatLineValuesByName(stats);
+        lineVal = lines.length ? lines[0] : 0;
+      } else {
+        lineVal = baseLine;
       }
+
+      let totalArry: any[] = [];
+      const key = this.getStatsKeyByStatsId(stats);
+
+      key.keyArr.forEach((item) => {
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player[item] ? parseFloat(player[item]) : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+      });
+
+      const combinedArry = totalArry.reduce((acc, arr) =>
+        this.addArrays(acc, arr)
+      );
+
+      let aboveBaseLineCount = 0;
+      let totalValue = 0;
+      let totalEntries = 0;
+
+      combinedArry.forEach((value: any) => {
+        totalValue += value;
+        totalEntries++;
+        if (value >= lineVal) {
+          aboveBaseLineCount++;
+        }
+      });
+      const average = totalEntries > 0 ? totalValue / totalEntries : 0;
+      const percentageAboveBaseLine =
+        totalEntries > 0 ? (aboveBaseLineCount / totalEntries) * 100 : 0;
+
+      results[`L${range}`] = {
+        average: parseFloat(average.toFixed(1)),
+        percentageAboveBaseLine: parseFloat(percentageAboveBaseLine.toFixed(1)),
+        aboveBaseLineCount,
+      };
     });
-    const average = totalEntries > 0 ? totalValue / totalEntries : 0;
-    const percentageAboveBaseLine =
-      totalEntries > 0 ? (aboveBaseLineCount / totalEntries) * 100 : 0;
 
-    results[`L${range}`] = {
-      average: parseFloat(average.toFixed(1)),
-      percentageAboveBaseLine: parseFloat(percentageAboveBaseLine.toFixed(1)),
-      aboveBaseLineCount,
-    };
-  });
+    return results;
+  }
 
-  return results;
-}
+  addArrays(arr1: any, arr2: any) {
+    return arr1.map((num: number, index: number) => num + (arr2[index] || 0));
+  }
 
-addArrays(arr1: any, arr2: any) {
-  return arr1.map((num: number, index: number) => num + (arr2[index] || 0));
-}
-
+  returnShortName(name: string) {
+    switch (name) {
+      case 'minutes':
+        return 'MIN';
+      case 'points':
+        return 'Pts';
+      case 'turnovers':
+        return 'TO';
+      case 'steals':
+        return 'Stl';
+      case 'blocks':
+        return 'Blk';
+      case 'assists':
+        return 'Ast';
+      case 'rebounds':
+        return 'Reb';
+      case 'three_pointers_made':
+        return '3PM';
+      case 'three_pointers_attempted':
+        return '3PA';
+      default:
+        return '';
+        break;
+    }
+  }
 
   // ----------------- End of Player Stats -----------------
   //====================================================================

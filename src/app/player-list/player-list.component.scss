@@ -1,15 +1,15 @@
 .playerList-container {
-  margin-top: 20px;
-  height: calc(100vh - 115px);
-  overflow: hidden;
+
+  height: calc(100vh - 170px);
+  overflow: auto;
 
   .player-list {
-    height: 100%;
+
     overflow: auto;
   }
 
   .player-card {
-    background-color: #ffffff;
+    background-color: #183240;
     cursor: pointer;
     border-radius: 10px;
     box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px,

@@ -1,14 +1,30 @@
 @if (!seletedPlayer) {
-<div class="w-full">
-  <app-header (onGameChange)="onGameChange($event)"></app-header>
+<div class="w-full ">
+   <app-header (onGameChange)="onGameChange($event)"></app-header>
+  <div class="col-4 mt-2 mb-3">
+    <p-iconfield >
+      <p-inputicon styleClass="pi pi-search" />
+      <input
+        id="search"
+        class="w-full py-2"
+        type="text"
+        [formControl]="searchControl"
+        [disabled]="isLoading"
+        [ngClass]="{ 'disable': isLoading }"
+        pInputText
+        placeholder="Search player by name..."
+      />
+    </p-iconfield>
+  </div>
+ 
 
   @if (!showComingSoon) {
-  <div class="playerList-container">
+  <div class="playerList-container" (scroll)="onScroll()">
     @if(!isLoading){
-    <div class="grid player-list m-0 p-0" (scroll)="onScroll()" >
+    <div class="grid player-list m-0 p-0"  >
       @for (player of playerList; track $index) {
       <div class="col-12 md:col-6 lg:col-4">
-        <div class="player-card h-full p-2" (click)="seletedPlayer = player?.id || 0">
+        <div class="player-card  p-2" (click)="seletedPlayer = player?.id || 0">
           <div class="flex gap-2 align-items-center">
             <div appJersey [jerseyNumber]="player?.jersey_number"></div>
             <div>

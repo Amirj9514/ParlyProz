@@ -10,7 +10,8 @@ $primary-color: #9233DF;
 $surface-100:#e7e7e8;
 
 body{
-    background-color:rgba(0, 0, 0, 0.1);
+    // background-color:rgba(0, 0, 0, 0.1);
+    background-color: #000C2C;
     font-family: 'Montserrat', sans-serif !important;
 }
 
@@ -28,8 +29,8 @@ body{
 
 
 .p-datatable-thead > tr > th{
-    background-color: #F3F3F3 !important;
-    border-top: 1px solid #e2e8f0 !important;
+    // background-color: #F3F3F3 !important;
+    // border-top: 1px solid #e2e8f0 !important;
     padding: 8px !important;
 }
 .p-datatable-tbody > tr > td{
@@ -69,4 +70,15 @@ body{
 
   .p-button-outlined{
     border: 1px solid silver !important;
+  }
+
+
+
+  .disable{
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  .p-paginator{
+    background: #0C1920 !important;
   }

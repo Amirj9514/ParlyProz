@@ -12,6 +12,12 @@ import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SinglePlayerDetailComponent } from '../single-player-detail/single-player-detail.component';
 import { ComingSoonComponent } from '../projections/coming-soon/coming-soon.component';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputIconModule } from 'primeng/inputicon';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-player-list',
@@ -23,6 +29,11 @@ import { ComingSoonComponent } from '../projections/coming-soon/coming-soon.comp
     SkeletonModule,
     SinglePlayerDetailComponent,
     ComingSoonComponent,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss',
@@ -37,12 +48,20 @@ export class PlayerListComponent implements OnInit {
   page = 1;
   limit = 60;
   totalPages = 0;
+  searchControl = new FormControl('');
 
   seletedPlayer: number = 0;
 
   constructor(private sharedS: SharedService) {}
   ngOnInit(): void {
     this.getPlayersList(false);
+    this.searchControl.valueChanges.pipe(debounceTime(1000)).subscribe((value:any) => {
+      if (value.trim()) {
+        this.getPlayersList(false);
+      }else{
+        this.getPlayersList(false);
+      }
+    });
   }
 
   onGameChange(event: any) {
@@ -56,37 +75,37 @@ export class PlayerListComponent implements OnInit {
     this.showComingSoon = true;
   }
 
-  getPlayersList(onScroll:boolean) {
-  
-    if(onScroll){
-      if(this.page > this.totalPages) return;
+  getPlayersList(onScroll: boolean) {
+    if (onScroll) {
+      if (this.page > this.totalPages) return;
       this.page++;
       this.playerListLoader = true;
-    }else{
+    } else {
       this.isLoading = true;
+      this.page = 1;
     }
     this.sharedS
       .sendGetRequest(
-        `${this.selectedGame}/players/list?limit=${this.limit}&offset=${this.page}`
+        `${this.selectedGame}/players/list?limit=${this.limit}&offset=${this.page}&name=${this.searchControl.value}`
       )
       .subscribe({
         next: (res: any) => {
-          this.playerListLoader = false
+          this.playerListLoader = false;
           this.isLoading = false;
           if (res.status === 200) {
             const players = res.body?.players ?? [];
-            if(onScroll) {
+            if (onScroll) {
               this.page++;
-              this.playerList = [...this.playerList,...players ]
+              this.playerList = [...this.playerList, ...players];
               this.totalPages = res.body?.page_info?.total_pages ?? 0;
-            }else{
+            } else {
               this.playerList = players ?? [];
               this.totalPages = res.body?.page_info?.total_pages ?? 0;
             }
           }
         },
         error: (error) => {
-          this.playerListLoader = false
+          this.playerListLoader = false;
           this.isLoading = false;
         },
       });
