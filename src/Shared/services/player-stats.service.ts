@@ -101,14 +101,12 @@ export class PlayerStatsService {
         values[this.returnShortName(k)] = value || 0;
       });
 
-      const date = new Date(player.date);
-      const formattedDate = `${String(date.getMonth() + 1).padStart(
-        2,
-        '0'
-      )}-${String(date.getDate()).padStart(2, '0')}`;
+      const date = new Date(player.match_datetime);  
+      const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' })); 
+      const formattedDate = `${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
 
       return {
-        category: `${formattedDate}_${player?.opponent ?? ''}`,
+        category: `${formattedDate}_${player?.opponent ?? ''}_${player?.match_datetime ?? ''}`,
         values,
       };
     });

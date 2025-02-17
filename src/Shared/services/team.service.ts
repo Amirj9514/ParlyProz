@@ -22,7 +22,6 @@ export class TeamService {
   preparePlayerStatsGraphData(stats: string, numberOfPlayers: number, lineVal: number) {
     const players = this.getTeamData(numberOfPlayers);
     const key = this.getStatsKeyByStatsId(stats);
-  
     const datasets = players.map((player: any) => {
       const values: Record<string, number> = {};
   
@@ -34,11 +33,12 @@ export class TeamService {
         values[k] = value || 0;
       });
   
-      const date = new Date(player.date);
-      const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  
+      const date = new Date(player.match_datetime);  
+      const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' })); 
+      const formattedDate = `${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
+
       return {
-        category: `${formattedDate}_${player?.opponent_tricode ?? ""}`,
+        category: `${formattedDate}_${player?.opponent_tricode ?? ''}_${player?.match_datetime ?? ''}`,
         values,
       };
     });
