@@ -142,7 +142,16 @@ export class PlayerStatsGraphComponent {
     const lineValue = this.thresholdValue;
 
     d3.select(this.chartContainer.nativeElement).selectAll('*').remove();
-
+    const tooltip = d3
+      .select(this.chartContainer.nativeElement)
+      .append('div')
+      .style('position', 'absolute')
+      // .style('background', 'white')
+      .style('box-shadow', '0px 4px 8px rgba(0, 0, 0, 0.2)')
+      .style('border-radius', '8px')
+      .style('font-size', '12px')
+      .style('display', 'none')
+      .style('pointer-events', 'none');
     const svg = d3
       .select(this.chartContainer.nativeElement)
       .append('svg')
@@ -192,6 +201,7 @@ export class PlayerStatsGraphComponent {
               } 
                V ${height} H ${x} Z`
             )
+
             .attr('fill', '#e74c3c');
 
           d3.select(this)
@@ -216,35 +226,68 @@ export class PlayerStatsGraphComponent {
           .range(['#e74c3c', '#c0392b', '#922b21']);
 
         allKeys.forEach((key, index) => {
+       
           const value = d.values[key];
           if (value === 0) return;
 
           let barHeight = (value / maxYValue) * height;
-          barHeight = Math.max(barHeight, 20); // Ensure minimum visibility
+          barHeight = Math.max(barHeight, 10); // Ensure minimum visibility
 
           const y = yOffset - barHeight;
           yOffset = y;
 
-          const isLastStack = index === allKeys.length - 1; // Check if this is the topmost stack
+          const nonZeroStacks = allKeys.filter((key) => d.values[key] > 0);
+          const isLastStack = key === nonZeroStacks[nonZeroStacks.length - 1]; // Check if this is the topmost stack
           const barColor =
             totalValue >= lineValue ? colorAbove(key) : colorBelow(key);
 
-          const barPath = isLastStack
+            const barPath = isLastStack
             ? `M ${x},${y + barRadius} 
                A ${barRadius},${barRadius} 0 0 1 ${x + barRadius},${y} 
                H ${x + xScale.bandwidth() - barRadius} 
-               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
-                y + barRadius
-              } 
+               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${y + barRadius} 
                V ${y + barHeight} H ${x} Z`
-            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${
-                y + barHeight
-              } H ${x} Z`;
+            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${y + barHeight} H ${x} Z`;
 
           d3.select(this)
             .append('path')
             .attr('d', barPath)
-            .attr('fill', barColor as string);
+            .attr('fill', barColor as string)
+            .on('mouseover', function (event) {
+
+              const statsHtml = d.data?.value
+              .map(
+                (stat:any) => `
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-size: 12px; opacity: 0.8;">${stat?.name || 'N/A'}</span>
+                  <span style="font-size: 12px; font-weight: bold;">${stat?.value || 'N/A'}</span>
+                </div>`
+              )
+              .join('');
+              const tooltipHtml = `
+              <div class="tooltipBody">
+                <div class="flex align-items-center" >
+                  📅 ${d.data?.date || 'N/A'} &nbsp; @ ${d.data?.opponent || 'N/A'}
+                </div>
+                
+                <hr style="border: 0.5px solid rgba(255, 255, 255, 0.1); margin: 8px 0;">
+                ${statsHtml}
+               
+              </div>`;
+              tooltip
+                .html(tooltipHtml)
+                .style('display', 'block')
+                .style('left', `${event.pageX - 105}px`)
+                .style('top', `${event.pageY - 10}px`);
+            })
+            .on('mousemove', function (event) {
+              tooltip
+                .style('left', `${event.pageX - 105}px`)
+                .style('top', `${event.pageY - 10}px`);
+            })
+            .on('mouseleave', function () {
+              tooltip.style('display', 'none');
+            });
 
           d3.select(this)
             .append('text')
@@ -307,5 +350,4 @@ export class PlayerStatsGraphComponent {
       .attr('stroke-dasharray', '10,10')
       .attr('stroke-width', 2);
   }
-
 }

@@ -82,37 +82,44 @@ export class PlayerStatsService {
     return sortPlayers;
   }
 
-  preparePlayerStatsGraphData(
-    stats: string,
-    numberOfPlayers: number,
-    lineVal: number
-  ) {
+  preparePlayerStatsGraphData(stats: string, numberOfPlayers: number, lineVal: number) {
     const players = this.getPlayerData(numberOfPlayers);
     const key = this.getStatsKeyByStatsId(stats);
-
+  
     const datasets = players.map((player: any) => {
+      const date = new Date(player.match_datetime);
+      const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+      const formattedDate = `${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
       const values: Record<string, number> = {};
-
+      const valueArray: any[] = [];
+  
       key.keyArr.forEach((k: string) => {
         let value = player[k];
         if (typeof value === 'string') {
           value = parseFloat(value);
         }
-        values[this.returnShortName(k)] = value || 0;
+        const shortName = this.returnShortName(k);
+        values[shortName] = value || 0;
+        valueArray.push({ name:k, value: value || 0 });
       });
-
-      const date = new Date(player.match_datetime);  
-      const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' })); 
-      const formattedDate = `${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
-
+  
       return {
         category: `${formattedDate}_${player?.opponent ?? ''}_${player?.match_datetime ?? ''}`,
         values,
+        data: {
+          date: formattedDate,
+          opponent: player.opponent,
+          player: player.name,
+          value: valueArray,
+        }
       };
     });
 
+    console.log(datasets);
+    
     return datasets;
   }
+  
 
   calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
     const ranges = [5, 10, 15, 20];
