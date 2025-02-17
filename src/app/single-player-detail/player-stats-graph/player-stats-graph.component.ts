@@ -231,7 +231,7 @@ export class PlayerStatsGraphComponent {
           if (value === 0) return;
 
           let barHeight = (value / maxYValue) * height;
-          barHeight = Math.max(barHeight, 10); // Ensure minimum visibility
+          // barHeight = Math.max(barHeight, 10); // Ensure minimum visibility
 
           const y = yOffset - barHeight;
           yOffset = y;
@@ -296,7 +296,7 @@ export class PlayerStatsGraphComponent {
             .attr('y', y + barHeight / 2 + 5)
             .attr('text-anchor', 'middle')
             .attr('fill', 'white')
-            .attr('font-size', '10px')
+            .attr('font-size', '8px')
             .attr('font-weight', 'bold');
         });
 
