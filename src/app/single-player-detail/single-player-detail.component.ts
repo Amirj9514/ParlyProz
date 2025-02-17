@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SharedService } from '../../Shared/services/shared.service';
 import { DetailsCardComponent } from './details-card/details-card.component';
 import { PlayerService } from '../../Shared/services/player.service';
-import { MainCompareGraphComponent } from '../single-player-detail/main-compare-graph/main-compare-graph.component';
 import { TableComponent } from '../single-player-detail/table/table.component';
 import { ButtonModule } from 'primeng/button';
 import { forkJoin } from 'rxjs';
@@ -10,7 +9,6 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TeamService } from '../../Shared/services/team.service';
 import { TeamGraphComponent } from './team-graph/team-graph.component';
 import { PlayerStatsService } from '../../Shared/services/player-stats.service';
-import { AuthComponent } from "../auth/auth.component";
 import { PlayerStatsGraphComponent } from "./player-stats-graph/player-stats-graph.component";
 
 @Component({
@@ -18,12 +16,11 @@ import { PlayerStatsGraphComponent } from "./player-stats-graph/player-stats-gra
   standalone: true,
   imports: [
     DetailsCardComponent,
-    MainCompareGraphComponent,
     TableComponent,
     ButtonModule,
     SkeletonModule,
     TeamGraphComponent,
-    AuthComponent,
+
     PlayerStatsGraphComponent
 ],
   templateUrl: './single-player-detail.component.html',
