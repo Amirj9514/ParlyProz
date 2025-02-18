@@ -1,14 +1,31 @@
 .cardBg{
     border-radius: 10px;
-    background-color: #183240;
+    // background: linear-gradient(to bottom, rgba(220, 38, 38, 0) 0%, rgba(220, 38, 38, 0.3));
+    // background-color: #183240;
     overflow: hidden;
+    position: relative;
+    border: 2px solid #183240 ;
 
     .statsList{
         overflow: auto;
         background-color: #183240;
     }
+
+   
 }
 
+
+// .lineINput{
+//     border: 1px solid #cbd5e1;;
+// }
+
+.successGrd{
+    background: linear-gradient(to bottom, rgba(5, 150, 105, 0) 0%, rgba(5, 150, 105, 0.9) 60%);
+}
+
+.dangerGrd{
+    background: linear-gradient(to bottom, rgba(220, 38, 38, 0) 0%, rgba(220, 38, 38, 0.6));
+}
 
 .detailHead{
     background-color: #183240;
@@ -16,11 +33,3 @@
     border-bottom: 1px solid #cbd5e1; 
 }
 
-
-.successGrd{
-    background: linear-gradient(to bottom, rgba(5, 150, 105, 0) 0%, rgba(5, 150, 105, 0.4) 60%);
-}
-
-.dangerGrd{
-    background: linear-gradient(to bottom, rgba(220, 38, 38, 0) 0%, rgba(220, 38, 38, 0.4));
-}

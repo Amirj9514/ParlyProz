@@ -6,12 +6,12 @@
 @import './styles/components/input';
 
 
-$primary-color: #9233DF;
+$primary-color: rgb(146, 51, 223);
 $surface-100:#e7e7e8;
 
 body{
     // background-color:rgba(0, 0, 0, 0.1);
-    background-color: #000C2C;
+  background-image: radial-gradient(circle at 0% 50%, #8D0EDF 0%,  rgb(0, 0, 0) 100%);
     font-family: 'Montserrat', sans-serif !important;
 }
 
