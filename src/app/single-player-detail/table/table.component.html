@@ -13,6 +13,7 @@
     <ng-template #header>
       <tr>
         <th>Opponent</th>
+        <th>Date</th>
         <th>Pts</th>
         <th>Rebs</th>
         <th>Asts</th>
@@ -26,6 +27,7 @@
     <ng-template #body let-stats>
       <tr>
         <td>{{stats?.opponent}}</td>
+        <td>{{stats?.match_datetime |date:'MM-dd-yyyy'}}</td>
         <td>{{stats?.points}}</td>
         <td>{{stats?.rebounds}}</td>
 

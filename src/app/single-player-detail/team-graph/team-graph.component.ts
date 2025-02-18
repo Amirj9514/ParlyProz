@@ -328,8 +328,6 @@ export class TeamGraphComponent implements OnInit {
   }
 
    private createChartPM(): void {
-      // Define the width, height, and margin inside the createChart function
-      
   
       const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
       const width = containerWidth - 40;
@@ -353,9 +351,6 @@ export class TeamGraphComponent implements OnInit {
         .style('font-size', '12px')
         .style('display', 'none')
         .style('pointer-events', 'none');
-    
-        console.log(this.graphData);
-        
       // Transforming data to extract relevant fields
       const chartData = this.graphData.map((d) => ({
         game: d.category, // Use date as the game label
@@ -433,7 +428,7 @@ export class TeamGraphComponent implements OnInit {
             .attr('y', yScale(d.PA))
             .attr('width', xScale.bandwidth())
             .attr('height', yScale(0) - yScale(d.PA))
-            .attr('fill', '#253F40')
+            .attr('fill', '#80808033')
             .attr('rx', 8)
             .attr('ry', 8);
             

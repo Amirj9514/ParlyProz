@@ -74,12 +74,13 @@ export class PlayerStatsService {
     this.playerStats = data;
   }
 
-  getPlayerData(numberOfPlayers: number) {
+  getPlayerData(numberOfPlayers: number ,order: 'asc' | 'desc' = 'asc') {
+    
     const players = this.playerStats.slice(0, numberOfPlayers);
-    const sortPlayers = players.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-    return sortPlayers;
+    return players.sort((a, b) => {
+      const diff = new Date(a.match_datetime).getTime() - new Date(b.match_datetime).getTime();
+      return order === 'asc' ? diff : -diff;
+    });
   }
 
   preparePlayerStatsGraphData(stats: string, numberOfPlayers: number, lineVal: number) {

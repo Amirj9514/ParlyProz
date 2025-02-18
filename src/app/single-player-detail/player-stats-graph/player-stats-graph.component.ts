@@ -22,6 +22,7 @@ import { debounceTime, Subject } from 'rxjs';
     InputGroupModule,
     InputGroupAddonModule,
     ButtonModule,
+    
   ],
   templateUrl: './player-stats-graph.component.html',
   styleUrl: './player-stats-graph.component.scss',
@@ -468,7 +469,7 @@ export class PlayerStatsGraphComponent {
           .attr('y', yScale(d.PA))
           .attr('width', xScale.bandwidth())
           .attr('height', yScale(0) - yScale(d.PA))
-          .attr('fill', '#253F40')
+          .attr('fill', '#80808033')
           .attr('rx', 8)
           .attr('ry', 8);
           

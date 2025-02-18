@@ -45,11 +45,11 @@ export class TeamService {
       });
   
       return {
-        category: `${formattedDate}_${player?.opponent ?? ''}_${player?.match_datetime ?? ''}`,
+        category: `${formattedDate}_${player?.opponent_tricode ?? ''}_${player?.match_datetime ?? ''}`,
         values,
         data: {
           date: formattedDate,
-          opponent: player.opponent,
+          opponent: player.opponent_tricode,
           player: player.name,
           value: valueArray,
         }
