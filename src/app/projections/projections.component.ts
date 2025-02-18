@@ -92,15 +92,21 @@ export class ProjectionsComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.statsLoader = false;
-          this.stopFormTrigger = false;
+          
           if (res.status === 200) {
             this.totalRecords = res.body?.page_info?.total_records ?? 120;
             this.projectionData = res.body.stats ?? [];
           }
+
+          setTimeout(() => {
+            this.stopFormTrigger = false;
+          }, 0);
         },
         error: (err: any) => {
           this.statsLoader = false;
-          this.stopFormTrigger = false;
+          setTimeout(() => {
+            this.stopFormTrigger = false;
+          }, 0);
           this.projectionData = [];
         },
       });
@@ -119,6 +125,7 @@ export class ProjectionsComponent implements OnInit {
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
     const fixture_slug = formValue.match?.fixture_slug ?? '';
+
     this.getProjections(stats, search, fixture_slug);
   }
 

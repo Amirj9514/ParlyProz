@@ -1,5 +1,5 @@
-@if (!showPlayerDetail) {
-<div class="w-full">
+
+<div [ngClass]="showPlayerDetail?'hidden':'block'" class="w-full">
   <app-header (onGameChange)="onGameChange($event)"></app-header>
 
   @if (!comingSoon) {
@@ -112,9 +112,10 @@
   <app-coming-soon></app-coming-soon>
   }
 </div>
-}@else {
+@if (showPlayerDetail) {
 <app-single-player-detail
   [selectedPlayerId]="selectedPlayer"
+  
   (onClose)="showPlayerDetail = false; selectedPlayer = 0"
 ></app-single-player-detail>
 }

@@ -43,7 +43,7 @@ export class ProjectionTableComponent implements OnChanges {
   rows: number = 50;
   page: number = 1;
   pageCount: number = 0;
-  sortCol: { field: string|null; order: number } = { field: null, order: -1 };
+  sortCol: { field: string | null; order: number } = { field: null, order: -1 };
 
   tableColumns: any[] = [
     {
@@ -100,23 +100,23 @@ export class ProjectionTableComponent implements OnChanges {
 
   constructor(private sharedS: SharedService) {}
   ngOnChanges(changes: SimpleChanges): void {
-    setTimeout(() => {
-      this.projectionTable.reset();
-     
-        this.projectionTable.sortField = 'average_last_10_line_diff';
-        this.projectionTable.sortOrder = -1;
-    
-      this.first = 0;
-    }, 0);
     if (changes['projectionLoader']) {
       if (this.projectionLoader && !this.projectionData.length) {
-        this.projectionData = Array.from({ length: 14 }).map(
+        this.projectionData = Array.from({ length: 80 }).map(
           (_, i) => `Item #${i}`
         );
       } else {
         this.projectionData = this.projectionData;
       }
     }
+
+    setTimeout(() => {
+      this.projectionTable.reset();
+      this.projectionTable.sortField = 'average_last_10_line_diff';
+      this.projectionTable.sortOrder = -1;
+
+      this.first = 0;
+    }, 0);
   }
 
   returnSeverity(value: any, type: string, line?: any) {
@@ -190,16 +190,14 @@ export class ProjectionTableComponent implements OnChanges {
 
   getProjections(stats: string, search: string) {
     this.projectionLoader = true;
-    const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';    
+    const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';
     this.sharedS
       .sendGetRequest(
-        `${
-          this.activeGameApiendpoint
-        }/dashboard/stats?name=${search ?? ''}&stat_fields=${stats ?? ''}&limit=${
-          this.rows
-        }&offset=${this.page}&order_field=${
-          order_field
-        }&order=${this.sortCol.order}`
+        `${this.activeGameApiendpoint}/dashboard/stats?name=${
+          search ?? ''
+        }&stat_fields=${stats ?? ''}&limit=${this.rows}&offset=${
+          this.page
+        }&order_field=${order_field}&order=${this.sortCol.order}`
       )
       .subscribe({
         next: (res: any) => {
@@ -207,8 +205,6 @@ export class ProjectionTableComponent implements OnChanges {
           if (res.status == 200) {
             this.totalRecords = res.body?.page_info?.total_records ?? 120;
             this.projectionData = res.body.stats ?? [];
-
-         
           }
         },
         error: (err: any) => {
