@@ -1,4 +1,4 @@
-<div class="cardBg">
+<div class="cardBg" [ngClass]="activeColor === 'success'?'successGrd':'dangerGrd'">
   <div class="flex gap-3 statsList">
     <p-tabs [value]="selectedStats?.id" scrollable>
       <p-tablist>
