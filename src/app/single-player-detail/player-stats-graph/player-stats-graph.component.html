@@ -1,4 +1,4 @@
-<div class="cardBg" [ngClass]="activeColor === 'success'?'successGrd':'dangerGrd'">
+<div class="cardBg" >
   <div class="flex gap-3 statsList">
     <p-tabs [value]="selectedStats?.id" scrollable>
       <p-tablist>
@@ -11,7 +11,7 @@
     </p-tabs>
   </div>
 
-  <div class="p-2">
+  <div class="p-2" [ngClass]="activeColor === 'success'?'successGrd':'dangerGrd'">
     <div class="flex w-full justify-content-between my-1">
         <div>
             <div class="text-xl font-semibold">{{ selectedStats?.name ?? "" }}</div>
