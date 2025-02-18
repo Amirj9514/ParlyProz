@@ -222,9 +222,9 @@ export class PlayerStatsGraphComponent {
             .append('text')
             .text('0')
             .attr('x', x + xScale.bandwidth() / 2)
-            .attr('y', height - 9)
+            .attr('y', height - 25)
             .attr('text-anchor', 'middle')
-            .attr('fill', 'black')
+            .attr('fill', 'white')
             .attr('font-size', '12px')
             .attr('font-weight', 'bold');
           return;
@@ -311,7 +311,8 @@ export class PlayerStatsGraphComponent {
             .attr('text-anchor', 'middle')
             .attr('fill', 'white')
             .attr('font-size', '8px')
-            .attr('font-weight', 'bold');
+            .attr('font-weight', 'bold')
+            .style('display', allKeys.length > 1 ? 'block' : 'none');
         });
 
         d3.select(this)
@@ -320,10 +321,10 @@ export class PlayerStatsGraphComponent {
           .attr('x', x + xScale.bandwidth() / 2)
           .attr('y', yOffset - 10)
           .attr('text-anchor', 'middle')
-          .attr('fill', 'black')
+          .attr('fill', 'white')
           .attr('font-size', '12px')
           .attr('font-weight', 'bold')
-          .style('display', allKeys.length > 1 ? 'block' : 'none');
+          // .style('display', allKeys.length > 1 ? 'block' : 'none');
       });
 
     svg
@@ -478,7 +479,7 @@ export class PlayerStatsGraphComponent {
         group
           .append('rect')
           .attr('x', 0)
-          .attr('y', d.PM === 0 ? yScale(0.5) : yScale(d.PM))
+          .attr('y', d.PM === 0 ? yScale(0.5) : yScale(d.PM ))
           .attr('width', xScale.bandwidth())
           .attr(
             'height',
@@ -492,17 +493,19 @@ export class PlayerStatsGraphComponent {
         group
           .append('text')
           .attr('x', xScale.bandwidth() / 2)
-          .attr('y', yScale(d.PA) + 15)
+          .attr('y', yScale(d.PA) + 25)
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
+          .style('font-weight', 'bold')
           .text(d.PA);
   
         group
           .append('text')
           .attr('x', xScale.bandwidth() / 2)
-          .attr('y', d.PM === 0 ? yScale(0.5) + 15 : yScale(d.PM) + 15)
+          .attr('y', d.PM === 0 ? yScale(0.5) + 25 : yScale(d.PM) + 25)
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
+          .style('font-weight', 'bold')
           .text(d.PM);
       });
   

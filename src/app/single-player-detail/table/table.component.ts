@@ -20,10 +20,12 @@ export class TableComponent implements OnInit {
 
   getPlayerList() {
     this.players =  this.playerS.getPlayerData(15 , 'desc');
+    console.log(this.players);
+    
   }
 
   roundValue(value: number) {
-    return (value).toFixed(1);
+    return (value);
   }
 
 }

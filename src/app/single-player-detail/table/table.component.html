@@ -21,7 +21,12 @@
         <th>PR</th>
         <th>RA</th>
         <th>PRA</th>
+        <th>BLKS</th>
+        <th>STLS</th>
+        <th>BS</th>
         <th>TO</th>
+        <th>3PM</th>
+        <th>3PA</th>
       </tr>
     </ng-template>
     <ng-template #body let-stats>
@@ -41,8 +46,16 @@
         </td>
 
         <td> {{roundValue(stats?.assists + stats?.rebounds + stats?.points)}}</td>
+        <td>{{stats?.blocks}}</td>
+        <td>{{stats?.steals}}</td>
+        <td>{{roundValue(stats?.blocks + stats?.steals)}}</td>
+
 
         <td>{{stats?.turnovers}}</td>
+        <td>{{stats?.three_pointers_made}}</td>
+
+        <td>{{stats?.three_pointers_attempted}}</td>
+
       </tr>
     </ng-template>
   </p-table>
