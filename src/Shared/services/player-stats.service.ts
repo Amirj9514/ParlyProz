@@ -100,7 +100,12 @@ export class PlayerStatsService {
         }
         const shortName = this.returnShortName(k);
         values[shortName] = value || 0;
-        valueArray.push({ name:k, value: value || 0 });
+        if(shortName === '3PM' || shortName === '3PA') {
+          valueArray.push({ name:shortName, value: value || 0 });
+        }else{
+          valueArray.push({ name:k, value: value || 0 });
+        }
+        
       });
   
       return {
@@ -114,9 +119,6 @@ export class PlayerStatsService {
         }
       };
     });
-
-    console.log(datasets);
-    
     return datasets;
   }
   
@@ -137,16 +139,26 @@ export class PlayerStatsService {
       }
 
       let totalArry: any[] = [];
-      const key = this.getStatsKeyByStatsId(stats);
 
-      key.keyArr.forEach((item) => {
+      if(stats !== '3PM'){
+        const key = this.getStatsKeyByStatsId(stats);
+        key.keyArr.forEach((item) => {
+          let prevArry: any[] = [];
+          players.forEach((player: any) => {
+            const value = player[item] ? parseFloat(player[item]) : 0;
+            prevArry.push(value);
+          });
+          totalArry.push(prevArry);
+        });
+      }else{
         let prevArry: any[] = [];
         players.forEach((player: any) => {
-          const value = player[item] ? parseFloat(player[item]) : 0;
+          const value = player['three_pointers_made'] ? parseFloat(player['three_pointers_made']) : 0;
           prevArry.push(value);
         });
         totalArry.push(prevArry);
-      });
+      }
+      
 
       const combinedArry = totalArry.reduce((acc, arr) =>
         this.addArrays(acc, arr)

@@ -23,26 +23,38 @@ export class TeamService {
     const players = this.getTeamData(numberOfPlayers);
     const key = this.getStatsKeyByStatsId(stats);
     const datasets = players.map((player: any) => {
+      const date = new Date(player.match_datetime);
+      const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+      const formattedDate = `${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
       const values: Record<string, number> = {};
+      const valueArray: any[] = [];
   
       key.keyArr.forEach((k: string) => {
         let value = player[k];
         if (typeof value === 'string') {
           value = parseFloat(value);
         }
-        values[this.returnShortName(k)] = value || 0;
+        const shortName = this.returnShortName(k);
+        values[shortName] = value || 0;
+        if(shortName === '3PM' || shortName === '3PA') {
+          valueArray.push({ name:shortName, value: value || 0 });
+        }else{
+          valueArray.push({ name:k, value: value || 0 });
+        }
+        
       });
   
-      const date = new Date(player.match_datetime);  
-      const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' })); 
-      const formattedDate = `${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
-
       return {
-        category: `${formattedDate}_${player?.opponent_tricode ?? ''}_${player?.match_datetime ?? ''}`,
+        category: `${formattedDate}_${player?.opponent ?? ''}_${player?.match_datetime ?? ''}`,
         values,
+        data: {
+          date: formattedDate,
+          opponent: player.opponent,
+          player: player.name,
+          value: valueArray,
+        }
       };
     });
-  
     return datasets;
   }
 
@@ -60,16 +72,24 @@ export class TeamService {
  
 
       let totalArry: any[] = [];
-      const key = this.getStatsKeyByStatsId(stats);
-
-      key.keyArr.forEach((item) => {
+      if(stats !== '3PM'){
+        const key = this.getStatsKeyByStatsId(stats);
+        key.keyArr.forEach((item) => {
+          let prevArry: any[] = [];
+          players.forEach((player: any) => {
+            const value = player[item] ? parseFloat(player[item]) : 0;
+            prevArry.push(value);
+          });
+          totalArry.push(prevArry);
+        });
+      }else{
         let prevArry: any[] = [];
         players.forEach((player: any) => {
-          const value = player[item] ? parseFloat(player[item]) : 0;
+          const value = player['three_pointers_made'] ? parseFloat(player['three_pointers_made']) : 0;
           prevArry.push(value);
         });
         totalArry.push(prevArry);
-      });
+      }
 
       const combinedArry = totalArry.reduce((acc, arr) =>
         this.addArrays(acc, arr)
