@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PlayerService } from '../../../Shared/services/player.service';
 import { SvgIconDirective } from '../../../Shared/directives/svg-icon.directive';
+import { SharedService } from '../../../Shared/services/shared.service';
 
 @Component({
   selector: 'app-details-card',
@@ -11,7 +12,8 @@ import { SvgIconDirective } from '../../../Shared/directives/svg-icon.directive'
 })
 export class DetailsCardComponent {
   playerProfile:any;
-  constructor(private playerS:PlayerService) { }
+  playerDetail:any;
+  constructor(private playerS:PlayerService , private sharedS:SharedService) { }
 
   ngOnInit(): void {
     this.getPlayerProfile();
@@ -19,6 +21,27 @@ export class DetailsCardComponent {
 
   getPlayerProfile(){
     this.playerProfile =this.playerS.preparePlayerProfile();
+    this.getMaxScore();
+  }
+
+
+  getMaxScore(){
+    this.sharedS.sendGetRequest(`/nba/players/${this.playerProfile?.player_id}/season-max?season=2024-25`).subscribe({
+      next: (res:any) => {
+        console.log(res);
+        
+        if(res.status === 200){
+          console.log(res.body);
+          
+          this.playerDetail = res.body;
+        }
+
+        
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
 
