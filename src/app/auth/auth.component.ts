@@ -16,11 +16,11 @@ export class AuthComponent implements OnInit {
   constructor(private route: ActivatedRoute , private sharedS:SharedService , private router:Router) {}
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
-      this.token = params.get('token'); 
+     this.token = params.get('token'); 
       if(this.token) {
         this.verifyToken(this.token);
       }else{
-        //  window.location.href = 'https://parlayproz.com/'
+         window.location.href = 'https://parlayproz.com/'
       }
     });
   }
