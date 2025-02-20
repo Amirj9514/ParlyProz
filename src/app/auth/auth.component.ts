@@ -20,13 +20,14 @@ export class AuthComponent implements OnInit {
       if(this.token) {
         this.verifyToken(this.token);
       }else{
-         window.location.href = 'https://parlayproz.com/'
+        //  window.location.href = 'https://parlayproz.com/'
       }
     });
   }
 
-  verifyToken(token: string) {
-    const decodedString = token.replaceAll(' ' , '+');
+  verifyToken(decodedString: string) {
+
+    
     this.sharedS.sendGetRequest('nba/stat/fields' , decodedString).subscribe({
       next:(res:any)=>{
         if(res.status === 200) {
