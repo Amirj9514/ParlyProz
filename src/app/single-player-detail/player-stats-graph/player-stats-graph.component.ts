@@ -509,7 +509,7 @@ export class PlayerStatsGraphComponent {
           .append('text')
           .attr('class', 'hide')
           .attr('x', xScale.bandwidth() / 2)
-          .attr('y', d.PM <= 1 ? yScale(0.5) + 6 : yScale(d.PM) + 15)
+          .attr('y', d.PM === 0 ? yScale(0.5) + 6 :d.PM ===1?yScale(0.5) + 5  : yScale(d.PM) + 15)
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
           .style('font-size', d.PM <= 1?'8px':'10px')
