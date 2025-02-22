@@ -12,3 +12,10 @@
     background-color: hsla(217.9, 10.6%, 64.9%, 0.2);
   }
 }
+
+
+@media screen and (max-width: 850px) {
+  .marBottom{
+    margin-bottom: 400px;
+  }
+}

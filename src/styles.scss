@@ -13,6 +13,7 @@ body{
     // background-color:rgba(0, 0, 0, 0.1);
   background-image: radial-gradient(circle at 0% 50%, #8D0EDF 0%,  rgb(0, 0, 0) 100%);
     font-family: 'Montserrat', sans-serif !important;
+    overflow: hidden  ;
 }
 
 
@@ -100,4 +101,10 @@ body{
 
   .p-togglebutton.p-togglebutton-checked{
     color: $primary-color !important;
+  }
+
+  @media screen and (max-width: 850px) {
+    .hide{
+      display: none !important;
+    }
   }

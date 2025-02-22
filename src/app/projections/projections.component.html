@@ -98,7 +98,7 @@
       </div>
     </form>
 
-    <div>
+    <div class="projectionTable">
       <app-projection-table
         [projectionData]="projectionData"
         [projectionLoader]="statsLoader"
@@ -106,6 +106,44 @@
         [filterForm]="filterForm"
         (onPlayerClick)="openPlayerDetail($event)"
       ></app-projection-table>
+    </div>
+
+    <div class="playerCard" (scroll)="onScroll()">
+      @for (player of projectionData; track $index) {
+        <app-player-card (onPlayerClick)="openPlayerDetail($event)" [player]="player"></app-player-card>
+      }
+
+      @if(!projectionLoader){
+        <div #scrollObserver class="loading-spinner text-center p-2">
+          <p style="visibility: hidden;">Loading more players...</p>
+        </div>
+      }@else {
+        <div class="col-12 md:col-6 lg:col-4">
+          <div class="rounded border player-card p-2">
+            <div class="flex mb-4">
+              <p-skeleton width="60px" height="60px" styleClass="mr-2" />
+              <div class="w-full mt-2">
+                <p-skeleton width="100%" styleClass="mb-2" />
+                <p-skeleton width="30%" styleClass="mb-2" />
+              </div>
+            </div>
+            <div class="flex">
+              <div style="width: 70px"></div>
+              <div class="flex justify-content-between w-full">
+                <div class="w-5">
+                  <p-skeleton width="100%" styleClass="mb-2" />
+                  <p-skeleton width="100%" styleClass="mb-2" />
+                </div>
+                <div class="w-5">
+                  <p-skeleton width="100%" styleClass="mb-2" />
+                  <p-skeleton width="100%" styleClass="mb-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      
     </div>
   </div>
   }@else {

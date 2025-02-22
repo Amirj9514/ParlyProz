@@ -29,3 +29,18 @@
     rgba(220, 38, 38, 0.4)
   );
 }
+
+.hide{
+  display: block;
+}
+
+
+@media screen and (max-width: 850px) {
+  .hide{
+    display: none !important;
+  }
+
+  .grphHHeader{
+    flex-direction: column;
+  }
+}

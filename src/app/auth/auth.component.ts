@@ -20,14 +20,14 @@ export class AuthComponent implements OnInit {
       if(this.token) {
         this.verifyToken(this.token);
       }else{
-         window.location.href = 'https://parlayproz.com/'
+         // window.location.href = 'https://parlayproz.com/'
       }
     });
   }
 
   verifyToken(decodedString: string) {
-
-    
+   
+    // = decodeURIComponent(decodedString);
     this.sharedS.sendGetRequest('nba/stat/fields' , decodedString).subscribe({
       next:(res:any)=>{
         if(res.status === 200) {
@@ -38,12 +38,17 @@ export class AuthComponent implements OnInit {
           this.sharedS.insertData(userProfile);
           this.router.navigate(['/']);
         }else{
-          window.location.href = 'https://parlayproz.com/'
+          // window.location.href = 'https://parlayproz.com/'
         }
       },error:(err:any)=>{
         console.log(err);
       }
     })
   }
+
+
+  fixBase64Url(str: string): string {
+    return str.replace(/-/g, '+').replace(/_/g, '/');
+}
 
 }

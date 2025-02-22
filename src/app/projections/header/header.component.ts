@@ -2,10 +2,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SvgIconDirective } from '../../../Shared/directives/svg-icon.directive';
+import { SelectModule } from 'primeng/select';
 @Component({
   selector: 'app-header',
   standalone:true,
-  imports: [SelectButtonModule , FormsModule , SvgIconDirective],
+  imports: [SelectButtonModule , FormsModule , SvgIconDirective , SelectModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -27,5 +28,10 @@ export class HeaderComponent {
 
   onChange(event: any) {
     this.onGameChange.emit(event.api);
+  }
+
+  handelSelectChange(event:any){
+    console.log(event);
+    
   }
 }

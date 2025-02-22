@@ -171,7 +171,8 @@ export class ProjectionTableComponent implements OnChanges {
     const formValue = this.filterForm.value;
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    this.getProjections(stats, search);
+    const fixture_slug = formValue.match?.fixture_slug ?? '';
+    this.getProjections(stats, search , fixture_slug);
   }
 
   onPageChange(event: any) {
@@ -185,10 +186,11 @@ export class ProjectionTableComponent implements OnChanges {
   applyFilter(formValue: any) {
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    this.getProjections(stats, search);
+    const fixture_slug = formValue.match?.fixture_slug ?? '';
+    this.getProjections(stats, search , fixture_slug);
   }
 
-  getProjections(stats: string, search: string) {
+  getProjections(stats: string, search: string , fixture_slug: string) {
     this.projectionLoader = true;
     const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';
     this.sharedS
@@ -197,7 +199,7 @@ export class ProjectionTableComponent implements OnChanges {
           search ?? ''
         }&stat_fields=${stats ?? ''}&limit=${this.rows}&offset=${
           this.page
-        }&order_field=${order_field}&order=${this.sortCol.order}`
+        }&order_field=${order_field}&order=${this.sortCol.order}&fixture_slug=${fixture_slug ?? ''}`
       )
       .subscribe({
         next: (res: any) => {

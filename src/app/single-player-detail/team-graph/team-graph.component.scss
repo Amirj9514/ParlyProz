@@ -33,3 +33,13 @@
     border-bottom: 1px solid #cbd5e1; 
 }
 
+
+@media screen and (max-width: 850px) {
+    .hide{
+      display: none !important;
+    }
+  
+    .grphHHeader{
+      flex-direction: column;
+    }
+  }

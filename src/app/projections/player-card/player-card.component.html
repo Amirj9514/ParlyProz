@@ -1,0 +1,85 @@
+<div class="detailCard">
+  <div class="flex gap-2 align-items-center" (click)="redirectToPlayerDetail(player)">
+    <div class="statIcon font-semibold primaryTextClr">
+      {{ getInitials(player.first_name + " " + player.last_name) }}
+    </div>
+    <div class="playerDetail cursor-pointer">
+      <div class="flex align-items-center gap-2 playerName">
+        <div class="text-sm font-semibold">
+          {{ player.first_name + " " + player.last_name }}
+          <span> ({{ player.position }}) </span>
+          <span class="text-xs font-medium textClr-400">{{
+            player?.team + " @ " + player?.opponent
+          }}</span>
+        </div>
+      </div>
+      <div class="place lightClr text-xs textClr-500">
+        {{ capatlizeStats(player?.field) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid mt-2">
+    <div class="col-2 px-0">
+      <div
+        class="text-center statBox"
+        [ngClass]="
+          returnSeverity(player?.average_last_10, 'avgLast10', player?.line)
+        "
+      >
+        <div class="lineStats">AVG</div>
+        <div>{{ roundValue(player?.average_last_10) }}</div>
+      </div>
+    </div>
+
+    <div class="col-2 px-0">
+      <div
+        class="text-center text-sm statBox"
+        [ngClass]="returnSeverity(player?.average_last_10_line_diff, 'diff')"
+      >
+        <div class="lineStats">Diff</div>
+        <div>{{ roundValue(player?.average_last_10_line_diff) }}</div>
+      </div>
+    </div>
+
+    <div class="col-2 px-0">
+      <div
+        class="text-center text-sm statBox"
+        [ngClass]="returnSeverity(player?.last_5_over_line_percentage, '')"
+      >
+        <div class="lineStats">L5</div>
+        <div>{{ roundValue(player?.last_5_over_line_percentage) + " %" }}</div>
+      </div>
+    </div>
+
+    <div class="col-2 px-0">
+      <div
+        class="text-center text-sm statBox"
+        [ngClass]="returnSeverity(player?.last_10_over_line_percentage, '')"
+      >
+        <div class="lineStats">L10</div>
+        <div>{{ roundValue(player?.last_10_over_line_percentage) + " %" }}</div>
+      </div>
+    </div>
+
+    <div class="col-2 px-0">
+      <div
+        class="text-center text-sm statBox"
+        [ngClass]="returnSeverity(player?.last_15_over_line_percentage, '')"
+      >
+        <div class="lineStats">L15</div>
+        <div>{{ roundValue(player?.last_15_over_line_percentage) + " %" }}</div>
+      </div>
+    </div>
+
+    <div class="col-2 px-0">
+      <div
+        class="text-center text-sm statBox"
+        [ngClass]="returnSeverity(player?.streak, 'streak')"
+      >
+        <div class="lineStats">STRK</div>
+        <div>{{ player?.streak }}</div>
+      </div>
+    </div>
+  </div>
+</div>

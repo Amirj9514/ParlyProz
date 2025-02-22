@@ -1,5 +1,5 @@
-<div class="flex justify-content-between align-items-center">
-  <div class="flex-1">
+<div class="flex justify-content-between align-items-center header">
+  <div class="flex-1 welcomeText">
     <div class=" font-medium leading-normal">Welcome to</div>
     <div class="text-3xl font-semibold leading-normal" style="color: #ffffff;">
       Parlay Proz
@@ -23,5 +23,11 @@
         </div>
       </ng-template>
     </p-selectbutton>
+  </div>
+
+  <div class="box  align-items-center">
+    <div class="card flex justify-center">
+      <p-select [options]="games" [(ngModel)]="selectedGame" optionLabel="label" (ngModelChange)="onChange($event)" placeholder="Select a City" class="w-full md:w-56" />
+  </div>
   </div>
 </div>

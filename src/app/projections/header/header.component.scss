@@ -1,0 +1,25 @@
+@media screen and (max-width: 850px) {
+    .header{
+        .welcomeText{
+            display: none;
+        }
+
+        .boxShadow1{
+            display: none;
+        }
+        .box{
+            display: flex;
+            position: fixed;
+            top: 0;
+            height: 60px;
+            right: 90px;
+            z-index: 2001;
+            width: 100px;
+        }
+
+    }
+}
+
+.box{
+    display: none;
+}

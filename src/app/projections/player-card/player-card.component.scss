@@ -1,0 +1,36 @@
+.detailCard {
+  margin: 10px;
+  padding: 10px;
+  padding-bottom: 0px;
+  background-color: #020518;
+  border-radius: 10px;
+  .statIcon {
+    border: 1px solid #9233df;
+    color: #9233df;
+    font-weight: 800;
+    cursor: pointer;
+    background-color: #f1f5f9;
+    border-radius: 10px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .statBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 50px;
+  }
+
+  .lineStats {
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}

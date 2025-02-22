@@ -149,9 +149,9 @@ export class PlayerStatsGraphComponent {
     const data: any[] = this.graphData;
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
-    const width = containerWidth - 40;
+    const width = containerWidth - 30;
     const height = 320;
-    const margin = { top: 40, right: 20, bottom: 40, left: 20 };
+    const margin = { top: 40, right: 10, bottom: 40, left: 10 };
     const barRadius = 8;
     const lineValue = this.thresholdValue;
 
@@ -172,7 +172,7 @@ export class PlayerStatsGraphComponent {
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+      .attr('transform', `translate(${margin.left},${45})`);
 
     const xScale = d3
       .scaleBand()
@@ -292,12 +292,12 @@ export class PlayerStatsGraphComponent {
                 .html(tooltipHtml)
                 .style('display', 'block')
                 .style('left', `${event.pageX - 105}px`)
-                .style('top', `${event.pageY - 10}px`);
+                .style('top', `${event.pageY - 105}px`);
             })
             .on('mousemove', function (event) {
               tooltip
                 .style('left', `${event.pageX - 105}px`)
-                .style('top', `${event.pageY - 10}px`);
+                .style('top', `${event.pageY - 105}px`);
             })
             .on('mouseleave', function () {
               tooltip.style('display', 'none');
@@ -312,7 +312,10 @@ export class PlayerStatsGraphComponent {
             .attr('fill', 'white')
             .attr('font-size', '8px')
             .attr('font-weight', 'bold')
-            .style('display', allKeys.length > 1 ? 'block' : 'none');
+            .style('display', allKeys.length > 1 ? 'block' : 'none')
+            .attr('class', 'hide');
+           
+            
         });
 
         d3.select(this)
@@ -332,6 +335,7 @@ export class PlayerStatsGraphComponent {
       .attr('transform', `translate(0,${height})`)
       .call(d3.axisBottom(xScale).tickFormat(() => ''))
       .selectAll('text')
+      .attr('class', 'hide')
       .attr('text-anchor', 'middle')
       .each(function (d: any) {
         const [date, team] = d.split('_');
@@ -373,9 +377,9 @@ export class PlayerStatsGraphComponent {
     
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
-    const width = containerWidth - 40;
-    const height = 400;
-    const margin = { top: 40, right: 20, bottom: 40, left: 20 };
+    const width = containerWidth - 30;
+    const height = 320;
+    const margin = { top: 40, right: 10, bottom: 40, left: 10 };
     d3.select(this.chartContainer.nativeElement).selectAll('*').remove();
     const svg = d3
       .select(this.chartContainer.nativeElement)
@@ -383,7 +387,7 @@ export class PlayerStatsGraphComponent {
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
-      .attr('transform', `translate(30, 120)`);
+      .attr('transform', `translate(20, 120)`);
       const tooltip = d3
       .select(this.chartContainer.nativeElement)
       .append('div')
@@ -452,12 +456,12 @@ export class PlayerStatsGraphComponent {
             .html(tooltipHtml)
             .style('display', 'block')
             .style('left', `${event.pageX - 105}px`)
-            .style('top', `${event.pageY - 10}px`);
+            .style('top', `${event.pageY - 105}px`);
         })
         .on('mousemove', function (event) {
           tooltip
             .style('left', `${event.pageX - 105}px`)
-            .style('top', `${event.pageY - 10}px`);
+            .style('top', `${event.pageY - 105}px`);
         })
         .on('mouseleave', function () {
           tooltip.style('display', 'none');
@@ -496,11 +500,13 @@ export class PlayerStatsGraphComponent {
           .attr('y', yScale(d.PA) + 25)
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
+          .attr('class', 'hide')
           .style('font-weight', 'bold')
           .text(d.PA);
   
         group
           .append('text')
+          .attr('class', 'hide')
           .attr('x', xScale.bandwidth() / 2)
           .attr('y', d.PM === 0 ? yScale(0.5) + 25 : yScale(d.PM) + 25)
           .attr('text-anchor', 'middle')
@@ -516,6 +522,7 @@ export class PlayerStatsGraphComponent {
       .call(d3.axisBottom(xScale).tickFormat(() => '')) // Clear existing tick labels
       .selectAll('text')
       .attr('text-anchor', 'middle')
+      .attr('class', 'hide')
       .each(function (d: any) {
         const [date, team] = d.split('_'); // Split the value into date and team
   
