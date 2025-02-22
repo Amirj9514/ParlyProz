@@ -501,9 +501,10 @@ export class TeamGraphComponent implements OnInit {
         group
           .append('text')
           .attr('x', xScale.bandwidth() / 2)
-          .attr('y', yScale(d.PA) + 25)
+          .attr('y', yScale(d.PA) + 15)
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
+          .style('font-size', '10px')
           .attr('class', 'hide')
           .style('font-weight', 'bold')
           .text(d.PA);
@@ -512,9 +513,10 @@ export class TeamGraphComponent implements OnInit {
           .append('text')
           .attr('class', 'hide')
           .attr('x', xScale.bandwidth() / 2)
-          .attr('y', d.PM === 0 ? yScale(0.5) + 25 : yScale(d.PM) + 25)
+          .attr('y', d.PM === 0 ? yScale(0.5) + 15 : yScale(d.PM) + 15)
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
+          .style('font-size', '10px')
           .style('font-weight', 'bold')
           .text(d.PM);
       });

@@ -90,7 +90,10 @@ export class PlayerStatsService {
     const datasets = players.map((player: any) => {
       const date = new Date(player.match_datetime);
       const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
-      const formattedDate = `${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
+
+      const finalDate = this.convertToEST(player.match_datetime);
+      const finalDateObj = new Date(finalDate);
+      const formattedDate = `${String(finalDateObj.getMonth() + 1).padStart(2, '0')}-${String(finalDateObj.getDate()).padStart(2, '0')}`;
       const values: Record<string, number> = {};
       const valueArray: any[] = [];
   
@@ -122,6 +125,20 @@ export class PlayerStatsService {
     });
     return datasets;
   }
+
+  convertToEST(dateString:any) {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    }).format(date);
+}
   
 
   calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
