@@ -20,7 +20,7 @@ export class AuthComponent implements OnInit {
       if(this.token) {
         this.verifyToken(this.token);
       }else{
-         // window.location.href = 'https://parlayproz.com/'
+         window.location.href = 'https://parlayproz.com/'
       }
     });
   }
@@ -38,7 +38,7 @@ export class AuthComponent implements OnInit {
           this.sharedS.insertData(userProfile);
           this.router.navigate(['/']);
         }else{
-          // window.location.href = 'https://parlayproz.com/'
+          window.location.href = 'https://parlayproz.com/'
         }
       },error:(err:any)=>{
         console.log(err);
