@@ -25,14 +25,20 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  verifyToken(decodedString: string) {
+  verifyToken(tokenss: string) {
+
+    const path = window.location.search.replace('?token=', '');
+
+    console.log(path);
+    
+    
+    const decodedString=path;
    
-    // = decodeURIComponent(decodedString);
     this.sharedS.sendGetRequest('nba/stat/fields' , decodedString).subscribe({
       next:(res:any)=>{
         if(res.status === 200) {
           let token = {key:'token' , val:decodedString};
-          const decodedToken = jwtDecode(decodedString);
+          const decodedToken = jwtDecode(tokenss);
           const userProfile = {key:'userProfile' , val:decodedToken};
           this.sharedS.insertData(token);
           this.sharedS.insertData(userProfile);
