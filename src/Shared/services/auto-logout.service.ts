@@ -8,7 +8,7 @@ export class AutoLogoutService {
   private timeoutInterval: any;
   private popupTimeout: any;
   private countdownInterval: any;
-  private readonly TIMEOUT_MS = 2 * 60 * 1000; // 1 hour
+  private readonly TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
   private readonly POPUP_TIME_MS = 1 * 60 * 1000; // 5 minutes before logout
   public showPopup = false;
   public countdown = 300; // 5 minutes countdown
