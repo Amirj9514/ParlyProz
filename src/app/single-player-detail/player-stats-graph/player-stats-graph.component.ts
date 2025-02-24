@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import * as d3 from 'd3';
 import { PlayerStatsService } from '../../../Shared/services/player-stats.service';
 import { PlayerService } from '../../../Shared/services/player.service';
@@ -22,14 +22,13 @@ import { debounceTime, Subject } from 'rxjs';
     InputGroupModule,
     InputGroupAddonModule,
     ButtonModule,
-    
   ],
   templateUrl: './player-stats-graph.component.html',
   styleUrl: './player-stats-graph.component.scss',
 })
 export class PlayerStatsGraphComponent {
   @ViewChild('chart', { static: true }) chartContainer!: ElementRef;
-
+  @Input() selectedPlayerDetail: any;
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
@@ -45,17 +44,23 @@ export class PlayerStatsGraphComponent {
     { name: 'L20', value: 4, avg: 0, hr: 0 },
   ];
 
-  constructor(
-    private PlayerStatsS: PlayerStatsService,
-    private playerS: PlayerService
-  ) {}
+  constructor(private PlayerStatsS: PlayerStatsService) {}
 
   ngOnInit() {
-    this.statsList = this.PlayerStatsS.getStatsList();
-    this.selectedStats = this.statsList[0];
-    const lines = this.PlayerStatsS.getStatLineValuesByName('MIN');
-    this.thresholdValue = lines.length ? lines[0] : 0;
-    this.getStatsList('MIN', 10);
+    setTimeout(() => {
+      this.statsList = this.PlayerStatsS.getStatsList();
+      const statsId = this.PlayerStatsS.getStatsIdByKey(
+        this.selectedPlayerDetail?.field
+      );
+      this.selectedStats = this.statsList.find((stat) => stat.id === statsId);
+      const line = this.selectedPlayerDetail?.line ?? 0;
+
+      this.thresholdValue = this.selectedPlayerDetail?.line ?? 0;
+      this.getStatsList(statsId || 'MIN', 10 , line);
+    }, 100);
+
+    //
+
     this.debounceSubject.pipe(debounceTime(500)).subscribe((val) => {
       this.thresholdValue = val ? val : 0;
       this.getStatsList(
@@ -91,10 +96,10 @@ export class PlayerStatsGraphComponent {
       option.hr = calStats[option.name].percentageAboveBaseLine;
     });
 
-    const hr = this.paymentOptions[this.value-1]?.hr ?? 0;
-    if(hr>=50){
+    const hr = this.paymentOptions[this.value - 1]?.hr ?? 0;
+    if (hr >= 50) {
       this.activeColor = 'success';
-    }else{
+    } else {
       this.activeColor = 'danger';
     }
 
@@ -240,7 +245,6 @@ export class PlayerStatsGraphComponent {
           .range(['#e74c3c', '#c0392b', '#922b21']);
 
         allKeys.forEach((key, index) => {
-       
           const value = d.values[key];
           if (value === 0) return;
 
@@ -255,33 +259,42 @@ export class PlayerStatsGraphComponent {
           const barColor =
             totalValue >= lineValue ? colorAbove(key) : colorBelow(key);
 
-            const barPath = isLastStack
+          const barPath = isLastStack
             ? `M ${x},${y + barRadius} 
                A ${barRadius},${barRadius} 0 0 1 ${x + barRadius},${y} 
                H ${x + xScale.bandwidth() - barRadius} 
-               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${y + barRadius} 
+               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
+                y + barRadius
+              } 
                V ${y + barHeight} H ${x} Z`
-            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${y + barHeight} H ${x} Z`;
+            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${
+                y + barHeight
+              } H ${x} Z`;
 
           d3.select(this)
             .append('path')
             .attr('d', barPath)
             .attr('fill', barColor as string)
             .on('mouseover', function (event) {
-
               const statsHtml = d.data?.value
-              .map(
-                (stat:any) => `
+                .map(
+                  (stat: any) => `
                 <div style="display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; opacity: 0.8;">${stat?.name || 'N/A'}</span>
-                  <span style="font-size: 12px; font-weight: bold;">${stat?.value || 'N/A'}</span>
+                  <span style="font-size: 12px; opacity: 0.8;">${
+                    stat?.name || 'N/A'
+                  }</span>
+                  <span style="font-size: 12px; font-weight: bold;">${
+                    stat?.value || 'N/A'
+                  }</span>
                 </div>`
-              )
-              .join('');
+                )
+                .join('');
               const tooltipHtml = `
               <div class="tooltipBody">
                 <div class="flex align-items-center" >
-                  📅 ${d.data?.date || 'N/A'} &nbsp; @ ${d.data?.opponent || 'N/A'}
+                  📅 ${d.data?.date || 'N/A'} &nbsp; @ ${
+                d.data?.opponent || 'N/A'
+              }
                 </div>
                 
                 <hr style="border: 0.5px solid rgba(255, 255, 255, 0.1); margin: 8px 0;">
@@ -314,8 +327,6 @@ export class PlayerStatsGraphComponent {
             .attr('font-weight', 'bold')
             .style('display', allKeys.length > 1 ? 'block' : 'none')
             .attr('class', 'hide');
-           
-            
         });
 
         d3.select(this)
@@ -326,8 +337,8 @@ export class PlayerStatsGraphComponent {
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
           .attr('font-size', '12px')
-          .attr('font-weight', 'bold')
-          // .style('display', allKeys.length > 1 ? 'block' : 'none');
+          .attr('font-weight', 'bold');
+        // .style('display', allKeys.length > 1 ? 'block' : 'none');
       });
 
     svg
@@ -370,11 +381,8 @@ export class PlayerStatsGraphComponent {
       .attr('stroke-width', 2);
   }
 
-
-
   private createChartPM(): void {
     // Define the width, height, and margin inside the createChart function
-    
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
     const width = containerWidth - 40;
@@ -388,7 +396,7 @@ export class PlayerStatsGraphComponent {
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('transform', `translate(30, 120)`);
-      const tooltip = d3
+    const tooltip = d3
       .select(this.chartContainer.nativeElement)
       .append('div')
       .style('position', 'absolute')
@@ -398,7 +406,7 @@ export class PlayerStatsGraphComponent {
       .style('font-size', '12px')
       .style('display', 'none')
       .style('pointer-events', 'none');
-  
+
     // Transforming data to extract relevant fields
     const chartData = this.graphData.map((d) => ({
       game: d.category, // Use date as the game label
@@ -407,21 +415,21 @@ export class PlayerStatsGraphComponent {
       PM: d.values['3PM'], // Extract 3PM
       PA: d.values['3PA'], // Extract 3PA
     }));
-  
+
     const xScale = d3
       .scaleBand()
       .domain(chartData.map((d) => d.game))
       .range([0, width - margin.left - margin.right])
       .padding(0.2);
-  
+
     const yScale = d3
       .scaleLinear()
       .domain([0, d3.max(chartData, (d) => d.PA)!])
       .range([height - margin.top - margin.bottom, 0]);
     const threshold = this.thresholdValue; // Threshold for PM
-  
- // Dashed line for the threshold
-  
+
+    // Dashed line for the threshold
+
     svg
       .selectAll('.bar-group')
       .data(chartData)
@@ -430,43 +438,49 @@ export class PlayerStatsGraphComponent {
       .attr('class', 'bar-group')
       .attr('transform', (d) => `translate(${xScale(d.game)}, 0)`)
       .each(function (d) {
-        const group = d3.select(this)
-        .on('mouseover', function (event) {
-
-          const statsHtml = d.player?.value
-          .map(
-            (stat:any) => `
+        const group = d3
+          .select(this)
+          .on('mouseover', function (event) {
+            const statsHtml = d.player?.value
+              .map(
+                (stat: any) => `
             <div style="display: flex; justify-content: space-between;">
-              <span style="font-size: 12px; opacity: 0.8;">${stat?.name || 'N/A'}</span>
-              <span style="font-size: 12px; font-weight: bold;">${stat?.value || 'N/A'}</span>
+              <span style="font-size: 12px; opacity: 0.8;">${
+                stat?.name || 'N/A'
+              }</span>
+              <span style="font-size: 12px; font-weight: bold;">${
+                stat?.value || 'N/A'
+              }</span>
             </div>`
-          )
-          .join('');
-          const tooltipHtml = `
+              )
+              .join('');
+            const tooltipHtml = `
           <div class="tooltipBody">
             <div class="flex align-items-center" >
-              📅 ${d.player?.date || 'N/A'} &nbsp; @ ${d.player?.opponent || 'N/A'}
+              📅 ${d.player?.date || 'N/A'} &nbsp; @ ${
+              d.player?.opponent || 'N/A'
+            }
             </div>
             
             <hr style="border: 0.5px solid rgba(255, 255, 255, 0.1); margin: 8px 0;">
             ${statsHtml}
            
           </div>`;
-          tooltip
-            .html(tooltipHtml)
-            .style('display', 'block')
-            .style('left', `${event.pageX - 105}px`)
-            .style('top', `${event.pageY - 10}px`);
-        })
-        .on('mousemove', function (event) {
-          tooltip
-            .style('left', `${event.pageX - 105}px`)
-            .style('top', `${event.pageY - 10}px`);
-        })
-        .on('mouseleave', function () {
-          tooltip.style('display', 'none');
-        });
-  
+            tooltip
+              .html(tooltipHtml)
+              .style('display', 'block')
+              .style('left', `${event.pageX - 105}px`)
+              .style('top', `${event.pageY - 10}px`);
+          })
+          .on('mousemove', function (event) {
+            tooltip
+              .style('left', `${event.pageX - 105}px`)
+              .style('top', `${event.pageY - 10}px`);
+          })
+          .on('mouseleave', function () {
+            tooltip.style('display', 'none');
+          });
+
         // Background Bar (Total Attempts) - Rounded Top Only
         group
           .append('rect')
@@ -477,13 +491,12 @@ export class PlayerStatsGraphComponent {
           .attr('fill', '#80808033')
           .attr('rx', 8)
           .attr('ry', 8);
-          
-  
+
         // Foreground Bar (Made Shots) - No Rounded Bottom, Only Top Rounded on PA Stack
         group
           .append('rect')
           .attr('x', 0)
-          .attr('y', d.PM === 0 ? yScale(0.5) : yScale(d.PM ))
+          .attr('y', d.PM === 0 ? yScale(0.5) : yScale(d.PM))
           .attr('width', xScale.bandwidth())
           .attr(
             'height',
@@ -492,7 +505,7 @@ export class PlayerStatsGraphComponent {
           .attr('fill', d.PM < threshold ? 'red' : '#2ECC71') // Color based on PM and threshold
           .attr('rx', d.PM === 0 ? 2 : 5)
           .attr('ry', d.PM === 0 ? 2 : 0);
-  
+
         // Labels Inside the Bars
         group
           .append('text')
@@ -503,7 +516,7 @@ export class PlayerStatsGraphComponent {
           .attr('font-size', '10px')
           .style('font-weight', 'bold')
           .text(d.PA);
-  
+
         group
           .append('text')
           .attr('x', xScale.bandwidth() / 2)
@@ -514,7 +527,7 @@ export class PlayerStatsGraphComponent {
           .style('font-weight', 'bold')
           .text(d.PM);
       });
-  
+
     // Axes
     svg
       .append('g')
@@ -524,7 +537,7 @@ export class PlayerStatsGraphComponent {
       .attr('text-anchor', 'middle')
       .each(function (d: any) {
         const [date, team] = d.split('_'); // Split the value into date and team
-  
+
         // Add the team name as a tspan
         d3.select(this)
           .append('tspan')
@@ -533,7 +546,7 @@ export class PlayerStatsGraphComponent {
           .attr('font-size', '10px')
           .attr('font-weight', 'bold')
           .text(team); // Display team name
-  
+
         // Add the date as a second tspan below the team name
         d3.select(this)
           .append('tspan')
@@ -543,16 +556,16 @@ export class PlayerStatsGraphComponent {
           .attr('dy', '1.2em') // Offset for date below team name
           .text(date); // Display date
       });
-     // Create a horizontal line at the threshold
-     svg
-     .append('line')
-     .attr('x1', 0)
-     .attr('x2', width - margin.left - margin.right)
-     .attr('y1', yScale(threshold))
-     .attr('y2', yScale(threshold))
-     .attr('stroke', 'gray')
-     .attr('stroke-width', 2)
-     .attr('stroke-dasharray', '5,5'); 
+    // Create a horizontal line at the threshold
+    svg
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', width - margin.left - margin.right)
+      .attr('y1', yScale(threshold))
+      .attr('y2', yScale(threshold))
+      .attr('stroke', 'gray')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '5,5');
     // svg.append('g').call(d3.axisLeft(yScale));
   }
 }

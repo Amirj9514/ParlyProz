@@ -4,6 +4,7 @@ import {
   HostListener,
   OnInit,
   ViewChild,
+  
 } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { ProjectionTableComponent } from './projection-table/projection-table.component';
@@ -67,6 +68,8 @@ export class ProjectionsComponent implements OnInit {
   page = 1;
   limit = 50;
   totalPages = 0;
+  selectedPlayerDetail:any;
+
 
   constructor(private sharedS: SharedService) {
     this.filterForm = new FormGroup({
@@ -213,8 +216,10 @@ export class ProjectionsComponent implements OnInit {
       });
   }
 
-  openPlayerDetail(playerId: number) {
-    this.selectedPlayer = playerId;
+  openPlayerDetail(playerId: any) {
+    // console.log(playerId);
+    this.selectedPlayerDetail = playerId;
+    this.selectedPlayer = playerId.player_id;
     this.showPlayerDetail = true;
   }
 

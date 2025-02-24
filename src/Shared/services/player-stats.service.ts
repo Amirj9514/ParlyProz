@@ -237,6 +237,27 @@ export class PlayerStatsService {
     }
   }
 
+  getStatsIdByKey(key: string): string | null {
+    const mapping: { [key: string]: string } = {
+      minutes: 'MIN',
+      points: 'PTS',
+      turnovers: 'TO',
+      steals: 'STLS',
+      blocks: 'BLKS',
+      assists: 'ASTS',
+      rebounds: 'REBS',
+      blocks_steals: 'BS',
+      three_pointers_made: '3PM',
+      three_pointers_attempted: '3PA',
+      points_assists: 'PA',
+      points_rebounds: 'PR',
+      rebounds_assists: 'RA',
+      points_assists_rebounds: 'PRA'
+    };
+  
+    return mapping[key] || null;
+  }
+
   // ----------------- End of Player Stats -----------------
   //====================================================================
 

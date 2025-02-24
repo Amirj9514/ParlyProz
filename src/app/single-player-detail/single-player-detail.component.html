@@ -12,7 +12,7 @@
   <div class="grid m-0 p-0">
     <div class="md:col-9 col-12">
       <div class="firstGrap mt-4">
-        <app-player-stats-graph></app-player-stats-graph>
+        <app-player-stats-graph [selectedPlayerDetail]="selectedPlayerDetail"></app-player-stats-graph>
         <!-- <app-main-compare-graph></app-main-compare-graph> -->
 
         @if (!teamGraphLoader) {

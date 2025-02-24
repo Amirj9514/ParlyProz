@@ -4,12 +4,11 @@
   border: 2px solid #183240;
   outline: none;
   background-color: #183240;
-  
 
   .header {
     display: flex;
     justify-content: center;
-    img{
+    img {
       width: 60px;
       object-fit: cover;
     }
@@ -29,10 +28,9 @@
         background-color: #e7e7e8;
       }
     }
-  
   }
 
-  .footer{
+  .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -42,21 +40,22 @@
     align-items: center;
     justify-content: center;
 
-    .profileAvatar{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-       
-        img{
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
+    .profileAvatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 20px;
+      font-weight: 600;
+      overflow: hidden;
+      background-color: #27272a;
+      color: #9233df;
     }
   }
 }
-
 
 .active {
   background-color: #9233df;

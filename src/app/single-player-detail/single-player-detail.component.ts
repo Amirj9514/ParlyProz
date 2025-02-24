@@ -28,6 +28,7 @@ import { PlayerStatsGraphComponent } from "./player-stats-graph/player-stats-gra
 })
 export class SinglePlayerDetailComponent implements OnInit {
   @Input() selectedPlayerId: number = 0;
+  @Input() selectedPlayerDetail:any;
   @Output() onClose = new EventEmitter();
   playerDetail: any[] = [];
   teamDetail: any[] = [];
