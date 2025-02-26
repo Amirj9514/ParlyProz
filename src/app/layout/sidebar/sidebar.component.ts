@@ -26,6 +26,7 @@ export class SidebarComponent implements OnInit {
       this.userDetail = data?.userProfile ?? null;
       this.getNameFirstLetter();
     });
+
   }
 
   getNameFirstLetter() {

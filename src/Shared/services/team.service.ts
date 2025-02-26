@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -6,6 +7,17 @@ import { Injectable } from '@angular/core';
 export class TeamService {
   teamData: any[] = [];
   constructor() {}
+
+
+  upadateDate = new BehaviorSubject<string>('');
+
+  setUpdateDate(date: string) {
+    this.upadateDate.next(date);
+  }
+
+  getUpdateDate() {
+    return this.upadateDate;
+  }
 
   setTeamData(data: any) {
     this.teamData = data;

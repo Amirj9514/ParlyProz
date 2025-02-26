@@ -4,7 +4,6 @@ import {
   HostListener,
   OnInit,
   ViewChild,
-  
 } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { ProjectionTableComponent } from './projection-table/projection-table.component';
@@ -24,6 +23,8 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { CommonModule } from '@angular/common';
 import { PlayerCardComponent } from './player-card/player-card.component';
 import { SkeletonModule } from 'primeng/skeleton';
+import { DatePipe } from '@angular/common';
+import { TeamService } from '../../Shared/services/team.service';
 
 Chart.register(...registerables, ChartDataLabels);
 
@@ -44,7 +45,7 @@ Chart.register(...registerables, ChartDataLabels);
     SelectModule,
     CommonModule,
     PlayerCardComponent,
-    SkeletonModule
+    SkeletonModule,
   ],
   templateUrl: './projections.component.html',
   styleUrl: './projections.component.scss',
@@ -68,10 +69,9 @@ export class ProjectionsComponent implements OnInit {
   page = 1;
   limit = 50;
   totalPages = 0;
-  selectedPlayerDetail:any;
+  selectedPlayerDetail: any;
 
-
-  constructor(private sharedS: SharedService) {
+  constructor(private sharedS: SharedService , private teamS:TeamService) {
     this.filterForm = new FormGroup({
       search: new FormControl(''),
       stats: new FormControl(''),
@@ -171,9 +171,9 @@ export class ProjectionsComponent implements OnInit {
       .sendGetRequest(
         `${this.activeGameApiendpoint}/dashboard/stats?name=${
           search ?? ''
-        }&stat_fields=${stats ?? ''}&fixture_slug=${fixture_slug ?? ''}&limit=${50}&offset=${
-          this.page
-        }`
+        }&stat_fields=${stats ?? ''}&fixture_slug=${
+          fixture_slug ?? ''
+        }&limit=${50}&offset=${this.page}`
       )
       .subscribe({
         next: (res: any) => {
@@ -183,7 +183,6 @@ export class ProjectionsComponent implements OnInit {
             const data = res.body.stats ?? [];
 
             if (loader) {
-              
               this.projectionData = [...this.projectionData, ...data];
               this.totalPages = res.body?.page_info?.total_pages ?? 0;
             } else {
@@ -207,6 +206,7 @@ export class ProjectionsComponent implements OnInit {
           this.gameListLoader = false;
           if (res.status === 200) {
             this.gameList = res.body ?? [];
+            this.convertDate();
           }
         },
         error: (err: any) => {
@@ -258,5 +258,26 @@ export class ProjectionsComponent implements OnInit {
 
       this.getProjections(stats, search, fixture_slug, true);
     }
+  }
+
+  convertDate() {
+
+    let date:any = ''
+    if (this.gameList && this.gameList.length > 0) {
+      const game = this.gameList[0];
+      const updateDate = new Date(game?.created_at);
+
+      if (updateDate) {
+        const datePipe = new DatePipe('en-US');
+        const utcDate = new Date(updateDate); // Convert to Date object
+        date = datePipe.transform(
+          utcDate,
+          'hh:mm a',
+          '-0400'
+        );
+      }
+    }
+
+    this.teamS.setUpdateDate(date || '');
   }
 }
