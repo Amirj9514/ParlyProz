@@ -14,7 +14,7 @@ export class PlayerCardComponent {
 
 
   redirectToPlayerDetail(player: any) {
-    this.onPlayerClick.emit(player.player_id);
+    this.onPlayerClick.emit(player);
   }
 
   capatlizeStats(value: string) {
