@@ -1,11 +1,17 @@
-.profileAvatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-    cursor: pointer;
-    overflow: hidden;
-}
+  .profileAvatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 20px;
+      font-weight: 600;
+      overflow: hidden;
+      background-color: #27272a;
+      color: #9233df;
+    }
 
 * {
     margin: 0;

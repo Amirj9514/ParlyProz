@@ -34,6 +34,6 @@ export class SidebarComponent implements OnInit {
       let name = this.userDetail?.display_name ?? 'N/A';
       return name.charAt(0).toUpperCase();
     }
-    return 'N';
+    return 'P';
   }
 }
