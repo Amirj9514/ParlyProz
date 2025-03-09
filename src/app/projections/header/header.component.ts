@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   selectedGame: string = 'NBA';
   games: any[] = [
     { label: 'NBA', icon: 'basketball', value: 'NBA', api: 'nba' },
-    { label: 'CBB', icon: 'basketball', value: 'CBB', api: null },
+    { label: 'WNBA', icon: 'basketball', value: 'wnba', api: 'wnba' },
     { label: 'NFL', icon: 'football', value: 'NFL', api: null },
     { label: 'Soccer', icon: 'soccer', value: 'Soccer', api: null },
     { label: 'NHL', icon: 'hockey', value: 'NHL', api: null },

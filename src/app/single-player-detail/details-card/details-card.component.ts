@@ -11,6 +11,7 @@ import { SharedService } from '../../../Shared/services/shared.service';
   styleUrl: './details-card.component.scss'
 })
 export class DetailsCardComponent {
+  @Input()selectedSport:string = 'nba';
   playerProfile:any;
   playerDetail:any;
   constructor(private playerS:PlayerService , private sharedS:SharedService) { }
@@ -26,13 +27,9 @@ export class DetailsCardComponent {
 
 
   getMaxScore(){
-    this.sharedS.sendGetRequest(`/nba/players/${this.playerProfile?.player_id}/season-max?season=2024-25`).subscribe({
+    this.sharedS.sendGetRequest(`/${this.selectedSport}/players/${this.playerProfile?.player_id}/season-max?season=2024-25`).subscribe({
       next: (res:any) => {
-        console.log(res);
-        
-        if(res.status === 200){
-          console.log(res.body);
-          
+        if(res.status === 200){ 
           this.playerDetail = res.body;
         }
 

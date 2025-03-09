@@ -51,7 +51,7 @@ export class PlayerStatsGraphComponent {
       this.statsList = this.PlayerStatsS.getStatsList();
       const statsId = this.PlayerStatsS.getStatsIdByKey(
         this.selectedPlayerDetail?.field
-      );
+      ) ?? 'MIN';
       this.selectedStats = this.statsList.find((stat) => stat.id === statsId);
       const line = this.selectedPlayerDetail?.line ?? 0;
 

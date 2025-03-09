@@ -29,6 +29,7 @@ import { PlayerStatsGraphComponent } from "./player-stats-graph/player-stats-gra
 export class SinglePlayerDetailComponent implements OnInit {
   @Input() selectedPlayerId: number = 0;
   @Input() selectedPlayerDetail:any;
+  @Input() selectedSport: string = 'nba';
   @Output() onClose = new EventEmitter();
   playerDetail: any[] = [];
   teamDetail: any[] = [];
@@ -49,10 +50,10 @@ export class SinglePlayerDetailComponent implements OnInit {
     this.playerDetailLoader = true;
 
     const lineStats$ = this.sharedS.sendGetRequest(
-      `nba/players/${this.selectedPlayerId}/lines`
+      `${this.selectedSport}/players/${this.selectedPlayerId}/lines`
     );
     const playerDetail$ = this.sharedS.sendGetRequest(
-      `nba/players/stats/${this.selectedPlayerId}?season=2024-25`
+      `${this.selectedSport}/players/stats/${this.selectedPlayerId}?season=2024-25`
     ); // Example of another API call
 
     forkJoin([lineStats$, playerDetail$]).subscribe({
@@ -78,7 +79,7 @@ export class SinglePlayerDetailComponent implements OnInit {
   getPlayerDetails(team: string = 'LAL') {
     this.teamGraphLoader = true;
     this.sharedS
-      .sendGetRequest(`nba/team/stats/${team}?season=2024-25`)
+      .sendGetRequest(`${this.selectedSport}/team/stats/${team}?season=2024-25`)
       .subscribe({
         next: (res: any) => {
           this.teamGraphLoader = false;
