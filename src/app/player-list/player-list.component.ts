@@ -16,7 +16,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime } from 'rxjs';
+import { debounceTime, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -54,6 +54,7 @@ export class PlayerListComponent implements OnInit {
 
   constructor(private sharedS: SharedService) {}
   ngOnInit(): void {
+    this.getDefaultGame();
     this.getPlayersList(false);
     this.searchControl.valueChanges.pipe(debounceTime(1000)).subscribe((value:any) => {
       if (value.trim()) {
@@ -62,7 +63,18 @@ export class PlayerListComponent implements OnInit {
         this.getPlayersList(false);
       }
     });
+
+
+   
   }
+
+  getDefaultGame() {
+    this.sharedS.getData().pipe(take(1)).subscribe((data: any) => {
+      this.selectedGame = data?.game.api ?? 'nba';
+    });
+  }
+
+
 
   onGameChange(event: any) {
     this.showComingSoon = false;

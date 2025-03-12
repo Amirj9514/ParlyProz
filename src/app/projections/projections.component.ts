@@ -14,7 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SharedService } from '../../Shared/services/shared.service';
-import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, of, switchMap, take } from 'rxjs';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 import { SinglePlayerDetailComponent } from '../single-player-detail/single-player-detail.component';
 import { registerables, Chart } from 'chart.js';
@@ -80,9 +80,17 @@ export class ProjectionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getActiveGame();
     this.getStatsAndProjections();
     this.observeFormChanges();
     this.getGameList();
+   
+  }
+
+  getActiveGame() {
+    this.sharedS.getData().pipe(take(1)).subscribe((data: any) => {
+      this.activeGameApiendpoint = data?.game?.api ?? 'nba';
+    });
   }
 
   getStatsAndProjections() {
