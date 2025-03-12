@@ -409,12 +409,16 @@ export class PlayerStatsGraphComponent {
 
     // Transforming data to extract relevant fields
     const chartData = this.graphData.map((d) => ({
+      
       game: d.category, // Use date as the game label
       opponent: d.data.opponent,
       player: d.data,
       PM: d.values['3PM'], // Extract 3PM
       PA: d.values['3PA'], // Extract 3PA
     }));
+
+    console.log(chartData);
+    
 
     const xScale = d3
       .scaleBand()
@@ -565,7 +569,8 @@ export class PlayerStatsGraphComponent {
       .attr('y2', yScale(threshold))
       .attr('stroke', 'gray')
       .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '5,5');
+      .attr('stroke-dasharray', '5,5')
+      .attr('display', threshold === 0 ? 'none' : 'block');
     // svg.append('g').call(d3.axisLeft(yScale));
   }
 }
