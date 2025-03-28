@@ -49,7 +49,7 @@ export class HeaderComponent implements OnInit {
   }
 
   handelSelectChange(event: any) {
-    console.log(event);
+
   }
 
   disableGame(game: any) {

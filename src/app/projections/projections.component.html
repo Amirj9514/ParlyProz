@@ -1,5 +1,4 @@
-
-<div [ngClass]="showPlayerDetail?'hidden':'block'" class="w-full">
+<div [ngClass]="showPlayerDetail ? 'hidden' : 'block'" class="w-full">
   <app-header (onGameChange)="onGameChange($event)"></app-header>
 
   @if (!comingSoon) {
@@ -18,82 +17,100 @@
           />
         </p-iconfield>
       </div>
-      <div class="col-5 pb-1 opacity-30">
+      <div class="col-5 pb-1">
         <!-- <p-floatlabel class="w-full" variant="on"> -->
-          <p-multiselect
-            id="on_label"
-            [disabled]="true"
-            [options]="[]"
-            optionLabel="name"
-            placeholder="Select App"
-            filter
-            [maxSelectedLabels]="3"
-            styleClass="w-full"
-          />
-          <!-- <label for="on_label">Select App</label> -->
+        <p-multiselect
+          [options]="apps"
+          placeholder="Select Countries"
+          optionLabel="name"
+          appendTo="body"
+          formControlName="apps"
+          styleClass="w-full"
+        >
+          <ng-template let-app #item>
+            <div class="flex items-center gap-2">
+              <img [src]='app.imageUrl' style="width: 70px;height: 30px; object-fit: contain;"/>
+   
+            </div>
+          </ng-template>
+        </p-multiselect>
+        <!-- <label for="on_label">Select App</label> -->
         <!-- </p-floatlabel> -->
       </div>
 
       <div class="col-5 pt-1">
         <!-- <p-floatlabel class="w-full" variant="on"> -->
-          <p-select
-            [options]="gameList"
-            formControlName="match"
-            class="w-full md:w-56"
-            [showClear]="true"
-            placeholder="Select Game"
-            
-          >
-            <ng-template #selectedItem let-selectedOption>
-              @if (selectedOption) {
-                <div class="flex items-center gap-2">
-                  <div class="flex gap-2">
-                    <div class="flex align-items-center gap-2">
-                      <div class="text-xs font-semibold ">{{selectedOption.first_competitor_abbreviation}}</div>
-                      <div class="text-sm font-semibold">V/S</div>
-                      <div class="text-xs font-semibold">{{ selectedOption.second_competitor_abbreviation}}</div>
-                    </div>
-  
-                    <div class="text-xs textClr-400">{{'@'}}
-                      <span >{{selectedOption.start_time | date: 'MM-dd-yyyy hh:mm a'}}</span>
-                    </div>
+        <p-select
+          [options]="gameList"
+          formControlName="match"
+          class="w-full md:w-56"
+          [showClear]="true"
+          placeholder="Select Game"
+        >
+          <ng-template #selectedItem let-selectedOption>
+            @if (selectedOption) {
+            <div class="flex items-center gap-2">
+              <div class="flex gap-2">
+                <div class="flex align-items-center gap-2">
+                  <div class="text-xs font-semibold">
+                    {{ selectedOption.first_competitor_abbreviation }}
+                  </div>
+                  <div class="text-sm font-semibold">V/S</div>
+                  <div class="text-xs font-semibold">
+                    {{ selectedOption.second_competitor_abbreviation }}
                   </div>
                 </div>
-              }
-            </ng-template>
-            <ng-template let-country #item>
-              <div class="flex items-center gap-2">
-                <div class="flex gap-2">
-                  <div class="flex align-items-center gap-2">
-                    <div class="text-xs font-semibold ">{{country.first_competitor_abbreviation}}</div>
-                    <div class="text-sm font-semibold">V/S</div>
-                    <div class="text-xs font-semibold">{{ country.second_competitor_abbreviation}}</div>
-                  </div>
 
-                  <div class="text-xs textClr-400">{{'@'}}
-                    <span >{{country.start_time | date: 'MM-dd-yyyy hh:mm a'}}</span>
-                  </div>
+                <div class="text-xs textClr-400">
+                  {{ "@" }}
+                  <span>{{
+                    selectedOption.start_time | date : "MM-dd-yyyy hh:mm a"
+                  }}</span>
                 </div>
               </div>
-            </ng-template>
-          </p-select>
-       
+            </div>
+            }
+          </ng-template>
+          <ng-template let-country #item>
+            <div class="flex items-center gap-2">
+              <div class="flex gap-2">
+                <div class="flex align-items-center gap-2">
+                  <div class="text-xs font-semibold">
+                    {{ country.first_competitor_abbreviation }}
+                  </div>
+                  <div class="text-sm font-semibold">V/S</div>
+                  <div class="text-xs font-semibold">
+                    {{ country.second_competitor_abbreviation }}
+                  </div>
+                </div>
+
+                <div class="text-xs textClr-400">
+                  {{ "@" }}
+                  <span>{{
+                    country.start_time | date : "MM-dd-yyyy hh:mm a"
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-select>
+
         <!-- </p-floatlabel> -->
       </div>
       <div class="col-7 pt-1">
         <!-- <p-floatlabel class="w-full" variant="on"> -->
-          <p-multiselect
-            id="on_label"
-            display="chip"
-            [options]="statsList"
-            formControlName="stats"
-            optionLabel="name"
-            placeholder="Select Stats"
-            filter
-            [maxSelectedLabels]="statsList.length"
-            styleClass="w-full"
-          />
-        
+        <p-multiselect
+          id="on_label"
+          display="chip"
+          [options]="statsList"
+          formControlName="stats"
+          optionLabel="name"
+          placeholder="Select Stats"
+          filter
+          [maxSelectedLabels]="statsList.length"
+          styleClass="w-full"
+        />
+
         <!-- </p-floatlabel> -->
       </div>
     </form>
@@ -110,40 +127,40 @@
 
     <div class="playerCard" (scroll)="onScroll()">
       @for (player of projectionData; track $index) {
-        <app-player-card (onPlayerClick)="openPlayerDetail($event)" [player]="player"></app-player-card>
-      }
-
-      @if(!projectionLoader){
-        <div #scrollObserver class="loading-spinner text-center p-2">
-          <p style="visibility: hidden;">Loading more players...</p>
-        </div>
+      <app-player-card
+        (onPlayerClick)="openPlayerDetail($event)"
+        [player]="player"
+      ></app-player-card>
+      } @if(!projectionLoader){
+      <div #scrollObserver class="loading-spinner text-center p-2">
+        <p style="visibility: hidden">Loading more players...</p>
+      </div>
       }@else {
-        <div class="col-12 md:col-6 lg:col-4">
-          <div class="rounded border player-card p-2">
-            <div class="flex mb-4">
-              <p-skeleton width="60px" height="60px" styleClass="mr-2" />
-              <div class="w-full mt-2">
-                <p-skeleton width="100%" styleClass="mb-2" />
-                <p-skeleton width="30%" styleClass="mb-2" />
-              </div>
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rounded border player-card p-2">
+          <div class="flex mb-4">
+            <p-skeleton width="60px" height="60px" styleClass="mr-2" />
+            <div class="w-full mt-2">
+              <p-skeleton width="100%" styleClass="mb-2" />
+              <p-skeleton width="30%" styleClass="mb-2" />
             </div>
-            <div class="flex">
-              <div style="width: 70px"></div>
-              <div class="flex justify-content-between w-full">
-                <div class="w-5">
-                  <p-skeleton width="100%" styleClass="mb-2" />
-                  <p-skeleton width="100%" styleClass="mb-2" />
-                </div>
-                <div class="w-5">
-                  <p-skeleton width="100%" styleClass="mb-2" />
-                  <p-skeleton width="100%" styleClass="mb-2" />
-                </div>
+          </div>
+          <div class="flex">
+            <div style="width: 70px"></div>
+            <div class="flex justify-content-between w-full">
+              <div class="w-5">
+                <p-skeleton width="100%" styleClass="mb-2" />
+                <p-skeleton width="100%" styleClass="mb-2" />
+              </div>
+              <div class="w-5">
+                <p-skeleton width="100%" styleClass="mb-2" />
+                <p-skeleton width="100%" styleClass="mb-2" />
               </div>
             </div>
           </div>
         </div>
+      </div>
       }
-      
     </div>
   </div>
   }@else {

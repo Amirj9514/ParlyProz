@@ -26,12 +26,7 @@ export class AuthComponent implements OnInit {
   }
 
   verifyToken(tokenss: string) {
-
     const path = window.location.search.replace('?token=', '');
-
-    console.log(path);
-    
-    
     const decodedString=path;
    
     this.sharedS.sendGetRequest('nba/stat/fields' , decodedString).subscribe({

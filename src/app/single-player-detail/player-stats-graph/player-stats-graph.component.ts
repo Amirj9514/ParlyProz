@@ -417,9 +417,6 @@ export class PlayerStatsGraphComponent {
       PA: d.values['3PA'], // Extract 3PA
     }));
 
-    console.log(chartData);
-    
-
     const xScale = d3
       .scaleBand()
       .domain(chartData.map((d) => d.game))

@@ -47,8 +47,6 @@ export class AutoLogoutService {
   private addEventListeners() {
     const events = ['mousemove', 'keydown', 'click', 'scroll'];
     if (!this.showPopup) {
-      console.log('Adding event listeners...');
-      
       events.forEach((event) => {
         window.addEventListener(event, () =>
           this.ngZone.run(() => this.resetTimer())
@@ -77,7 +75,6 @@ export class AutoLogoutService {
 
   // Logout function
   public logout() {
-    console.log('Logging out due to inactivity...');
     this.showPopup = false;
     localStorage.clear(); // Clear user data
     window.location.href = 'https://parlayproz.com/';

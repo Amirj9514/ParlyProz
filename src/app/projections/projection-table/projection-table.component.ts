@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
 import { FormGroup } from '@angular/forms';
 import { SharedService } from '../../../Shared/services/shared.service';
+import { CommonService } from '../../../Shared/services/common.service';
 
 @Component({
   selector: 'app-projection-table',
@@ -98,7 +99,9 @@ export class ProjectionTableComponent implements OnChanges {
     },
   ];
 
-  constructor(private sharedS: SharedService) {}
+  constructor(private sharedS: SharedService , public commonS:CommonService) {
+
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['projectionLoader']) {
       if (this.projectionLoader && !this.projectionData.length) {
@@ -171,8 +174,9 @@ export class ProjectionTableComponent implements OnChanges {
     const formValue = this.filterForm.value;
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    const fixture_slug = formValue.match?.fixture_slug ?? '';
-    this.getProjections(stats, search , fixture_slug);
+    const fixture_slug =this.commonS.getTeams(formValue.match);
+    const apps = this.commonS.getSelectedApp(formValue.apps);
+    this.getProjections(stats, search , fixture_slug ,apps);
   }
 
   onPageChange(event: any) {
@@ -186,11 +190,12 @@ export class ProjectionTableComponent implements OnChanges {
   applyFilter(formValue: any) {
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    const fixture_slug = formValue.match?.fixture_slug ?? '';
-    this.getProjections(stats, search , fixture_slug);
+    const fixture_slug =this.commonS.getTeams(formValue.match);
+    const apps = this.commonS.getSelectedApp(formValue.apps);
+    this.getProjections(stats, search , fixture_slug , apps);
   }
 
-  getProjections(stats: string, search: string , fixture_slug: string) {
+  getProjections(stats: string, search: string , fixture_slug: any , apps: string) {
     this.projectionLoader = true;
     const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';
     this.sharedS
@@ -199,7 +204,11 @@ export class ProjectionTableComponent implements OnChanges {
           search ?? ''
         }&stat_fields=${stats ?? ''}&limit=${this.rows}&offset=${
           this.page
-        }&order_field=${order_field}&order=${this.sortCol.order}&fixture_slug=${fixture_slug ?? ''}`
+        }&order_field=${order_field}&order=${this.sortCol.order}&team_a=${
+          fixture_slug.team_a ?? ''
+        }&team_b=${
+          fixture_slug.team_b ?? ''
+        }&bookie=${apps ?? ''}`
       )
       .subscribe({
         next: (res: any) => {

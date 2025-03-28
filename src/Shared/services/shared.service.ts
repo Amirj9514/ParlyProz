@@ -57,7 +57,6 @@ export class SharedService {
       ...this.sharedData.getValue(),
       [data.key]: data.val,
     });
-    console.log(this.sharedData.value);
     
     localStorage.setItem(
       'sharedData@parlayProz',

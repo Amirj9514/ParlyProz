@@ -25,6 +25,7 @@ import { PlayerCardComponent } from './player-card/player-card.component';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DatePipe } from '@angular/common';
 import { TeamService } from '../../Shared/services/team.service';
+import { CommonService } from '../../Shared/services/common.service';
 
 Chart.register(...registerables, ChartDataLabels);
 
@@ -66,17 +67,22 @@ export class ProjectionsComponent implements OnInit {
   gameList: any[] = [];
   gameListLoader: boolean = false;
   selectedCountry: string | undefined;
+  apps: any[] = [];
   page = 1;
   limit = 50;
   totalPages = 0;
   selectedPlayerDetail: any;
 
-  constructor(private sharedS: SharedService , private teamS:TeamService) {
+  constructor(private sharedS: SharedService , private teamS:TeamService , private commonS: CommonService) {
+    this.apps = this.commonS.getApps();
     this.filterForm = new FormGroup({
       search: new FormControl(''),
       stats: new FormControl(''),
       match: new FormControl(null),
+      apps: new FormControl(this.apps),
     });
+
+    
   }
 
   ngOnInit(): void {
@@ -105,10 +111,11 @@ export class ProjectionsComponent implements OnInit {
             const stats = this.statsList
               .map((stat: any) => stat.code)
               .join(',');
+            const selectedApp = this.commonS.getSelectedApp(this.filterForm.get('apps')?.value);
             return this.sharedS.sendGetRequest(
               `${
                 this.activeGameApiendpoint
-              }/dashboard/stats?name=${''}&stat_fields=${stats}`
+              }/dashboard/stats?name=${''}&stat_fields=${stats}&bookie=${selectedApp}`
             );
           }
           return of([]);
@@ -151,16 +158,19 @@ export class ProjectionsComponent implements OnInit {
     if (this.stopFormTrigger) return;
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    const fixture_slug = formValue.match?.fixture_slug ?? '';
-
-    this.getProjections(stats, search, fixture_slug);
+    const fixture_slug =this.commonS.getTeams(formValue.match);
+    const selectedApp = this.commonS.getSelectedApp(formValue.apps); 
+    this.getProjections(stats, search, fixture_slug , selectedApp);
   }
 
   getProjections(
     stats: string,
     search: string,
-    fixture_slug: string,
-    loader: boolean = false
+    fixture_slug: any,
+    apps: string,
+    loader: boolean=false,
+
+  
   ) {
     if (!this.projectionData.length) {
       this.projectionLoader = true;
@@ -173,15 +183,17 @@ export class ProjectionsComponent implements OnInit {
     } else {
       this.projectionLoader = true;
       this.page = 1;
-    }
+    }    
 
     this.sharedS
       .sendGetRequest(
         `${this.activeGameApiendpoint}/dashboard/stats?name=${
           search ?? ''
-        }&stat_fields=${stats ?? ''}&fixture_slug=${
-          fixture_slug ?? ''
-        }&limit=${50}&offset=${this.page}`
+        }&stat_fields=${stats ?? ''}&team_a=${
+          fixture_slug.team_a ?? ''
+        }&team_b=${
+          fixture_slug.team_b ?? ''
+        }&limit=${50}&offset=${this.page}&bookie=${apps ?? ''}`
       )
       .subscribe({
         next: (res: any) => {
@@ -262,9 +274,10 @@ export class ProjectionsComponent implements OnInit {
       const formValue = this.filterForm.value;
       const stats = formValue.stats.map((stat: any) => stat.code).join(',');
       const search = formValue.search;
-      const fixture_slug = formValue.match?.fixture_slug ?? '';
+      const fixture_slug =this.commonS.getTeams(formValue.match);
+      const apps = this.commonS.getSelectedApp(formValue.apps);
 
-      this.getProjections(stats, search, fixture_slug, true);
+      this.getProjections(stats, search, fixture_slug,apps, true);
     }
   }
 
