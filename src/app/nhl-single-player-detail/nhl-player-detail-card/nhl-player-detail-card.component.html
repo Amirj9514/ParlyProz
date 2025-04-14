@@ -1,0 +1,91 @@
+<div class="container fle justify-content-center mt-5">
+  <div class="card">
+    <div class="top-container">
+      <div class="profile-image">{{ getInitials(playerProfile.name) }}</div>
+      <div class="ml-3">
+        <div class="name">
+          {{ playerProfile?.name }}
+          <span class="lightClr">( {{ playerProfile.position }} )</span>
+        </div>
+        <div class="flex gap-2 mt-2">
+          <div class="chip1">{{ playerProfile?.team }}</div>
+          <div class="chip2">NBA</div>
+          <div class="chip3">{{ playerProfile?.season }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="recent-border mt-4">
+      <span class="recent-orders">Player Max Stats</span>
+    </div>
+
+    <div class="mt-3 mb-4">
+      @if (playerDetail?.points ) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Points</div>
+        <div>{{ playerDetail?.points ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.blocked_shots) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Block Shots</div>
+        <div>{{ playerDetail?.blocked_shots ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.giveaways) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Giveaways</div>
+        <div>{{ playerDetail?.giveaways ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.goals) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Goals</div>
+        <div>{{ playerDetail?.goals ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.goals_against){
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Goals Against</div>
+        <div>{{ playerDetail?.goals_against ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.hits) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Hits</div>
+        <div>{{ playerDetail?.hits ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.saves) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Saves</div>
+        <div>{{ playerDetail?.saves ?? 0 }}</div>
+      </div>
+      }
+    </div>
+
+    <div class="middle-container flex align-items-center mt-3 p-2">
+      <div class="dollar-div">
+        <div class="round-div">
+          <div
+            class="flex align-items-center justify-content-center"
+            [appSvgIcon]="'basketball'"
+          ></div>
+        </div>
+      </div>
+      <div class="flex flex-column ml-2">
+        <div class="current-balance">Match Played</div>
+        <div class="amount">
+          <span class="dollar-sign"></span>{{ allPlayerData.length}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

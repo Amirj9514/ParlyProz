@@ -1,0 +1,23 @@
+.firstGrap {
+    overflow: auto;
+    height: calc(100vh - 116px);
+    border-radius: 10px;
+  }
+  .sportNav {
+    cursor: pointer;
+    padding: 4px 9px;
+    border-radius: 7px;
+    &:hover {
+      color: rgb(226 232 240 / 1);
+      background-color: hsla(217.9, 10.6%, 64.9%, 0.2);
+    }
+  }
+  
+  
+  
+  
+  @media screen and (max-width: 850px) {
+    .marBottom{
+      margin-bottom: 400px;
+    }
+  }

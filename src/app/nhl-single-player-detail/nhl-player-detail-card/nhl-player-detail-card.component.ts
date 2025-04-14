@@ -1,27 +1,30 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PlayerService } from '../../../Shared/services/player.service';
-import { SvgIconDirective } from '../../../Shared/directives/svg-icon.directive';
 import { SharedService } from '../../../Shared/services/shared.service';
+import { NhlService } from '../../../Shared/services/nhl.service';
+import { SvgIconDirective } from '../../../Shared/directives/svg-icon.directive';
 
 @Component({
-  selector: 'app-details-card',
+  selector: 'app-nhl-player-detail-card',
   standalone: true,
   imports: [SvgIconDirective],
-  templateUrl: './details-card.component.html',
-  styleUrl: './details-card.component.scss'
+  templateUrl: './nhl-player-detail-card.component.html',
+  styleUrl: './nhl-player-detail-card.component.scss'
 })
-export class DetailsCardComponent {
-  @Input()selectedSport:string = 'nba';
+export class NhlPlayerDetailCardComponent implements OnInit {
+ @Input()selectedSport:string = 'nba';
   playerProfile:any;
   playerDetail:any;
-  constructor(private playerS:PlayerService , private sharedS:SharedService) { }
-
+  allPlayerData:any[] = [];
+  constructor(private playerS:PlayerService , private sharedS:SharedService , private nhlService:NhlService) { }
+  
   ngOnInit(): void {
     this.getPlayerProfile();
   }
 
   getPlayerProfile(){
-    this.playerProfile =this.playerS.preparePlayerProfile();
+    this.playerProfile = this.nhlService.getPlayerProfile();
+    this.allPlayerData = this.nhlService.getAllPlayerData() ?? [];
     this.getMaxScore();
   }
 
@@ -32,8 +35,6 @@ export class DetailsCardComponent {
         if(res.status === 200){ 
           this.playerDetail = res.body;
         }
- 
-       
       },
       error: (error) => {
         console.log(error);

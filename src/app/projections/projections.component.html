@@ -29,8 +29,10 @@
         >
           <ng-template let-app #item>
             <div class="flex items-center gap-2">
-              <img [src]='app.imageUrl' style="width: 70px;height: 30px; object-fit: contain;"/>
-   
+              <img
+                [src]="app.imageUrl"
+                style="width: 70px; height: 30px; object-fit: contain"
+              />
             </div>
           </ng-template>
         </p-multiselect>
@@ -120,6 +122,7 @@
         [projectionData]="projectionData"
         [projectionLoader]="statsLoader"
         [totalRecords]="totalRecords"
+        [activeGameApiendpoint]="activeGameApiendpoint"
         [filterForm]="filterForm"
         (onPlayerClick)="openPlayerDetail($event)"
       ></app-projection-table>
@@ -167,11 +170,18 @@
   <app-coming-soon></app-coming-soon>
   }
 </div>
-@if (showPlayerDetail) {
+@if (showPlayerDetail) { @if (activeGameApiendpoint === 'nhl') {
+<app-nhl-single-player-detail
+  [selectedPlayerId]="selectedPlayer"
+  [selectedPlayerDetail]="selectedPlayerDetail"
+  [selectedSport]="activeGameApiendpoint"
+  (onClose)="showPlayerDetail = false; selectedPlayer = 0"
+></app-nhl-single-player-detail>
+}@else {
 <app-single-player-detail
   [selectedPlayerId]="selectedPlayer"
   [selectedPlayerDetail]="selectedPlayerDetail"
   [selectedSport]="activeGameApiendpoint"
   (onClose)="showPlayerDetail = false; selectedPlayer = 0"
 ></app-single-player-detail>
-}
+} }

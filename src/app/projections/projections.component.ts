@@ -26,6 +26,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { DatePipe } from '@angular/common';
 import { TeamService } from '../../Shared/services/team.service';
 import { CommonService } from '../../Shared/services/common.service';
+import { NhlSinglePlayerDetailComponent } from "../nhl-single-player-detail/nhl-single-player-detail.component";
 
 Chart.register(...registerables, ChartDataLabels);
 
@@ -47,7 +48,8 @@ Chart.register(...registerables, ChartDataLabels);
     CommonModule,
     PlayerCardComponent,
     SkeletonModule,
-  ],
+    NhlSinglePlayerDetailComponent
+],
   templateUrl: './projections.component.html',
   styleUrl: './projections.component.scss',
 })

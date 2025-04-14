@@ -1,0 +1,45 @@
+<div class="tableStyle">
+
+    <div class="detailHead" >
+      <div class="flex justify-content-center align-items-center text-lg font-semibold py-3">
+          <div>Gamelog - Last 15 Games</div>
+      </div>
+    </div>
+    <p-table
+      [value]="players"
+      stripedRows
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template #header>
+        <tr>
+          <th class="text-center">Opponent</th>
+          <th class="text-center">Date</th>
+          <th class="text-center">TOI</th>
+          <th class="text-center">PTS</th>
+          <th class="text-center">GOALS</th>
+          <th class="text-center">ASTS</th>
+          <th class="text-center">SHOTS</th>
+          <th class="text-center">HIT</th>
+          <th class="text-center">BLOCKED SHOTS</th>
+          <th class="text-center">SAVES</th>
+          <th class="text-center">GA</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-stats>
+        <tr>
+          <td class="text-center">{{stats?.opponent ?? '-'}}</td>
+          <td class="text-center">{{stats?.date |date:'MM-dd-yyyy'}}</td>
+          <td class="text-center">{{stats?.time_on_ice ?? '-'}}</td>
+          <td class="text-center">{{stats?.points ?? "-"}}</td>
+          <td class="text-center">{{stats?.goals ?? '-'}}</td>
+          <td class="text-center">{{ stats?.assists ?? '-'}}</td>
+          <td class="text-center">{{stats?.shots_on_goal ?? '-'}}</td>
+          <td class="text-center">{{stats?.hits ?? '-'}}</td>
+          <td class="text-center">{{stats?.blocked_shots ?? '-'}}</td>  
+          <td class="text-center">{{stats?.saves ??  '-'}}</td>
+          <td class="text-center">{{stats?.goals_against ?? '-'}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  
