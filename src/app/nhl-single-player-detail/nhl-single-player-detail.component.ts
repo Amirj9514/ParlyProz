@@ -10,11 +10,12 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { NhlPlayerCardComponent } from "./nhl-player-card/nhl-player-card.component";
 import { NhlPlayerDetailCardComponent } from "./nhl-player-detail-card/nhl-player-detail-card.component";
 import { NhlPlayerTableComponent } from "./nhl-player-table/nhl-player-table.component";
+import { NhlTeamGraphComponent } from "./nhl-team-graph/nhl-team-graph.component";
 
 @Component({
   selector: 'app-nhl-single-player-detail',
   standalone: true,
-  imports: [ButtonModule, SkeletonModule, NhlPlayerCardComponent, NhlPlayerDetailCardComponent, NhlPlayerTableComponent],
+  imports: [ButtonModule, SkeletonModule, NhlPlayerCardComponent, NhlPlayerDetailCardComponent, NhlPlayerTableComponent, NhlTeamGraphComponent],
   templateUrl: './nhl-single-player-detail.component.html',
   styleUrl: './nhl-single-player-detail.component.scss',
 })
@@ -29,9 +30,6 @@ export class NhlSinglePlayerDetailComponent {
   teamGraphLoader: boolean = false;
   constructor(
     private sharedS: SharedService,
-    private playerS: PlayerService,
-    private teamS: TeamService,
-    private playerStatsS: PlayerStatsService,
     private nhlService: NhlService // Assuming you have a service for NHL
   ) {}
 
@@ -78,7 +76,7 @@ export class NhlSinglePlayerDetailComponent {
           this.teamGraphLoader = false;
           if (res.status === 200) {
             this.teamDetail = res.body ?? [];
-            this.teamS.setTeamData(this.teamDetail);
+            this.nhlService.setTeamData(this.teamDetail);
           }
         },
         error: (error) => {

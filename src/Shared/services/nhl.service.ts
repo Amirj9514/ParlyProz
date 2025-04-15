@@ -31,11 +31,9 @@ export class NhlService {
   };
 
   getPlayerData(numberOfPlayers: number, order: 'asc' | 'desc' = 'asc') {
-    const players = this.playerData.slice(0, numberOfPlayers);  
+    const players = this.playerData.slice(0, numberOfPlayers);
     return players.sort((a, b) => {
-      const diff =
-        new Date(a.date).getTime() -
-        new Date(b.date).getTime();
+      const diff = new Date(a.date).getTime() - new Date(b.date).getTime();
       return order === 'asc' ? diff : -diff;
     });
   }
@@ -51,11 +49,9 @@ export class NhlService {
   ) {
     const players = this.getPlayerData(numberOfPlayers);
 
-    console.log('players', players);
-    
     const key = this.getStatsKeyByStatsId(stats);
-    console.log(key , stats);
-    
+    console.log(key, stats);
+
     const datasets = players.map((player: any) => {
       const date = new Date(player.date);
       const localDate = new Date(
@@ -73,7 +69,7 @@ export class NhlService {
 
       key.keyArr.forEach((k: string) => {
         console.log(k);
-        
+
         let value = player[k];
         if (typeof value === 'string') {
           value = parseFloat(value);
@@ -83,7 +79,7 @@ export class NhlService {
         // if (shortName === '3PM' || shortName === '3PA') {
         //   valueArray.push({ name: shortName, value: value || 0 });
         // } else {
-          valueArray.push({ name: k, value: value || 0 });
+        valueArray.push({ name: k, value: value || 0 });
         // }
       });
 
@@ -100,31 +96,27 @@ export class NhlService {
         },
       };
     });
-
-    console.log('datasets', datasets);
-    
     return datasets;
   }
-
 
   calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
     const ranges = [5, 10, 15, 20];
     const results: any = {};
-  
+
     ranges.forEach((range) => {
       let lineVal = 0;
       const players = this.playerData.slice(0, range);
-  
+
       if (!baseLine) {
         const lines = this.getStatLineValuesByName(stats);
         lineVal = lines.length ? lines[0] : 0;
       } else {
         lineVal = baseLine;
       }
-  
+
       let totalArry: any[] = [];
       const key = this.getStatsKeyByStatsId(stats);
-  
+
       key.keyArr.forEach((item) => {
         let prevArry: any[] = [];
         players.forEach((player: any) => {
@@ -133,17 +125,17 @@ export class NhlService {
         });
         totalArry.push(prevArry);
       });
-  
+
       let combinedArry: any[] = [];
-      if(totalArry.length > 0) {
-         combinedArry =  totalArry.reduce((acc, arr) => this.addArrays(acc, arr))
+      if (totalArry.length > 0) {
+        combinedArry = totalArry.reduce((acc, arr) => this.addArrays(acc, arr));
       }
-  
+
       let aboveBaseLineCount = 0;
       let totalValue = 0;
       let totalEntries = 0;
-  
-      combinedArry.forEach((value:any) => {
+
+      combinedArry.forEach((value: any) => {
         totalValue += value;
         totalEntries++;
         if (value > lineVal) {
@@ -151,19 +143,17 @@ export class NhlService {
         }
       });
 
-      
-  
       const average = totalEntries > 0 ? totalValue / totalEntries : 0;
       const percentageAboveBaseLine =
         totalEntries > 0 ? (aboveBaseLineCount / totalEntries) * 100 : 0;
-  
+
       results[`L${range}`] = {
         average: parseFloat(average.toFixed(1)),
         percentageAboveBaseLine: parseFloat(percentageAboveBaseLine.toFixed(1)),
         aboveBaseLineCount,
       };
     });
-  
+
     return results;
   }
 
@@ -177,6 +167,120 @@ export class NhlService {
 
   setTeamData(data: any) {
     this.teamData = data;
+  }
+
+  getTeamData(numberOfGame: number) {
+    const teamData = this.teamData.slice(0, numberOfGame);
+    const sortPlayers = teamData.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+    return sortPlayers;
+  }
+
+  prepareTeamStatsGraphData(
+    stats: string,
+    numberOfPlayers: number,
+    lineVal: number
+  ) {
+    const players = this.getTeamData(numberOfPlayers);
+    const key = this.getStatsKeyByStatsId(stats);
+    const datasets = players.map((player: any) => {
+      const date = new Date(player.match_datetime);
+      const localDate = new Date(
+        date.toLocaleString('en-US', { timeZone: 'UTC' })
+      );
+      const formattedDate = `${String(localDate.getMonth() + 1).padStart(
+        2,
+        '0'
+      )}-${String(localDate.getDate()).padStart(2, '0')}`;
+      const values: Record<string, number> = {};
+      const valueArray: any[] = [];
+
+      key.keyArr.forEach((k: string) => {
+        let value = player[k];
+        if (typeof value === 'string') {
+          value = parseFloat(value);
+        }
+        const shortName = this.returnShortName(k);
+        values[shortName] = value || 0;
+        valueArray.push({ name: k, value: value || 0 });
+      });
+
+      return {
+        category: `${formattedDate}_${player?.opponent_tricode ?? ''}_${
+          player?.match_datetime ?? ''
+        }`,
+        values,
+        data: {
+          date: formattedDate,
+          opponent: player.opponent_tricode,
+          player: player.name,
+          value: valueArray,
+        },
+      };
+    });
+    return datasets;
+  }
+
+  calculateTeamAvgAndHR(baseLine: number | null, stats: string) {
+    const ranges = [5, 10, 15, 20];
+    const results: any = {};
+
+    ranges.forEach((range) => {
+      let lineVal = 0;
+      const players = this.teamData.slice(0, range);
+
+      lineVal = baseLine || 0;
+
+      let totalArry: any[] = [];
+      if (stats !== '3PM') {
+        const key = this.getStatsKeyByStatsId(stats);
+        key.keyArr.forEach((item) => {
+          let prevArry: any[] = [];
+          players.forEach((player: any) => {
+            const value = player[item] ? parseFloat(player[item]) : 0;
+            prevArry.push(value);
+          });
+          totalArry.push(prevArry);
+        });
+      } else {
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player['three_pointers_made']
+            ? parseFloat(player['three_pointers_made'])
+            : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+      }
+
+      const combinedArry = totalArry.reduce((acc, arr) =>
+        this.addArrays(acc, arr)
+      );
+
+      let aboveBaseLineCount = 0;
+      let totalValue = 0;
+      let totalEntries = 0;
+
+      combinedArry.forEach((value: any) => {
+        totalValue += value;
+        totalEntries++;
+        if (value >= lineVal) {
+          aboveBaseLineCount++;
+        }
+      });
+      const average = totalEntries > 0 ? totalValue / totalEntries : 0;
+      const percentageAboveBaseLine =
+        totalEntries > 0 ? (aboveBaseLineCount / totalEntries) * 100 : 0;
+
+      results[`L${range}`] = {
+        average: parseFloat(average.toFixed(1)),
+        percentageAboveBaseLine: parseFloat(percentageAboveBaseLine.toFixed(1)),
+        aboveBaseLineCount,
+      };
+    });
+
+    return results;
   }
 
   // =======================================================================
@@ -230,13 +334,57 @@ export class NhlService {
   // ----------------- Line Stats Ends-----------------
   //====================================================================
 
-
   getStatsList() {
     return [
       {
         id: 'TOI',
         name: 'Time On Ice',
       },
+      {
+        id: 'PTS',
+        name: 'Points',
+      },
+      {
+        id: 'GOALS',
+        name: 'Goals',
+      },
+      {
+        id: 'ASTS',
+        name: 'Assists',
+      },
+      {
+        id: 'SHOTS',
+        name: 'Shots on Goal',
+      },
+      {
+        id: 'HIT',
+        name: 'Hits',
+      },
+      {
+        id: 'BLOCKED SHOTS',
+        name: 'Blocked Shots',
+      },
+      {
+        id: 'SAVES',
+        name: 'Saves',
+      },
+      {
+        id: 'GA',
+        name: 'Goals Against',
+      },
+      // {
+      //   id: 'PM',
+      //   name: 'Plus Minus',
+      // },
+    ];
+  }
+
+  getTeamStatsList() {
+    return [
+      // {
+      //   id: 'TOI',
+      //   name: 'Time On Ice',
+      // },
       {
         id: 'PTS',
         name: 'Points',
@@ -292,10 +440,13 @@ export class NhlService {
         return { key: 'blocked_shots', keyArr: ['blocked_shots'] };
       case 'SAVES':
         return { key: 'saves', keyArr: ['saves'] };
-        case 'GA':
-          return { key: 'goals_against', keyArr: ['goals_against'] };
-          case 'PM':
-            return { key: 'plus_minus', keyArr: ['plus_minus'] };
+      case 'GA':
+        return { key: 'goals_against', keyArr: ['goals_against'] };
+      case 'PM':
+        return { key: 'plus_minus', keyArr: ['plus_minus'] };
+
+      case 'TOI':
+        return { key: 'time_on_ice', keyArr: ['time_on_ice'] };
       default:
         return { key: '', keyArr: [] };
     }
@@ -360,7 +511,7 @@ export class NhlService {
     }
   }
 
-  getPlayerProfile(){
+  getPlayerProfile() {
     const playerProfile = this.playerData[0]; // Assuming you want the first player profile
     return playerProfile;
   }
