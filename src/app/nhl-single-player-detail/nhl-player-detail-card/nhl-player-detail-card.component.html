@@ -9,7 +9,7 @@
         </div>
         <div class="flex gap-2 mt-2">
           <div class="chip1">{{ playerProfile?.team }}</div>
-          <div class="chip2">NBA</div>
+          <div class="chip2" style="text-transform: uppercase;">{{selectedSport}}</div>
           <div class="chip3">{{ playerProfile?.season }}</div>
         </div>
       </div>
@@ -76,7 +76,7 @@
         <div class="round-div">
           <div
             class="flex align-items-center justify-content-center"
-            [appSvgIcon]="'basketball'"
+            [appSvgIcon]="'hockey'"
           ></div>
         </div>
       </div>
