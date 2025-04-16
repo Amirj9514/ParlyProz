@@ -53,10 +53,6 @@ export class NhlPlayerCardComponent {
         const statsId = this.nhlService.getStatsIdByKey(
           this.selectedPlayerDetail?.field
         ) ?? 'TOI';
-
-
-        console.log(this.selectedPlayerDetail, statsId);
-        
         this.selectedStats = this.statsList.find((stat) => stat.id === statsId);
         const line = this.selectedPlayerDetail?.line ?? 0;
   

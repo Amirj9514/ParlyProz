@@ -50,8 +50,6 @@ export class NhlService {
     const players = this.getPlayerData(numberOfPlayers);
 
     const key = this.getStatsKeyByStatsId(stats);
-    console.log(key, stats);
-
     const datasets = players.map((player: any) => {
       const date = new Date(player.date);
       const localDate = new Date(
@@ -68,8 +66,6 @@ export class NhlService {
       const valueArray: any[] = [];
 
       key.keyArr.forEach((k: string) => {
-        console.log(k);
-
         let value = player[k];
         if (typeof value === 'string') {
           value = parseFloat(value);

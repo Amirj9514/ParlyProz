@@ -21,11 +21,7 @@ export class PlayerService {
   playerData: any[] = [];
 
   setLineStats = (data: any) => {
-    console.log('data', data);
-    
     this.lineData = this.transformStats(data)?.stats ?? [];
-    console.log('lineData', this.lineData);
-    
   };
 
   transformStats(data: PlayerStat[]): TransformedStats {
