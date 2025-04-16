@@ -26,6 +26,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { DatePipe } from '@angular/common';
 import { TeamService } from '../../Shared/services/team.service';
 import { CommonService } from '../../Shared/services/common.service';
+import { NhlSinglePlayerDetailComponent } from "../nhl-single-player-detail/nhl-single-player-detail.component";
 
 Chart.register(...registerables, ChartDataLabels);
 
@@ -47,7 +48,8 @@ Chart.register(...registerables, ChartDataLabels);
     CommonModule,
     PlayerCardComponent,
     SkeletonModule,
-  ],
+    NhlSinglePlayerDetailComponent
+],
   templateUrl: './projections.component.html',
   styleUrl: './projections.component.scss',
 })
@@ -89,7 +91,7 @@ export class ProjectionsComponent implements OnInit {
     this.getActiveGame();
     this.getStatsAndProjections();
     this.observeFormChanges();
-    this.getGameList();
+    
    
   }
 
@@ -107,6 +109,7 @@ export class ProjectionsComponent implements OnInit {
         switchMap((res: any) => {
           if (res.status === 200) {
             this.statsList = res.body ?? [];
+            this.getGameList();
             this.filterForm.get('stats')?.setValue(this.statsList);
             const stats = this.statsList
               .map((stat: any) => stat.code)
