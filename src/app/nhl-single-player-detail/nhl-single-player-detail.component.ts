@@ -24,6 +24,7 @@ export class NhlSinglePlayerDetailComponent {
   @Input() selectedPlayerDetail: any;
   @Input() selectedSport: string = 'nba';
   @Output() onClose = new EventEmitter();
+  @Input() selectedPlayer: any;
   playerDetail: any[] = [];
   teamDetail: any[] = [];
   playerDetailLoader: boolean = false;
@@ -39,7 +40,6 @@ export class NhlSinglePlayerDetailComponent {
 
   getPlayerDetailWithLineStats() {
     this.playerDetailLoader = true;
-
     const lineStats$ = this.sharedS.sendGetRequest(
       `${this.selectedSport}/players/${this.selectedPlayerId}/lines`
     );

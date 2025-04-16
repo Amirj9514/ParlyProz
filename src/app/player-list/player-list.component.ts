@@ -53,6 +53,7 @@ export class PlayerListComponent implements OnInit {
   searchControl = new FormControl('');
 
   seletedPlayer: number = 0;
+  selectedPlayerDetail: any;
 
   constructor(private sharedS: SharedService) {}
   ngOnInit(): void {

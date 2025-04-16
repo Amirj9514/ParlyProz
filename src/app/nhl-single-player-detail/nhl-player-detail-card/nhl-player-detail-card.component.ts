@@ -25,7 +25,11 @@ export class NhlPlayerDetailCardComponent implements OnInit {
   getPlayerProfile(){
     this.playerProfile = this.nhlService.getPlayerProfile();
     this.allPlayerData = this.nhlService.getAllPlayerData() ?? [];
-    this.getMaxScore();
+
+    if(this.playerProfile){
+      this.getMaxScore();
+    }
+    // 
   }
 
 
