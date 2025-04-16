@@ -18,6 +18,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { NhlSinglePlayerDetailComponent } from '../nhl-single-player-detail/nhl-single-player-detail.component';
 
 @Component({
   selector: 'app-player-list',
@@ -33,7 +34,8 @@ import { CommonModule } from '@angular/common';
     InputIconModule,
     InputTextModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    NhlSinglePlayerDetailComponent
   ],
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss',

@@ -1,11 +1,11 @@
 <div class="container fle justify-content-center mt-5">
   <div class="card">
     <div class="top-container">
-      <div class="profile-image">{{ getInitials(playerProfile.name) }}</div>
+      <div class="profile-image">{{ getInitials(playerProfile?.name) }}</div>
       <div class="ml-3">
         <div class="name">
           {{ playerProfile?.name }}
-          <span class="lightClr">( {{ playerProfile.position }} )</span>
+          <span class="lightClr">( {{ playerProfile?.position }} )</span>
         </div>
         <div class="flex gap-2 mt-2">
           <div class="chip1">{{ playerProfile?.team }}</div>
