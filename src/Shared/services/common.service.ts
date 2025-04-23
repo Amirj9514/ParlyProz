@@ -22,7 +22,7 @@ export class CommonService {
     {
       id: 2,
       uid: 'sportsBet',
-      name: 'Sportsbet.io',
+      name: 'Sportsbet',
       description: 'sportsBet',
       imageUrl: 'assets/images/sportbet.png',
     },
