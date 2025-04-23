@@ -19,6 +19,13 @@ export class CommonService {
       description: 'betOnline',
       imageUrl: 'assets/images/betOnlineWhite.svg',
     },
+    {
+      id: 2,
+      uid: 'sportsBet',
+      name: 'Sportsbet.io',
+      description: 'sportsBet',
+      imageUrl: 'assets/images/sportbet.png',
+    },
   ];
   constructor() {}
 
