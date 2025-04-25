@@ -42,60 +42,16 @@
 
       <div class="col-5 pt-1">
         <!-- <p-floatlabel class="w-full" variant="on"> -->
-        <p-select
+        <p-multiselect 
           [options]="gameList"
           formControlName="match"
           class="w-full md:w-56"
           [showClear]="true"
+          optionLabel="optionData"
           placeholder="Select Game"
         >
-          <ng-template #selectedItem let-selectedOption>
-            @if (selectedOption) {
-            <div class="flex items-center gap-2">
-              <div class="flex gap-2">
-                <div class="flex align-items-center gap-2">
-                  <div class="text-xs font-semibold">
-                    {{ selectedOption.first_competitor_abbreviation }}
-                  </div>
-                  <div class="text-sm font-semibold">V/S</div>
-                  <div class="text-xs font-semibold">
-                    {{ selectedOption.second_competitor_abbreviation }}
-                  </div>
-                </div>
-
-                <div class="text-xs textClr-400">
-                  {{ "@" }}
-                  <span>{{
-                    selectedOption.start_time | date : "MM-dd-yyyy hh:mm a"
-                  }}</span>
-                </div>
-              </div>
-            </div>
-            }
-          </ng-template>
-          <ng-template let-country #item>
-            <div class="flex items-center gap-2">
-              <div class="flex gap-2">
-                <div class="flex align-items-center gap-2">
-                  <div class="text-xs font-semibold">
-                    {{ country.first_competitor_abbreviation }}
-                  </div>
-                  <div class="text-sm font-semibold">V/S</div>
-                  <div class="text-xs font-semibold">
-                    {{ country.second_competitor_abbreviation }}
-                  </div>
-                </div>
-
-                <div class="text-xs textClr-400">
-                  {{ "@" }}
-                  <span>{{
-                    country.start_time | date : "MM-dd-yyyy hh:mm a"
-                  }}</span>
-                </div>
-              </div>
-            </div>
-          </ng-template>
-        </p-select>
+          
+        </p-multiselect>
 
         <!-- </p-floatlabel> -->
       </div>

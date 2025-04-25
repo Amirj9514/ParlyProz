@@ -158,10 +158,32 @@ export class ProjectionsComponent implements OnInit {
   }
 
   applyFilter(formValue: any) {
-    if (this.stopFormTrigger) return;
+    if (this.stopFormTrigger) return; 
+
+    const selectedMatch = formValue.match;
+    let fixture_slugs: { team_a: any[]; team_b: any[] } = {
+      team_a: [],
+      team_b: [],
+    };
+    if (Array.isArray(selectedMatch) && selectedMatch.length) {
+      selectedMatch.forEach(match => {
+        const { team_a, team_b } = this.commonS.getTeams(match) || {};
+        if (team_a) fixture_slugs.team_a.push(team_a);
+        if (team_b) fixture_slugs.team_b.push(team_b);
+      });
+    }
+
+    const fixture_slug = {
+      team_a: fixture_slugs.team_a.join(','),
+      team_b: fixture_slugs.team_b.join(','),
+    }
+    
+
+    console.log('fixture_slugs', fixture_slug);
+    
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    const fixture_slug =this.commonS.getTeams(formValue.match);
+    // const fixture_slug =this.commonS.getTeams(formValue.match);
     const selectedApp = this.commonS.getSelectedApp(formValue.apps); 
     this.getProjections(stats, search, fixture_slug , selectedApp);
   }
@@ -187,6 +209,9 @@ export class ProjectionsComponent implements OnInit {
       this.projectionLoader = true;
       this.page = 1;
     }    
+
+    console.log('page', fixture_slug);
+    
 
     this.sharedS
       .sendGetRequest(
@@ -226,9 +251,23 @@ export class ProjectionsComponent implements OnInit {
       .sendGetRequest(`${this.activeGameApiendpoint}/matches`)
       .subscribe({
         next: (res: any) => {
+          this.gameList = [];
           this.gameListLoader = false;
           if (res.status === 200) {
-            this.gameList = res.body ?? [];
+            const data = res.body ?? [];
+            if(data.length ){
+              for (const element of data) {
+                const datePipe = new DatePipe('en-US');
+                const formattedDate = datePipe.transform(element.start_time, 'MM-dd-yyyy hh:mm a');
+                const optionData = `${element?.first_competitor_abbreviation} V/S ${element?.second_competitor_abbreviation} @ ${formattedDate}`;
+                this.gameList.push({
+                  ...element,
+                  optionData: optionData,
+                })
+              }
+            }else{
+              this.gameList = [];
+            }
             this.convertDate();
           }
         },
@@ -240,7 +279,6 @@ export class ProjectionsComponent implements OnInit {
   }
 
   openPlayerDetail(playerId: any) {
-    // console.log(playerId);
     this.selectedPlayerDetail = playerId;
     this.selectedPlayer = playerId.player_id;
     this.showPlayerDetail = true;
@@ -252,6 +290,10 @@ export class ProjectionsComponent implements OnInit {
       this.filterForm.reset();
       return;
     }
+
+    this.filterForm.controls['match'].setValue(null);
+    this.filterForm.controls['search'].setValue('');
+    this.filterForm.controls['stats'].setValue(null);
     this.comingSoon = false;
     this.activeGameApiendpoint = endpoint;
     this.getStatsAndProjections();
