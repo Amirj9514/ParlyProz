@@ -177,10 +177,7 @@ export class ProjectionsComponent implements OnInit {
       team_a: fixture_slugs.team_a.join(','),
       team_b: fixture_slugs.team_b.join(','),
     }
-    
-
-    console.log('fixture_slugs', fixture_slug);
-    
+  
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
     // const fixture_slug =this.commonS.getTeams(formValue.match);
@@ -209,9 +206,6 @@ export class ProjectionsComponent implements OnInit {
       this.projectionLoader = true;
       this.page = 1;
     }    
-
-    console.log('page', fixture_slug);
-    
 
     this.sharedS
       .sendGetRequest(
@@ -317,9 +311,27 @@ export class ProjectionsComponent implements OnInit {
     ) {
       // this.getPlayersList(true);
       const formValue = this.filterForm.value;
+
+      const selectedMatch = formValue.match;
+      let fixture_slugs: { team_a: any[]; team_b: any[] } = {
+        team_a: [],
+        team_b: [],
+      };
+      if (Array.isArray(selectedMatch) && selectedMatch.length) {
+        selectedMatch.forEach(match => {
+          const { team_a, team_b } = this.commonS.getTeams(match) || {};
+          if (team_a) fixture_slugs.team_a.push(team_a);
+          if (team_b) fixture_slugs.team_b.push(team_b);
+        });
+      }
+  
+      const fixture_slug = {
+        team_a: fixture_slugs.team_a.join(','),
+        team_b: fixture_slugs.team_b.join(','),
+      }
       const stats = formValue.stats.map((stat: any) => stat.code).join(',');
       const search = formValue.search;
-      const fixture_slug =this.commonS.getTeams(formValue.match);
+      // const fixture_slug =this.commonS.getTeams(formValue.match);
       const apps = this.commonS.getSelectedApp(formValue.apps);
 
       this.getProjections(stats, search, fixture_slug,apps, true);

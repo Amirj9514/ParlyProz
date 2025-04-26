@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, } from '@angular/core';
+import { CommonService } from '../../../Shared/services/common.service';
 
 @Component({
   selector: 'app-player-card',
@@ -11,6 +12,7 @@ import { Component, EventEmitter, Input, Output, } from '@angular/core';
 export class PlayerCardComponent {
   @Input() player: any;
   @Output() onPlayerClick = new EventEmitter<number>();
+  constructor(public commonS:CommonService){}
 
 
   redirectToPlayerDetail(player: any) {
