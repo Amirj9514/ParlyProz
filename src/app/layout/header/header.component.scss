@@ -111,7 +111,10 @@
 .sidebar li.profile {
     position: fixed;
     height: 60px;
-    width: 250px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     left: 0;
     bottom: -8px;
     padding: 10px 14px;
@@ -138,8 +141,19 @@
 
 .updateTime{
     position: fixed;
-    bottom:25px;
+    bottom:135px;
     left: 25px;
     font-size: 12px;
     color: #ffffff;
+}
+
+
+.logout{
+    width: 200px;
+    border: 1px solid #dc2626;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    color: #dc2626;
 }

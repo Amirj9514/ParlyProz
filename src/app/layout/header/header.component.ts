@@ -45,4 +45,13 @@ export class HeaderComponent implements OnInit {
     }
     return 'P';
   }
+
+
+  logout(){
+    this.sharedS.insertData({key:'userProfile', val: null});
+    this.sharedS.insertData({key:'token' , val:null});
+    this.sharedS.insertData({key: 'game' ,  val:null});
+
+    window.location.href = 'https://parlayproz.com/'
+  }
 }

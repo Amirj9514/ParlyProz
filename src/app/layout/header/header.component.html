@@ -46,17 +46,12 @@
           </div>
         </li>
     
-        <!-- <div class="menu_title mt-5">Community</div>
-        <li class="item">
-          <div href="#" class="nav_link submenu_item">
-            <span class="navlink_icon">
-              <i class="bx bx-home-alt"></i>
-            </span>
-            <span class="navlink">Trending</span>
+        <li  class="profile">
+          <div (click)="logout()" class="logout">
+            Logout
           </div>
+          
         </li>
-    
-        <li class="profile"></li> -->
         @if(updateDate){
           <div class="updateTime text-xs">Last Update: {{updateDate}}</div>
         }

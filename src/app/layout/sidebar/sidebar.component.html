@@ -3,34 +3,21 @@
     <img src="../../../assets/images/logo.PNG" />
   </div>
   <div class="body my-5">
-    <div
-      pTooltip="Projections"
-      tooltipPosition="right"
-      [routerLink]="'/'"
-      [routerLinkActive]="['active']"
+    <div pTooltip="Projections" tooltipPosition="right" [routerLink]="'/'" [routerLinkActive]="['active']"
       [routerLinkActiveOptions]="{ exact: true }"
-      class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2"
-    >
-      <div
-        class="flex align-items-center justify-content-center text-2xl"
-        [appSvgIcon]="'graph'"
-      ></div>
+      class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2">
+      <div class="flex align-items-center justify-content-center text-2xl" [appSvgIcon]="'graph'"></div>
     </div>
 
-    <div
-      [routerLink]="'/players'"
-      [routerLinkActive]="['active']"
-      pTooltip="Players"
-      tooltipPosition="right"
-      class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2"
-    >
-      <div
-        class="flex align-items-center justify-content-center text-2xl"
-        [appSvgIcon]="'players'"
-      ></div>
+    <div [routerLink]="'/players'" [routerLinkActive]="['active']" pTooltip="Players" tooltipPosition="right"
+      class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2">
+      <div class="flex align-items-center justify-content-center text-2xl" [appSvgIcon]="'players'"></div>
     </div>
   </div>
   <div class="footer">
+    <div style="border-radius: 10px;background-color: #dc2626;" (click)="logout()" class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2">
+      <div class="flex align-items-center justify-content-center text-2xl" [appSvgIcon]="'logout'"></div>
+    </div>
     <p-divider />
     <div class="profileAvatar">
       <div>{{getNameFirstLetter()}}</div>

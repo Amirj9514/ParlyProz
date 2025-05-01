@@ -3,7 +3,7 @@ import { DividerModule } from 'primeng/divider';
 import { AvatarModule } from 'primeng/avatar';
 import { SvgIconDirective } from '../../../Shared/directives/svg-icon.directive';
 import { TooltipModule } from 'primeng/tooltip';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SharedService } from '../../../Shared/services/shared.service';
 @Component({
   selector: 'app-sidebar',
@@ -20,7 +20,7 @@ import { SharedService } from '../../../Shared/services/shared.service';
 })
 export class SidebarComponent implements OnInit {
   userDetail: any;
-  constructor(private sharedS: SharedService) {}
+  constructor(private sharedS: SharedService , private router:Router) {}
   ngOnInit(): void {
     this.sharedS.getData().subscribe((data: any) => {
       this.userDetail = data?.userProfile ?? null;
@@ -35,5 +35,15 @@ export class SidebarComponent implements OnInit {
       return name.charAt(0).toUpperCase();
     }
     return 'P';
+  }
+
+  logout(){
+    console.log('logout');
+  
+    this.sharedS.insertData({key:'userProfile', val: null});
+    this.sharedS.insertData({key:'token' , val:null});
+    this.sharedS.insertData({key: 'game' ,  val:null});
+
+    window.location.href = 'https://parlayproz.com/'
   }
 }
