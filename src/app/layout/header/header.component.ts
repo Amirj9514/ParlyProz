@@ -52,6 +52,6 @@ export class HeaderComponent implements OnInit {
     this.sharedS.insertData({key:'token' , val:null});
     this.sharedS.insertData({key: 'game' ,  val:null});
 
-    window.location.href = 'https://parlayproz.com/'
+    window.location.href = 'https://parlayproz.com/scanner/'
   }
 }
