@@ -74,8 +74,8 @@ export class PlayerStatsService {
     this.playerStats = data;
   }
 
-  getPlayerData(numberOfPlayers: number ,order: 'asc' | 'desc' = 'asc') {
-    
+  getPlayerData(numberOfPlayers: number, order: 'asc' | 'desc' = 'asc') {
+
     const players = this.playerStats.slice(0, numberOfPlayers);
     return players.sort((a, b) => {
       const diff = new Date(a.match_datetime).getTime() - new Date(b.match_datetime).getTime();
@@ -86,7 +86,7 @@ export class PlayerStatsService {
   preparePlayerStatsGraphData(stats: string, numberOfPlayers: number, lineVal: number) {
     const players = this.getPlayerData(numberOfPlayers);
     const key = this.getStatsKeyByStatsId(stats);
-  
+
     const datasets = players.map((player: any) => {
       const date = new Date(player.match_datetime);
       const localDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
@@ -96,22 +96,23 @@ export class PlayerStatsService {
       const formattedDate = `${String(finalDateObj.getMonth() + 1).padStart(2, '0')}-${String(finalDateObj.getDate()).padStart(2, '0')}`;
       const values: Record<string, number> = {};
       const valueArray: any[] = [];
-  
+
       key.keyArr.forEach((k: string) => {
         let value = player[k];
         if (typeof value === 'string') {
           value = parseFloat(value);
         }
         const shortName = this.returnShortName(k);
+
         values[shortName] = value || 0;
-        if(shortName === '3PM' || shortName === '3PA') {
-          valueArray.push({ name:shortName, value: value || 0 });
-        }else{
-          valueArray.push({ name:k, value: value || 0 });
+        if (shortName === '3PM' || shortName === '3PA' || shortName === 'FGM' || shortName === 'FGA' || shortName === 'FTM' || shortName === 'FTA') {
+          valueArray.push({ name: shortName, value: value || 0 });
+        } else {
+          valueArray.push({ name: k, value: value || 0 });
         }
-        
+
       });
-  
+
       return {
         category: `${formattedDate}_${player?.opponent ?? ''}_${player?.match_datetime ?? ''}`,
         values,
@@ -126,20 +127,20 @@ export class PlayerStatsService {
     return datasets;
   }
 
-  convertToEST(dateString:any) {
+  convertToEST(dateString: any) {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
+      timeZone: 'America/New_York',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
     }).format(date);
-}
-  
+  }
+
 
   calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
     const ranges = [5, 10, 15, 20];
@@ -158,7 +159,30 @@ export class PlayerStatsService {
 
       let totalArry: any[] = [];
 
-      if(stats !== '3PM'){
+
+      if(stats === '3PM'){
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player['three_pointers_made'] ? parseFloat(player['three_pointers_made']) : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+      }else if(stats === 'FTM'){
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player['free_throws_made'] ? parseFloat(player['free_throws_made']) : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+
+      }else if(stats === 'FGM'){
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player['field_goals_made'] ? parseFloat(player['field_goals_made']) : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+      } else{
         const key = this.getStatsKeyByStatsId(stats);
         key.keyArr.forEach((item) => {
           let prevArry: any[] = [];
@@ -168,16 +192,8 @@ export class PlayerStatsService {
           });
           totalArry.push(prevArry);
         });
-      }else{
-        let prevArry: any[] = [];
-        players.forEach((player: any) => {
-          const value = player['three_pointers_made'] ? parseFloat(player['three_pointers_made']) : 0;
-          prevArry.push(value);
-        });
-        totalArry.push(prevArry);
       }
-      
-
+ 
       const combinedArry = totalArry.reduce((acc, arr) =>
         this.addArrays(acc, arr)
       );
@@ -231,6 +247,17 @@ export class PlayerStatsService {
         return '3PM';
       case 'three_pointers_attempted':
         return '3PA';
+      case 'field_goals_made':
+        return 'FGM';
+      case 'field_goals_attempted':
+        return 'FGA';
+      case 'free_throws_made':
+        return 'FTM';
+      case 'free_throws_attempted':
+        return 'FTA';
+      case 'fouls_personal':
+        return 'PF';
+
       default:
         return '';
         break;
@@ -252,9 +279,14 @@ export class PlayerStatsService {
       points_assists: 'PA',
       points_rebounds: 'PR',
       rebounds_assists: 'RA',
-      points_assists_rebounds: 'PRA'
+      points_assists_rebounds: 'PRA',
+      field_goals_made: 'FGM',
+      field_goals_attempted: 'FGA',
+      free_throws_made: 'FTM',
+      free_throws_attempted: 'FTA',
+      fouls_personal: 'PF',
     };
-  
+
     return mapping[key] || null;
   }
 
@@ -306,6 +338,20 @@ export class PlayerStatsService {
           key: 'points_rebounds_assists',
           keyArr: ['points', 'rebounds', 'assists'],
         };
+
+
+      case 'FGM':
+        return { key: 'field_goals_made', keyArr: ['field_goals_made', 'field_goals_attempted'] };
+
+      case 'FGA':
+        return { key: 'field_goals_attempted', keyArr: ['field_goals_attempted'] };
+      case 'FTM':
+        return { key: 'free_throws_made', keyArr: ['free_throws_made', 'free_throws_attempted'] };
+      case 'FTA':
+        return { key: 'free_throws_attempted', keyArr: ['free_throws_attempted'] };
+
+      case 'PF':
+        return { key: 'fouls_personal', keyArr: ['fouls_personal'] };
       default:
         return { key: '', keyArr: [] };
     }
@@ -369,6 +415,46 @@ export class PlayerStatsService {
         id: '3PA',
         name: '3-PT Attempts',
       },
+      {
+        id: 'FGM',
+        name: 'FG Made',
+      },
+      {
+        id: 'FGA',
+        name: 'FG Attempted',
+      },
+      {
+        id: 'FTM',
+        name: 'FT Made',
+      },
+      {
+        id: 'FTA',
+        name: 'FT Attempted',
+      },
+      {
+        id: 'PF',
+        name: 'Personal Fouls'
+      },
+      {
+        id: 'PFs',
+        name: 'Personal Fouls'
+      },
     ];
   }
+
+  graphDataKeys(activeKey: string) {
+    if (activeKey === 'FGM') {
+      return ['FGM', 'FGA'];
+    }
+    else if (activeKey === 'FTM') {
+      return ['FTM', 'FTA'];
+    } else {
+      return ['3PM', '3PA'];
+    }
+
+  }
 }
+
+
+
+

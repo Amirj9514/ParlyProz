@@ -103,8 +103,8 @@ export class PlayerStatsGraphComponent {
       this.activeColor = 'danger';
     }
 
-    if (activeStats === '3PM') {
-      this.createChartPM();
+    if (activeStats === '3PM' || activeStats === 'FGM' || activeStats === 'FTM' ) {
+      this.createChartPM(activeStats);
       return;
     }
     this.createChart();
@@ -381,7 +381,7 @@ export class PlayerStatsGraphComponent {
       .attr('stroke-width', 2);
   }
 
-  private createChartPM(): void {
+  private createChartPM(activeStats:string): void {
     // Define the width, height, and margin inside the createChart function
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
@@ -408,13 +408,14 @@ export class PlayerStatsGraphComponent {
       .style('pointer-events', 'none');
 
     // Transforming data to extract relevant fields
+
+   const keys = this.PlayerStatsS.graphDataKeys(activeStats)
     const chartData = this.graphData.map((d) => ({
-      
       game: d.category, // Use date as the game label
       opponent: d.data.opponent,
       player: d.data,
-      PM: d.values['3PM'], // Extract 3PM
-      PA: d.values['3PA'], // Extract 3PA
+      PM: d.values[keys[0]], // Extract 3PM
+      PA: d.values[keys[1]], // Extract 3PA
     }));
 
     const xScale = d3

@@ -200,7 +200,10 @@ export class PlayerService {
       case 'BS':
         return { key: 'blocks_steals', keyArr: ['blocks', 'steals'] };
       case '3PM':
-        return { key: 'three_pointers_made', keyArr: ['three_pointers_made' , 'three_pointers_attempted'] };
+        return {
+          key: 'three_pointers_made',
+          keyArr: ['three_pointers_made', 'three_pointers_attempted'],
+        };
       case '3PA':
         return {
           key: 'three_pointers_attempted',
@@ -219,6 +222,20 @@ export class PlayerService {
           key: 'points_rebounds_assists',
           keyArr: ['points', 'rebounds', 'assists'],
         };
+
+
+      case 'FGM':
+        return { key: 'field_goals_made', keyArr: ['field_goals_made' , 'field_goals_attempted'] };
+        
+      case 'FGA':
+        return { key: 'field_goals_attempted', keyArr: ['field_goals_attempted'] };
+      case 'FTM':
+        return { key: 'free_throws_made', keyArr: ['free_throws_made' , 'free_throws_attempted'] };
+      case 'FTA':
+        return { key: 'free_throws_attempted', keyArr: ['free_throws_attempted'] };
+
+      case 'PF':
+        return { key: 'fouls_personal', keyArr: ['fouls_personal'] };
       default:
         return { key: '', keyArr: [] };
     }
@@ -251,12 +268,24 @@ export class PlayerService {
         name: 'Points & Rebounds',
       },
       {
+        id: 'RA',
+        name: 'Rebounds & Assists',
+      },
+      {
+        id: 'PRA',
+        name: 'Points, Rebounds & Assists',
+      },
+      {
         id: 'BLKS',
         name: 'blocks',
       },
       {
         id: 'STLS',
         name: 'Steals',
+      },
+      {
+        id: 'BS',
+        name: 'Blocks & Steals',
       },
       {
         id: 'TO',
@@ -271,17 +300,29 @@ export class PlayerService {
         name: '3-PT Attempts',
       },
       {
-        id: 'BS',
-        name: 'Blocks & Steals',
+        id: 'FGM',
+        name: 'FG Made',
       },
       {
-        id: 'RA',
-        name: 'Rebounds & Assists',
+        id: 'FGA',
+        name: 'FG Attempted',
       },
       {
-        id: 'PRA',
-        name: 'Points, Rebounds & Assists',
+        id: 'FTM',
+        name: 'FT Made',
       },
+      {
+        id: 'FTA',
+        name: 'FT Attempted',
+      },
+      {
+        id:'PF',
+        name:'Personal Fouls'
+      },
+      {
+        id:'PF',
+        name:'Personal Fouls'
+      }
     ];
   }
 

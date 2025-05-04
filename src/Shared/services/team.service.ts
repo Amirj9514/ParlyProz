@@ -48,7 +48,7 @@ export class TeamService {
         }
         const shortName = this.returnShortName(k);
         values[shortName] = value || 0;
-        if(shortName === '3PM' || shortName === '3PA') {
+        if(shortName === '3PM' || shortName === '3PA' || shortName === 'FGM' || shortName === 'FGA' || shortName === 'FTM' || shortName === 'FTA') {
           valueArray.push({ name:shortName, value: value || 0 });
         }else{
           valueArray.push({ name:k, value: value || 0 });
@@ -84,7 +84,29 @@ export class TeamService {
  
 
       let totalArry: any[] = [];
-      if(stats !== '3PM'){
+      if(stats === '3PM'){
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player['three_pointers_made'] ? parseFloat(player['three_pointers_made']) : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+      }else if(stats === 'FTM'){
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player['free_throws_made'] ? parseFloat(player['free_throws_made']) : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+
+      }else if(stats === 'FGM'){
+        let prevArry: any[] = [];
+        players.forEach((player: any) => {
+          const value = player['field_goals_made'] ? parseFloat(player['field_goals_made']) : 0;
+          prevArry.push(value);
+        });
+        totalArry.push(prevArry);
+      } else{
         const key = this.getStatsKeyByStatsId(stats);
         key.keyArr.forEach((item) => {
           let prevArry: any[] = [];
@@ -94,13 +116,6 @@ export class TeamService {
           });
           totalArry.push(prevArry);
         });
-      }else{
-        let prevArry: any[] = [];
-        players.forEach((player: any) => {
-          const value = player['three_pointers_made'] ? parseFloat(player['three_pointers_made']) : 0;
-          prevArry.push(value);
-        });
-        totalArry.push(prevArry);
       }
 
       const combinedArry = totalArry.reduce((acc, arr) =>
@@ -157,10 +172,47 @@ export class TeamService {
         return '3PM';
       case 'three_pointers_attempted':
         return '3PA';
+      case 'field_goals_made':
+        return 'FGM';
+      case 'field_goals_attempted':
+        return 'FGA';
+      case 'free_throws_made':
+        return 'FTM';
+      case 'free_throws_attempted':
+        return 'FTA';
+      case 'fouls_personal':
+        return 'PF';
+
       default:
         return '';
         break;
     }
+  }
+
+  getStatsIdByKey(key: string): string | null {
+    const mapping: { [key: string]: string } = {
+      minutes: 'MIN',
+      points: 'PTS',
+      turnovers: 'TO',
+      steals: 'STLS',
+      blocks: 'BLKS',
+      assists: 'ASTS',
+      rebounds: 'REBS',
+      blocks_steals: 'BS',
+      three_pointers_made: '3PM',
+      three_pointers_attempted: '3PA',
+      points_assists: 'PA',
+      points_rebounds: 'PR',
+      rebounds_assists: 'RA',
+      points_assists_rebounds: 'PRA',
+      field_goals_made: 'FGM',
+      field_goals_attempted: 'FGA',
+      free_throws_made: 'FTM',
+      free_throws_attempted: 'FTA',
+      fouls_personal: 'PF',
+    };
+
+    return mapping[key] || null;
   }
 
   // ----------------- Stats Of NBA -----------------
@@ -208,6 +260,20 @@ export class TeamService {
           key: 'points_rebounds_assists',
           keyArr: ['points', 'rebounds', 'assists'],
         };
+
+
+      case 'FGM':
+        return { key: 'field_goals_made', keyArr: ['field_goals_made', 'field_goals_attempted'] };
+
+      case 'FGA':
+        return { key: 'field_goals_attempted', keyArr: ['field_goals_attempted'] };
+      case 'FTM':
+        return { key: 'free_throws_made', keyArr: ['free_throws_made', 'free_throws_attempted'] };
+      case 'FTA':
+        return { key: 'free_throws_attempted', keyArr: ['free_throws_attempted'] };
+
+      case 'PF':
+        return { key: 'fouls_personal', keyArr: ['fouls_personal'] };
       default:
         return { key: '', keyArr: [] };
     }
@@ -215,10 +281,10 @@ export class TeamService {
 
   getStatsList() {
     return [
-      // {
-      //   id: 'MIN',
-      //   name: 'Minutes Played',
-      // },
+      {
+        id: 'MIN',
+        name: 'Minutes Played',
+      },
       {
         id: 'PTS',
         name: 'Points',
@@ -271,6 +337,42 @@ export class TeamService {
         id: '3PA',
         name: '3-PT Attempts',
       },
+      {
+        id: 'FGM',
+        name: 'FG Made',
+      },
+      {
+        id: 'FGA',
+        name: 'FG Attempted',
+      },
+      {
+        id: 'FTM',
+        name: 'FT Made',
+      },
+      {
+        id: 'FTA',
+        name: 'FT Attempted',
+      },
+      {
+        id: 'PF',
+        name: 'Personal Fouls'
+      },
+      {
+        id: 'PFs',
+        name: 'Personal Fouls'
+      },
     ];
+  }
+
+  graphDataKeys(activeKey: string) {
+    if (activeKey === 'FGM') {
+      return ['FGM', 'FGA'];
+    }
+    else if (activeKey === 'FTM') {
+      return ['FTM', 'FTA'];
+    } else {
+      return ['3PM', '3PA'];
+    }
+
   }
 }
