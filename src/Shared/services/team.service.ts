@@ -357,10 +357,10 @@ export class TeamService {
         id: 'PF',
         name: 'Personal Fouls'
       },
-      {
-        id: 'PFs',
-        name: 'Personal Fouls'
-      },
+      // {
+      //   id: 'PFs',
+      //   name: 'Personal Fouls'
+      // },
     ];
   }
 
