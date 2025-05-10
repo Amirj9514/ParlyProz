@@ -51,7 +51,7 @@ export class SharedService {
     return this.sharedData.asObservable();
   }
 
-  /** to insert data this.sharedService.insertData({ key: 'name', val: response.data }) **/
+  /** to insert data this.sharedService.insertData({ key: 'name', val: response.da  ta }) **/
   public insertData(data: any) {
     this.sharedData.next({
       ...this.sharedData.getValue(),

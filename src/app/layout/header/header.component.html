@@ -20,10 +20,8 @@
       <ul class="nav-list">
         <div class="menu_title">Analysis</div>
         <li class="item">
-          <div [routerLink]="'/'" (click)="visible = false" class="nav_link submenu_item">
-            <span class="navlink_icon">
-              <i class="bx bx-home-alt"></i>
-            </span>
+          <div [routerLink]="'/'" (click)="visible = false" class="nav_link submenu_item gap-3">
+             <div [appSvgIcon]="'graph'" style="font-size: 22px;"></div>
             <span class="navlink">Projections</span>
           </div>
         </li>
@@ -38,11 +36,16 @@
         </li> -->
     
         <li class="item">
-          <div [routerLink]="'/players'" (click)="visible = false" class="nav_link submenu_item">
-            <span class="navlink_icon">
-              <i class="bx bx-home-alt"></i>
-            </span>
+          <div [routerLink]="'/players'" (click)="visible = false" class="nav_link submenu_item gap-3">
+            <div [appSvgIcon]="'players'" style="font-size: 22px;"></div>
             <span class="navlink">Players</span>
+          </div>
+        </li>
+
+          <li class="item">
+          <div (click)="visible = false;openWhatsAppGroup()" class="nav_link submenu_item gap-3">
+            <div [appSvgIcon]="'whatsapp'" style="font-size: 22px;"></div>
+            <span class="navlink">Join WhatsApp Group</span>
           </div>
         </li>
     

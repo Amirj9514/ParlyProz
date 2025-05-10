@@ -13,6 +13,11 @@
       class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2">
       <div class="flex align-items-center justify-content-center text-2xl" [appSvgIcon]="'players'"></div>
     </div>
+
+       <div pTooltip="Don’t miss updates join the WhatsApp group"  tooltipPosition="right" (click)="openWhatsAppGroup()"
+      class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2">
+      <div class="flex align-items-center justify-content-center text-2xl icon" [appSvgIcon]="'whatsapp'"></div>
+    </div>
   </div>
   <div class="footer">
     <div style="border-radius: 10px;background-color: #dc2626;" (click)="logout()" class="flex items-center gap-1 cursor-pointer text-base rounded-lg p-2 nav-item mb-2">

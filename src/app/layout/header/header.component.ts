@@ -54,4 +54,9 @@ export class HeaderComponent implements OnInit {
 
     window.location.href = 'https://parlayproz.com/scanner/'
   }
+
+
+    openWhatsAppGroup(){
+    window.open('https://chat.whatsapp.com/DpPciOVku1UBeaUCcuVdGb', '_blank');
+  }
 }

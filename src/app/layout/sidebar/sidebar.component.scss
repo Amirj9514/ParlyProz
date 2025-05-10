@@ -26,6 +26,8 @@
       transition: all 0.3s;
       &:hover {
         background-color: #e7e7e8;
+        color: #3F3F46;
+        
       }
     }
   }
@@ -61,6 +63,7 @@
   background-color: #9233df;
   color: #ffffff;
   &:hover {
-    background-color: #9233df;
+    background-color: #9233df !important;
+    color: #ffffff !important;
   }
 }
