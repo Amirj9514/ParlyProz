@@ -19,6 +19,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NhlSinglePlayerDetailComponent } from '../nhl-single-player-detail/nhl-single-player-detail.component';
+import { MlbSinglePlayerDetailComponent } from "../mlb-single-player-detail/mlb-single-player-detail.component";
 
 @Component({
   selector: 'app-player-list',
@@ -35,8 +36,9 @@ import { NhlSinglePlayerDetailComponent } from '../nhl-single-player-detail/nhl-
     InputTextModule,
     ReactiveFormsModule,
     CommonModule,
-    NhlSinglePlayerDetailComponent
-  ],
+    NhlSinglePlayerDetailComponent,
+    MlbSinglePlayerDetailComponent
+],
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss',
 })

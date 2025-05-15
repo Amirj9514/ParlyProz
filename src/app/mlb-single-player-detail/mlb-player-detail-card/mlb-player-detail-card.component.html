@@ -1,0 +1,135 @@
+<div class="container fle justify-content-center mt-5">
+  <div class="card">
+    <div class="top-container">
+      <div class="profile-image">{{ getInitials(playerProfile?.name) }}</div>
+      <div class="ml-3">
+        <div class="name">
+          {{ playerProfile?.name }}
+          <span class="lightClr">( {{ playerProfile?.position }} )</span>
+        </div>
+        <div class="flex gap-2 mt-2">
+          <div class="chip1">{{ playerProfile?.team }}</div>
+          <div class="chip2" style="text-transform: uppercase;">{{selectedSport}}</div>
+          <div class="chip3">{{ playerProfile?.season }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="recent-border mt-4">
+      <span class="recent-orders">Player Max Stats</span>
+    </div>
+
+    <div class="mt-3 mb-4">
+      @if (playerDetail?.batter_walks ) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Batter Walks</div>
+        <div>{{ playerDetail?.batter_walks ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.hits) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Hits</div>
+        <div>{{ playerDetail?.hits ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.runs) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Runs</div>
+        <div>{{ playerDetail?.runs ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.rbis) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">RBIS</div>
+        <div>{{ playerDetail?.rbis ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.doubles){
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Doubles</div>
+        <div>{{ playerDetail?.doubles ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.triples) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Triples</div>
+        <div>{{ playerDetail?.triples ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.home_runs) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Home Runs</div>
+        <div>{{ playerDetail?.home_runs ?? 0 }}</div>
+      </div>
+      }
+
+       @if (playerDetail?.stolen_bases){
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Stolen Bases</div>
+        <div>{{ playerDetail?.stolen_bases ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.hitter_strike_outs) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Hitter Strikeouts</div>
+        <div>{{ playerDetail?.hitter_strike_outs ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.hits_allowed) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Hits Allowed</div>
+        <div>{{ playerDetail?.hits_allowed ?? 0 }}</div>
+      </div>
+      }   @if (playerDetail?.earned_runs_allowed){
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Earned Runs Allowed</div>
+        <div>{{ playerDetail?.earned_runs_allowed ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.pitcher_strike_outs) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Pitcher Strikeouts</div>
+        <div>{{ playerDetail?.pitcher_strike_outs ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.pitcher_wins) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">Pitcher Wins</div>
+        <div>{{ playerDetail?.pitcher_wins ?? 0 }}</div>
+      </div>
+      }
+    </div>
+
+    <div class="middle-container flex align-items-center mt-3 p-2">
+      <div class="dollar-div">
+        <div class="round-div">
+          <div
+            class="flex align-items-center justify-content-center"
+            [appSvgIcon]="'baseball'"
+          ></div>
+        </div>
+      </div>
+      <div class="flex flex-column ml-2">
+        <div class="current-balance">Match Played</div>
+        <div class="amount">
+          <span class="dollar-sign"></span>{{ allPlayerData.length}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

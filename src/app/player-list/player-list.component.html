@@ -149,6 +149,11 @@
     (onClose)="seletedPlayer = 0"
     [selectedSport]="selectedGame"
   ></app-single-player-detail>
+  }@else if(selectedGame === 'mlb') {
+    <app-mlb-single-player-detail
+    [selectedPlayerId]="seletedPlayer"
+    (onClose)="seletedPlayer = 0"
+    [selectedSport]="selectedGame"></app-mlb-single-player-detail>
   }@else {
 
     <app-nhl-single-player-detail
