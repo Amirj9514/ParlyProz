@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
     { label: 'NBA', icon: 'basketball', value: 'NBA', api: 'nba' },
     { label: 'NHL', icon: 'hockey', value: 'NHL', api: 'nhl' ,  constant: false },
     { label: 'MLB', icon: 'baseball', value: 'MLB', api: 'mlb' ,  constant: false },
-    { label: 'WNBA', icon: 'basketball', value: 'wnba', api: 'wnba' ,constant: true },
+    { label: 'WNBA', icon: 'basketball', value: 'wnba', api: 'wnba' ,constant: false },
     { label: 'NFL', icon: 'football', value: 'NFL', api: null ,  constant: true },
     { label: 'Soccer', icon: 'soccer', value: 'Soccer', api: null ,  constant: true },
     
