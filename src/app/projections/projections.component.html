@@ -42,7 +42,7 @@
 
       <div class="col-5 pt-1">
         <!-- <p-floatlabel class="w-full" variant="on"> -->
-        <p-multiselect 
+        <p-multiselect
           [options]="gameList"
           formControlName="match"
           class="w-full md:w-56"
@@ -50,7 +50,6 @@
           optionLabel="optionData"
           placeholder="Select Game"
         >
-          
         </p-multiselect>
 
         <!-- </p-floatlabel> -->
@@ -133,7 +132,14 @@
   [selectedSport]="activeGameApiendpoint"
   (onClose)="showPlayerDetail = false; selectedPlayer = 0"
 ></app-nhl-single-player-detail>
-}@else {
+}@else if (activeGameApiendpoint === 'mlb'){
+<app-mlb-single-player-detail
+  [selectedPlayerId]="selectedPlayer"
+  [selectedPlayerDetail]="selectedPlayerDetail"
+  [selectedSport]="activeGameApiendpoint"
+  (onClose)="showPlayerDetail = false; selectedPlayer = 0"
+></app-mlb-single-player-detail>
+} @else {
 <app-single-player-detail
   [selectedPlayerId]="selectedPlayer"
   [selectedPlayerDetail]="selectedPlayerDetail"
