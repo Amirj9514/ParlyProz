@@ -29,6 +29,7 @@ import { debounceTime, Subject } from 'rxjs';
 export class PlayerStatsGraphComponent {
   @ViewChild('chart', { static: true }) chartContainer!: ElementRef;
   @Input() selectedPlayerDetail: any;
+  @Input() selectedSport: string = 'nba';
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
@@ -49,14 +50,20 @@ export class PlayerStatsGraphComponent {
   ngOnInit() {
     setTimeout(() => {
       this.statsList = this.PlayerStatsS.getStatsList();
-      const statsId = this.PlayerStatsS.getStatsIdByKey(
-        this.selectedPlayerDetail?.field
-      ) ?? 'MIN';
+      if (this.selectedSport === 'wnba') {
+        this.statsList = this.statsList.filter((stat: any) => {
+          return stat.id !== 'PF' && stat.id !== 'FTA' && stat.id !== 'FTM';
+        });
+      }
+
+      const statsId =
+        this.PlayerStatsS.getStatsIdByKey(this.selectedPlayerDetail?.field) ??
+        'MIN';
       this.selectedStats = this.statsList.find((stat) => stat.id === statsId);
       const line = this.selectedPlayerDetail?.line ?? 0;
 
       this.thresholdValue = this.selectedPlayerDetail?.line ?? 0;
-      this.getStatsList(statsId || 'MIN', 10 , line);
+      this.getStatsList(statsId || 'MIN', 10, line);
     }, 100);
 
     //
@@ -103,7 +110,11 @@ export class PlayerStatsGraphComponent {
       this.activeColor = 'danger';
     }
 
-    if (activeStats === '3PM' || activeStats === 'FGM' || activeStats === 'FTM' ) {
+    if (
+      activeStats === '3PM' ||
+      activeStats === 'FGM' ||
+      activeStats === 'FTM'
+    ) {
       this.createChartPM(activeStats);
       return;
     }
@@ -381,7 +392,7 @@ export class PlayerStatsGraphComponent {
       .attr('stroke-width', 2);
   }
 
-  private createChartPM(activeStats:string): void {
+  private createChartPM(activeStats: string): void {
     // Define the width, height, and margin inside the createChart function
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
@@ -409,7 +420,7 @@ export class PlayerStatsGraphComponent {
 
     // Transforming data to extract relevant fields
 
-   const keys = this.PlayerStatsS.graphDataKeys(activeStats)
+    const keys = this.PlayerStatsS.graphDataKeys(activeStats);
     const chartData = this.graphData.map((d) => ({
       game: d.category, // Use date as the game label
       opponent: d.data.opponent,
