@@ -3,8 +3,11 @@ import {
   Component,
   ElementRef,
   inject,
+  Input,
+  OnChanges,
   OnInit,
   PLATFORM_ID,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import * as d3 from 'd3';
@@ -39,8 +42,9 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './team-graph.component.html',
   styleUrl: './team-graph.component.scss',
 })
-export class TeamGraphComponent implements OnInit {
+export class TeamGraphComponent implements OnInit , OnChanges {
   @ViewChild('TeamChart', { static: true }) chartContainer!: ElementRef;
+  @Input() selectedSport: any = 'nba';
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
@@ -61,8 +65,15 @@ export class TeamGraphComponent implements OnInit {
     private playerS: PlayerService
   ) {}
 
-  ngOnInit() {
-    this.statsList = this.PlayerStatsS.getStatsList();
+  ngOnChanges(changes: SimpleChanges): void {
+      this.statsList = this.PlayerStatsS.getStatsList();
+      console.log(this.selectedSport);
+      
+    if (this.selectedSport === 'wnba') {
+      this.statsList = this.statsList.filter((stat: any) => {
+        return stat.id !== 'PF' && stat.id !== 'FTA' && stat.id !== 'FTM';
+      });
+    }
     this.selectedStats = this.statsList[0];
     this.getStatsList('PTS', 10);
     this.debounceSubject.pipe(debounceTime(500)).subscribe((val) => {
@@ -73,6 +84,10 @@ export class TeamGraphComponent implements OnInit {
         this.thresholdValue
       );
     });
+  }
+
+  ngOnInit() {
+  
   }
 
   getStatsList(stats: string, numberOfStats: number, line?: number) {
@@ -103,7 +118,11 @@ export class TeamGraphComponent implements OnInit {
     } else {
       this.activeColor = 'danger';
     }
-    if (activeStats === '3PM' || activeStats === 'FGM' || activeStats === 'FTM' ) {
+    if (
+      activeStats === '3PM' ||
+      activeStats === 'FGM' ||
+      activeStats === 'FTM'
+    ) {
       this.createChartPM(activeStats);
       return;
     }
@@ -149,7 +168,7 @@ export class TeamGraphComponent implements OnInit {
     // Emit debounced value
     this.debounceSubject.next(lineVal);
   }
- private createChart() {
+  private createChart() {
     const data: any[] = this.graphData;
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
@@ -244,7 +263,6 @@ export class TeamGraphComponent implements OnInit {
           .range(['#e74c3c', '#c0392b', '#922b21']);
 
         allKeys.forEach((key, index) => {
-       
           const value = d.values[key];
           if (value === 0) return;
 
@@ -259,33 +277,42 @@ export class TeamGraphComponent implements OnInit {
           const barColor =
             totalValue >= lineValue ? colorAbove(key) : colorBelow(key);
 
-            const barPath = isLastStack
+          const barPath = isLastStack
             ? `M ${x},${y + barRadius} 
                A ${barRadius},${barRadius} 0 0 1 ${x + barRadius},${y} 
                H ${x + xScale.bandwidth() - barRadius} 
-               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${y + barRadius} 
+               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
+                y + barRadius
+              } 
                V ${y + barHeight} H ${x} Z`
-            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${y + barHeight} H ${x} Z`;
+            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${
+                y + barHeight
+              } H ${x} Z`;
 
           d3.select(this)
             .append('path')
             .attr('d', barPath)
             .attr('fill', barColor as string)
             .on('mouseover', function (event) {
-
               const statsHtml = d.data?.value
-              .map(
-                (stat:any) => `
+                .map(
+                  (stat: any) => `
                 <div style="display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; opacity: 0.8;">${stat?.name || 'N/A'}</span>
-                  <span style="font-size: 12px; font-weight: bold;">${stat?.value || 'N/A'}</span>
+                  <span style="font-size: 12px; opacity: 0.8;">${
+                    stat?.name || 'N/A'
+                  }</span>
+                  <span style="font-size: 12px; font-weight: bold;">${
+                    stat?.value || 'N/A'
+                  }</span>
                 </div>`
-              )
-              .join('');
+                )
+                .join('');
               const tooltipHtml = `
               <div class="tooltipBody">
                 <div class="flex align-items-center" >
-                  📅 ${d.data?.date || 'N/A'} &nbsp; @ ${d.data?.opponent || 'N/A'}
+                  📅 ${d.data?.date || 'N/A'} &nbsp; @ ${
+                d.data?.opponent || 'N/A'
+              }
                 </div>
                 
                 <hr style="border: 0.5px solid rgba(255, 255, 255, 0.1); margin: 8px 0;">
@@ -318,8 +345,6 @@ export class TeamGraphComponent implements OnInit {
             .attr('font-weight', 'bold')
             .style('display', allKeys.length > 1 ? 'block' : 'none')
             .attr('class', 'hide');
-           
-            
         });
 
         d3.select(this)
@@ -330,8 +355,8 @@ export class TeamGraphComponent implements OnInit {
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
           .attr('font-size', '12px')
-          .attr('font-weight', 'bold')
-          // .style('display', allKeys.length > 1 ? 'block' : 'none');
+          .attr('font-weight', 'bold');
+        // .style('display', allKeys.length > 1 ? 'block' : 'none');
       });
 
     svg
@@ -374,9 +399,7 @@ export class TeamGraphComponent implements OnInit {
       .attr('stroke-width', 2);
   }
 
-
-
- private createChartPM(activeStats:string): void {
+  private createChartPM(activeStats: string): void {
     // Define the width, height, and margin inside the createChart function
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
@@ -404,7 +427,7 @@ export class TeamGraphComponent implements OnInit {
 
     // Transforming data to extract relevant fields
 
-   const keys = this.PlayerStatsS.graphDataKeys(activeStats)
+    const keys = this.PlayerStatsS.graphDataKeys(activeStats);
     const chartData = this.graphData.map((d) => ({
       game: d.category, // Use date as the game label
       opponent: d.data.opponent,

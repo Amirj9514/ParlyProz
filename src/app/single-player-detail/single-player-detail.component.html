@@ -12,11 +12,11 @@
   <div class="grid m-0 p-0">
     <div class="md:col-9 col-12">
       <div class="firstGrap mt-4">
-        <app-player-stats-graph [selectedPlayerDetail]="selectedPlayerDetail"></app-player-stats-graph>
+        <app-player-stats-graph [selectedPlayerDetail]="selectedPlayerDetail" [selectedSport]="selectedSport"></app-player-stats-graph>
 
         @if (!teamGraphLoader) {
           <div class="mt-4">
-            <app-team-graph></app-team-graph>
+            <app-team-graph [selectedSport]="selectedSport"></app-team-graph>
           </div>
         }
        
