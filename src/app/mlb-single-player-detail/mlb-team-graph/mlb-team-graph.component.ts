@@ -25,7 +25,7 @@ import { MlbService } from '../../../Shared/services/mlb.service';
 @Component({
   selector: 'app-mlb-team-graph',
   standalone: true,
- imports: [
+  imports: [
     SelectButtonModule,
     FormsModule,
     ChartModule,
@@ -37,10 +37,10 @@ import { MlbService } from '../../../Shared/services/mlb.service';
     ButtonModule,
   ],
   templateUrl: './mlb-team-graph.component.html',
-  styleUrl: './mlb-team-graph.component.scss'
+  styleUrl: './mlb-team-graph.component.scss',
 })
 export class MlbTeamGraphComponent {
-@ViewChild('TeamChart', { static: true }) chartContainer!: ElementRef;
+  @ViewChild('TeamChart', { static: true }) chartContainer!: ElementRef;
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
@@ -56,12 +56,39 @@ export class MlbTeamGraphComponent {
     { name: 'L20', value: 4, avg: 0, hr: 0 },
   ];
 
-  constructor(
-  private nhlService: MlbService,
-  ) {}
+  constructor(private nhlService: MlbService) {}
 
   ngOnInit() {
     this.statsList = this.nhlService.getTeamStatsList();
+    let newStatsList: any[] = [];
+    const playersStats: any[] = this.nhlService.getPlayerData(20) ?? [];
+    this.statsList.map((stat) => {
+      if (stat.id !== 'H+R+RBI') {
+        const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
+        let isStatFound = false;
+        for (const player of playersStats) {
+          if (player[statName.key]) {
+            isStatFound = true;
+            break;
+          }
+        }
+
+        if (isStatFound) {
+          newStatsList.push(stat);
+        }
+      }
+    });
+    for (const stats of newStatsList) {
+      if (stats.id === 'HITS' || stats.id === 'RUNS' || stats.id === 'RBIS') {
+        newStatsList.push({
+          id: 'H+R+RBI',
+          name: 'Hits+Runs+RBIs',
+        });
+        break;
+      }
+    }
+    this.statsList = newStatsList;
+
     this.selectedStats = this.statsList[0];
     this.getStatsList('HITS', 10);
     this.debounceSubject.pipe(debounceTime(500)).subscribe((val) => {
@@ -145,7 +172,7 @@ export class MlbTeamGraphComponent {
     // Emit debounced value
     this.debounceSubject.next(lineVal);
   }
- private createChart() {
+  private createChart() {
     const data: any[] = this.graphData;
 
     const containerWidth = this.chartContainer.nativeElement.clientWidth || 500;
@@ -240,7 +267,6 @@ export class MlbTeamGraphComponent {
           .range(['#e74c3c', '#c0392b', '#922b21']);
 
         allKeys.forEach((key, index) => {
-       
           const value = d.values[key];
           if (value === 0) return;
 
@@ -255,33 +281,42 @@ export class MlbTeamGraphComponent {
           const barColor =
             totalValue >= lineValue ? colorAbove(key) : colorBelow(key);
 
-            const barPath = isLastStack
+          const barPath = isLastStack
             ? `M ${x},${y + barRadius} 
                A ${barRadius},${barRadius} 0 0 1 ${x + barRadius},${y} 
                H ${x + xScale.bandwidth() - barRadius} 
-               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${y + barRadius} 
+               A ${barRadius},${barRadius} 0 0 1 ${x + xScale.bandwidth()},${
+                y + barRadius
+              } 
                V ${y + barHeight} H ${x} Z`
-            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${y + barHeight} H ${x} Z`;
+            : `M ${x},${y} H ${x + xScale.bandwidth()} V ${
+                y + barHeight
+              } H ${x} Z`;
 
           d3.select(this)
             .append('path')
             .attr('d', barPath)
             .attr('fill', barColor as string)
             .on('mouseover', function (event) {
-
               const statsHtml = d.data?.value
-              .map(
-                (stat:any) => `
+                .map(
+                  (stat: any) => `
                 <div style="display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; opacity: 0.8;">${stat?.name || 'N/A'}</span>
-                  <span style="font-size: 12px; font-weight: bold;">${stat?.value || 'N/A'}</span>
+                  <span style="font-size: 12px; opacity: 0.8;">${
+                    stat?.name || 'N/A'
+                  }</span>
+                  <span style="font-size: 12px; font-weight: bold;">${
+                    stat?.value || 'N/A'
+                  }</span>
                 </div>`
-              )
-              .join('');
+                )
+                .join('');
               const tooltipHtml = `
               <div class="tooltipBody">
                 <div class="flex align-items-center" >
-                  📅 ${d.data?.date || 'N/A'} &nbsp; @ ${d.data?.opponent || 'N/A'}
+                  📅 ${d.data?.date || 'N/A'} &nbsp; @ ${
+                d.data?.opponent || 'N/A'
+              }
                 </div>
                 
                 <hr style="border: 0.5px solid rgba(255, 255, 255, 0.1); margin: 8px 0;">
@@ -314,8 +349,6 @@ export class MlbTeamGraphComponent {
             .attr('font-weight', 'bold')
             .style('display', allKeys.length > 1 ? 'block' : 'none')
             .attr('class', 'hide');
-           
-            
         });
 
         d3.select(this)
@@ -326,8 +359,8 @@ export class MlbTeamGraphComponent {
           .attr('text-anchor', 'middle')
           .attr('fill', 'white')
           .attr('font-size', '12px')
-          .attr('font-weight', 'bold')
-          // .style('display', allKeys.length > 1 ? 'block' : 'none');
+          .attr('font-weight', 'bold');
+        // .style('display', allKeys.length > 1 ? 'block' : 'none');
       });
 
     svg
@@ -369,6 +402,4 @@ export class MlbTeamGraphComponent {
       .attr('stroke-dasharray', '10,10')
       .attr('stroke-width', 2);
   }
-
 }
-
