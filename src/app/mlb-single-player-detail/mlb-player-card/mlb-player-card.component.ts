@@ -109,6 +109,10 @@ export class MlbPlayerCardComponent {
       this.thresholdValue = line;
     } else {
       const lines = this.nhlService.getStatLineValuesByName(activeStats);
+     
+      console.log('lines', lines);
+      
+      
       this.thresholdValue = lines.length ? lines[0] : 0;
     }
     this.graphData = this.nhlService.preparePlayerStatsGraphData(
@@ -374,7 +378,7 @@ export class MlbPlayerCardComponent {
 
   onStatsChange(event: any) {
     this.selectedStats = event;
-    this.getStatsList(event.id, this.value * 5, this.thresholdValue);
+    this.getStatsList(event.id, this.value * 5);
   }
 
   onPlayerMatchChange(event: any) {
