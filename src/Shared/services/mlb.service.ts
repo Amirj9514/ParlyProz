@@ -353,6 +353,10 @@ export class MlbService {
         name: 'Hits+Runs+RBIs',
       },
       {
+        id: '1B',
+        name: 'Singles',
+      },
+      {
         id: '2B',
         name: 'Doubles',
       },
@@ -392,6 +396,18 @@ export class MlbService {
       {
         id: 'WINS',
         name: 'Pitcher Wins',
+      },
+      {
+        id: 'PO',
+        name: 'Pitching Outs',
+      },
+      {
+        id: 'P',
+        name: 'Total Pitches',
+      },
+      {
+        id: 'BASES',
+        name: 'Total Bases',
       },
     ];
   }
@@ -459,6 +475,19 @@ export class MlbService {
         id: 'WINS',
         name: 'Pitcher Wins',
       },
+        {
+        id: 'PO',
+        name: 'Pitching Outs',
+      },
+      {
+        id: 'P',
+        name: 'Total Pitches',
+      },
+      {
+        id: 'BASES',
+        name: 'Total Bases',
+      },
+      
     ];
   }
 
@@ -498,6 +527,17 @@ export class MlbService {
         };
       case 'WINS':
         return { key: 'pitcher_wins', keyArr: ['pitcher_wins'] };
+      
+      case 'PO':
+        return { key: 'pitching_outs', keyArr: ['pitching_outs'] };
+
+      case 'P':
+        return { key: 'total_pitches', keyArr: ['total_pitches'] };
+      
+      case 'BASES':
+        return { key: 'total_bases', keyArr: ['total_bases'] };
+      case '1B':
+        return { key: 'singles', keyArr: ['singles'] };
 
       default:
         return { key: '', keyArr: [] };
@@ -520,6 +560,10 @@ export class MlbService {
       earned_runs_allowed: 'ER',
       pitching_strike_outs: 'PIT SO',
       pitcher_wins: 'WINS',
+      pitching_outs: 'PO',
+      total_pitches: 'P',
+      total_bases: 'BASES',
+      singles: '1B',
     };
 
     return mapping[key] || null;
@@ -569,6 +613,14 @@ export class MlbService {
         return '2B';
       case 'triples':
         return '3B';
+      case 'singles':
+        return '1B';
+      case 'pitching_outs':
+        return 'PO';
+      case 'total_pitches':
+        return 'P';
+      case 'total_bases':
+        return 'BASES';
 
       default:
         return '';
