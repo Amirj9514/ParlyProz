@@ -57,7 +57,7 @@ export class MlbPlayerCardComponent {
           const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
           let isStatFound = false;
           for (const player of playersStats) {
-            if (player[statName.key]) {
+            if (player[statName.key] || player[statName.key] === 0) {
               isStatFound = true;
               break;
             }

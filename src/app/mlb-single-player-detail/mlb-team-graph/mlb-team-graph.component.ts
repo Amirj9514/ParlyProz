@@ -60,34 +60,34 @@ export class MlbTeamGraphComponent {
 
   ngOnInit() {
     this.statsList = this.nhlService.getTeamStatsList();
-    let newStatsList: any[] = [];
-    const playersStats: any[] = this.nhlService.getPlayerData(20) ?? [];
-    this.statsList.map((stat) => {
-      if (stat.id !== 'H+R+RBI') {
-        const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
-        let isStatFound = false;
-        for (const player of playersStats) {
-          if (player[statName.key]) {
-            isStatFound = true;
-            break;
-          }
-        }
+    // let newStatsList: any[] = [];
+    // const playersStats: any[] = this.nhlService.getPlayerData(20) ?? [];
+    // this.statsList.map((stat) => {
+    //   if (stat.id !== 'H+R+RBI') {
+    //     const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
+    //     let isStatFound = false;
+    //     for (const player of playersStats) {
+    //       if (player[statName.key]) {
+    //         isStatFound = true;
+    //         break;
+    //       }
+    //     }
 
-        if (isStatFound) {
-          newStatsList.push(stat);
-        }
-      }
-    });
-    for (const stats of newStatsList) {
-      if (stats.id === 'HITS' || stats.id === 'RUNS' || stats.id === 'RBIS') {
-        newStatsList.push({
-          id: 'H+R+RBI',
-          name: 'Hits+Runs+RBIs',
-        });
-        break;
-      }
-    }
-    this.statsList = newStatsList;
+    //     if (isStatFound) {
+    //       newStatsList.push(stat);
+    //     }
+    //   }
+    // });
+    // for (const stats of newStatsList) {
+    //   if (stats.id === 'HITS' || stats.id === 'RUNS' || stats.id === 'RBIS') {
+    //     newStatsList.push({
+    //       id: 'H+R+RBI',
+    //       name: 'Hits+Runs+RBIs',
+    //     });
+    //     break;
+    //   }
+    // }
+    // this.statsList = newStatsList;
 
     this.selectedStats = this.statsList[0];
     this.getStatsList('HITS', 10);
