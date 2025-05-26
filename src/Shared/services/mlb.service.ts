@@ -502,7 +502,7 @@ export class MlbService {
       case 'RBIS':
         return { key: 'rbis', keyArr: ['rbis'] };
       case 'H+R+RBI':
-        return { key: 'hits', keyArr: ['hits', 'runs', 'rbis'] };
+        return { key: 'hits_runs_rbis', keyArr: ['hits', 'runs', 'rbis'] };
       case '2B':
         return { key: 'doubles', keyArr: ['doubles'] };
       case '3B':
@@ -553,6 +553,7 @@ export class MlbService {
       doubles: '2B',
       triples: '3B',
       home_runs: 'HR',
+      hits_runs_rbis:'H+R+RBI',
       stolen_bases: 'STEALS',
       hitter_strike_outs: 'HIT SO',
       hits_allowed: 'HA',
