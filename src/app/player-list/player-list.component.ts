@@ -44,7 +44,7 @@ import { MlbSinglePlayerDetailComponent } from "../mlb-single-player-detail/mlb-
 })
 export class PlayerListComponent implements OnInit {
   @ViewChild('scrollObserver', { static: false }) scrollObserver!: ElementRef;
-  selectedGame: string = 'nba';
+  selectedGame: string = 'mlb';
   playerList: any[] = [];
   playerListLoader: boolean = false;
   showComingSoon: boolean = false;
@@ -75,7 +75,7 @@ export class PlayerListComponent implements OnInit {
 
   getDefaultGame() {
     this.sharedS.getData().pipe(take(1)).subscribe((data: any) => {
-      this.selectedGame = data?.game.api ?? 'nba';
+      this.selectedGame = data?.game.api ?? 'mlb';
     });
   }
 

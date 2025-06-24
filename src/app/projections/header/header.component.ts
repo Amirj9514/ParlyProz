@@ -19,13 +19,36 @@ export class HeaderComponent implements OnInit {
   selectedGame: string = 'NBA';
 
   games: any[] = [
-    { label: 'NBA', icon: 'basketball', value: 'NBA', api: 'nba' },
-     { label: 'WNBA', icon: 'basketball', value: 'wnba', api: 'wnba' ,constant: false },
-    { label: 'NHL', icon: 'hockey', value: 'NHL', api: 'nhl' ,  constant: false },  
-     { label: 'MLB', icon: 'baseball', value: 'MLB', api: 'mlb' ,  constant: false },
-    { label: 'NFL', icon: 'football', value: 'NFL', api: null ,  constant: true },
-    { label: 'Soccer', icon: 'soccer', value: 'Soccer', api: null ,  constant: true },
-    
+    {
+      label: 'MLB',
+      icon: 'baseball',
+      value: 'MLB',
+      api: 'mlb',
+      constant: false,
+    },
+    {
+      label: 'WNBA',
+      icon: 'basketball',
+      value: 'wnba',
+      api: 'wnba',
+      constant: false,
+    },
+    { label: 'NHL', icon: 'hockey', value: 'NHL', api: 'nhl', constant: true },
+    {
+      label: 'NBA',
+      icon: 'basketball',
+      value: 'NBA',
+      api: 'mlb',
+      constant: true,
+    },
+    { label: 'NFL', icon: 'football', value: 'NFL', api: null, constant: true },
+    {
+      label: 'Soccer',
+      icon: 'soccer',
+      value: 'Soccer',
+      api: null,
+      constant: true,
+    },
   ];
 
   constructor(private teamS: TeamService, private SharedS: SharedService) {}
@@ -50,9 +73,7 @@ export class HeaderComponent implements OnInit {
     this.onGameChange.emit(event.api);
   }
 
-  handelSelectChange(event: any) {
-
-  }
+  handelSelectChange(event: any) {}
 
   disableGame(game: any) {
     return game.constant;

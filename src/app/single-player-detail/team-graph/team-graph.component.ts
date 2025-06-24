@@ -44,7 +44,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class TeamGraphComponent implements OnInit , OnChanges {
   @ViewChild('TeamChart', { static: true }) chartContainer!: ElementRef;
-  @Input() selectedSport: any = 'nba';
+  @Input() selectedSport: any = 'mlb';
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;

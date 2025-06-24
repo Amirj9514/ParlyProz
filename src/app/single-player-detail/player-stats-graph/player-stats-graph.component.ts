@@ -29,7 +29,7 @@ import { debounceTime, Subject } from 'rxjs';
 export class PlayerStatsGraphComponent {
   @ViewChild('chart', { static: true }) chartContainer!: ElementRef;
   @Input() selectedPlayerDetail: any;
-  @Input() selectedSport: string = 'nba';
+  @Input() selectedSport: string = 'mlb';
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;

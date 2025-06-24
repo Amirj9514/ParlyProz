@@ -20,7 +20,7 @@ import { MlbPlayerDetailCardComponent } from "./mlb-player-detail-card/mlb-playe
 export class MlbSinglePlayerDetailComponent {
   @Input() selectedPlayerId: number = 0;
   @Input() selectedPlayerDetail: any;
-  @Input() selectedSport: string = 'nba';
+  @Input() selectedSport: string = 'mlb';
   @Output() onClose = new EventEmitter();
   @Input() selectedPlayer: any;
   playerDetail: any[] = [];

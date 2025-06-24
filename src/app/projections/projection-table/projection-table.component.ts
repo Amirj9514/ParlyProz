@@ -36,7 +36,7 @@ export class ProjectionTableComponent implements OnChanges {
   @Input() projectionLoader: boolean = false;
   @Input() totalRecords: number = 0;
   @Input() filterForm!: FormGroup;
-  @Input() activeGameApiendpoint: string = 'nba';
+  @Input() activeGameApiendpoint: string = 'mlb';
   @Output() onPlayerClick = new EventEmitter<number>();
   @Output() onPagination = new EventEmitter<{ pageNo: number; rows: number }>();
   @ViewChild('projectionTable') projectionTable!: Table;
