@@ -26,13 +26,13 @@ export class CommonService {
       description: 'sportsBet',
       imageUrl: 'assets/images/sportbet.png',
     },
-    {
-      id: 3,
-      uid: 'fanfunded',
-      name: 'fanfund',
-      description: 'fanfunded',
-      imageUrl: 'assets/images/fanfund.png',
-    },
+    // {
+    //   id: 3,
+    //   uid: 'fanfunded',
+    //   name: 'fanfund',
+    //   description: 'fanfunded',
+    //   imageUrl: 'assets/images/fanfund.png',
+    // },
   ];
   constructor() {}
 
