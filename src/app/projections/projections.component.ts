@@ -26,8 +26,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { DatePipe } from '@angular/common';
 import { TeamService } from '../../Shared/services/team.service';
 import { CommonService } from '../../Shared/services/common.service';
-import { NhlSinglePlayerDetailComponent } from "../nhl-single-player-detail/nhl-single-player-detail.component";
-import { MlbSinglePlayerDetailComponent } from "../mlb-single-player-detail/mlb-single-player-detail.component";
+import { NhlSinglePlayerDetailComponent } from '../nhl-single-player-detail/nhl-single-player-detail.component';
+import { MlbSinglePlayerDetailComponent } from '../mlb-single-player-detail/mlb-single-player-detail.component';
 
 Chart.register(...registerables, ChartDataLabels);
 
@@ -50,8 +50,8 @@ Chart.register(...registerables, ChartDataLabels);
     PlayerCardComponent,
     SkeletonModule,
     NhlSinglePlayerDetailComponent,
-    MlbSinglePlayerDetailComponent
-],
+    MlbSinglePlayerDetailComponent,
+  ],
   templateUrl: './projections.component.html',
   styleUrl: './projections.component.scss',
 })
@@ -77,7 +77,11 @@ export class ProjectionsComponent implements OnInit {
   totalPages = 0;
   selectedPlayerDetail: any;
 
-  constructor(private sharedS: SharedService , private teamS:TeamService , private commonS: CommonService) {
+  constructor(
+    private sharedS: SharedService,
+    private teamS: TeamService,
+    private commonS: CommonService
+  ) {
     this.apps = this.commonS.getApps();
     this.filterForm = new FormGroup({
       search: new FormControl(''),
@@ -85,22 +89,21 @@ export class ProjectionsComponent implements OnInit {
       match: new FormControl(null),
       apps: new FormControl(this.apps),
     });
-
-    
   }
 
   ngOnInit(): void {
     this.getActiveGame();
     this.getStatsAndProjections();
     this.observeFormChanges();
-    
-   
   }
 
   getActiveGame() {
-    this.sharedS.getData().pipe(take(1)).subscribe((data: any) => {
-      this.activeGameApiendpoint = data?.game?.api ?? 'mlb';
-    });
+    this.sharedS
+      .getData()
+      .pipe(take(1))
+      .subscribe((data: any) => {
+        this.activeGameApiendpoint = data?.game?.api ?? 'mlb';
+      });
   }
 
   getStatsAndProjections() {
@@ -116,7 +119,9 @@ export class ProjectionsComponent implements OnInit {
             const stats = this.statsList
               .map((stat: any) => stat.code)
               .join(',');
-            const selectedApp = this.commonS.getSelectedApp(this.filterForm.get('apps')?.value);
+            const selectedApp = this.commonS.getSelectedApp(
+              this.filterForm.get('apps')?.value
+            );
             return this.sharedS.sendGetRequest(
               `${
                 this.activeGameApiendpoint
@@ -160,7 +165,7 @@ export class ProjectionsComponent implements OnInit {
   }
 
   applyFilter(formValue: any) {
-    if (this.stopFormTrigger) return; 
+    if (this.stopFormTrigger) return;
 
     const selectedMatch = formValue.match;
     let fixture_slugs: { team_a: any[]; team_b: any[] } = {
@@ -168,7 +173,7 @@ export class ProjectionsComponent implements OnInit {
       team_b: [],
     };
     if (Array.isArray(selectedMatch) && selectedMatch.length) {
-      selectedMatch.forEach(match => {
+      selectedMatch.forEach((match) => {
         const { team_a, team_b } = this.commonS.getTeams(match) || {};
         if (team_a) fixture_slugs.team_a.push(team_a);
         if (team_b) fixture_slugs.team_b.push(team_b);
@@ -178,13 +183,13 @@ export class ProjectionsComponent implements OnInit {
     const fixture_slug = {
       team_a: fixture_slugs.team_a.join(','),
       team_b: fixture_slugs.team_b.join(','),
-    }
-  
+    };
+
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
     // const fixture_slug =this.commonS.getTeams(formValue.match);
-    const selectedApp = this.commonS.getSelectedApp(formValue.apps); 
-    this.getProjections(stats, search, fixture_slug , selectedApp);
+    const selectedApp = this.commonS.getSelectedApp(formValue.apps);
+    this.getProjections(stats, search, fixture_slug, selectedApp);
   }
 
   getProjections(
@@ -192,9 +197,7 @@ export class ProjectionsComponent implements OnInit {
     search: string,
     fixture_slug: any,
     apps: string,
-    loader: boolean=false,
-
-  
+    loader: boolean = false
   ) {
     if (!this.projectionData.length) {
       this.projectionLoader = true;
@@ -207,7 +210,7 @@ export class ProjectionsComponent implements OnInit {
     } else {
       this.projectionLoader = true;
       this.page = 1;
-    }    
+    }
 
     this.sharedS
       .sendGetRequest(
@@ -215,9 +218,9 @@ export class ProjectionsComponent implements OnInit {
           search ?? ''
         }&stat_fields=${stats ?? ''}&team_a=${
           fixture_slug.team_a ?? ''
-        }&team_b=${
-          fixture_slug.team_b ?? ''
-        }&limit=${50}&offset=${this.page}&bookie=${apps ?? ''}`
+        }&team_b=${fixture_slug.team_b ?? ''}&limit=${50}&offset=${
+          this.page
+        }&bookie=${apps ?? ''}`
       )
       .subscribe({
         next: (res: any) => {
@@ -251,17 +254,20 @@ export class ProjectionsComponent implements OnInit {
           this.gameListLoader = false;
           if (res.status === 200) {
             const data = res.body ?? [];
-            if(data.length ){
+            if (data.length) {
               for (const element of data) {
                 const datePipe = new DatePipe('en-US');
-                const formattedDate = datePipe.transform(element.start_time, 'MM-dd-yyyy hh:mm a');
+                const formattedDate = datePipe.transform(
+                  element.start_time,
+                  'MM-dd-yyyy hh:mm a'
+                );
                 const optionData = `${element?.first_competitor_abbreviation} V/S ${element?.second_competitor_abbreviation} @ ${formattedDate}`;
                 this.gameList.push({
                   ...element,
                   optionData: optionData,
-                })
+                });
               }
-            }else{
+            } else {
               this.gameList = [];
             }
             this.convertDate();
@@ -320,41 +326,49 @@ export class ProjectionsComponent implements OnInit {
         team_b: [],
       };
       if (Array.isArray(selectedMatch) && selectedMatch.length) {
-        selectedMatch.forEach(match => {
+        selectedMatch.forEach((match) => {
           const { team_a, team_b } = this.commonS.getTeams(match) || {};
           if (team_a) fixture_slugs.team_a.push(team_a);
           if (team_b) fixture_slugs.team_b.push(team_b);
         });
       }
-  
+
       const fixture_slug = {
         team_a: fixture_slugs.team_a.join(','),
         team_b: fixture_slugs.team_b.join(','),
-      }
+      };
       const stats = formValue.stats.map((stat: any) => stat.code).join(',');
       const search = formValue.search;
       // const fixture_slug =this.commonS.getTeams(formValue.match);
       const apps = this.commonS.getSelectedApp(formValue.apps);
 
-      this.getProjections(stats, search, fixture_slug,apps, true);
+      this.getProjections(stats, search, fixture_slug, apps, true);
     }
   }
 
   convertDate() {
-
-    let date:any = ''
+    let date: any = '';
     if (this.gameList && this.gameList.length > 0) {
-      const game = this.gameList[0];
-      const updateDate = new Date(game?.created_at);
+ 
+      console.log(this.gameList);
+
+      let latestDate: Date | null = null;
+
+      this.gameList.forEach((game: any) => {
+        const updateDate = new Date(game?.created_at);
+        if (!latestDate || updateDate > latestDate) {
+          latestDate = updateDate;
+        }
+      });
+      let updateDate: Date | null = null;
+      if (latestDate) {
+        updateDate = new Date(latestDate);
+      }
 
       if (updateDate) {
         const datePipe = new DatePipe('en-US');
         const utcDate = new Date(updateDate); // Convert to Date object
-        date = datePipe.transform(
-          utcDate,
-          'hh:mm a',
-          '-0400'
-        );
+        date = datePipe.transform(utcDate, 'hh:mm a', '-0400');
       }
     }
 
