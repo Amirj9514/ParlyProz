@@ -33,6 +33,13 @@ export class CommonService {
       description: 'fanfunded',
       imageUrl: 'assets/images/fan_funded.png',
     },
+      {
+      id: 4,
+      uid: 'playerprofit',
+      name: 'Player Profit',
+      description: 'playerprofit',
+      imageUrl: 'assets/images/playerProfit.png',
+    },
   ];
   constructor() {}
 
