@@ -34,6 +34,8 @@ export class AuthComponent implements OnInit {
         if(res.status === 200) {
           let token = {key:'token' , val:decodedString};
           const decodedToken = jwtDecode(tokenss);
+          console.log(decodedToken);
+          
           const userProfile = {key:'userProfile' , val:decodedToken};
           this.sharedS.insertData(token);
           this.sharedS.insertData(userProfile);

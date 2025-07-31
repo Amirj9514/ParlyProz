@@ -349,9 +349,6 @@ export class ProjectionsComponent implements OnInit {
   convertDate() {
     let date: any = '';
     if (this.gameList && this.gameList.length > 0) {
- 
-      console.log(this.gameList);
-
       let latestDate: Date | null = null;
 
       this.gameList.forEach((game: any) => {

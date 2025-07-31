@@ -33,7 +33,7 @@ export class CommonService {
       description: 'fanfunded',
       imageUrl: 'assets/images/fan_funded.png',
     },
-      {
+    {
       id: 4,
       uid: 'playerprofit',
       name: 'Player Profit',
@@ -41,14 +41,35 @@ export class CommonService {
       imageUrl: 'assets/images/playerProfit.png',
     },
   ];
-  constructor() {}
+  constructor() { }
 
   getApps() {
+    const data = localStorage.getItem('sharedData@parlayProz');
+    const parsedData = data ? JSON.parse(data ?? '{}') : {};
+
+    if (!parsedData) {
+      this.apps = [];
+    }
+
+    if (parsedData && parsedData.userProfile?.subscription_type === "normal") {
+      this.apps = this.apps.filter((app) => app.uid !== 'fanfunded' && app.uid !== 'playerprofit');
+    }
     return this.apps;
   }
 
   getSelectedApp(value: any) {
-    if (!value || value.length < 1) return '';
+    if (!value || value.length < 1) {
+
+      const data = localStorage.getItem('sharedData@parlayProz');
+      const parsedData = data ? JSON.parse(data ?? '{}') : {};
+      if (parsedData && parsedData.userProfile?.subscription_type === "normal") {
+        const apps = this.apps.filter((app) => app.uid !== 'fanfunded' && app.uid !== 'playerprofit');
+        return apps.map((stat: any) => stat.uid).join(',');
+      }
+      const apps = this.apps.map((stat: any) => stat.uid).join(',')
+      return apps;
+    }
+
     const apps = value.map((stat: any) => stat.uid).join(',');
     return apps;
   }
