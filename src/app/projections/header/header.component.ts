@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   selectedGame: string = 'NBA';
 
   games: any[] = [
+    { label: 'NFL', icon: 'football', value: 'NFL', api: 'nfl', constant: false },
     {
       label: 'MLB',
       icon: 'baseball',
@@ -41,7 +42,7 @@ export class HeaderComponent implements OnInit {
       api: 'mlb',
       constant: true,
     },
-    { label: 'NFL', icon: 'football', value: 'NFL', api: null, constant: true },
+    
     {
       label: 'Soccer',
       icon: 'soccer',

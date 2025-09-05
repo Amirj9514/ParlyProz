@@ -134,11 +134,16 @@
 ></app-nhl-single-player-detail>
 }@else if (activeGameApiendpoint === 'mlb'){
 <app-mlb-single-player-detail
-  [selectedPlayerId]="selectedPlayer"
-  [selectedPlayerDetail]="selectedPlayerDetail"
-  [selectedSport]="activeGameApiendpoint"
-  (onClose)="showPlayerDetail = false; selectedPlayer = 0"
+    [selectedPlayerId]="selectedPlayer"
+    [selectedPlayerDetail]="selectedPlayerDetail"
+    [selectedSport]="activeGameApiendpoint"
+    (onClose)="showPlayerDetail = false; selectedPlayer = 0"
 ></app-mlb-single-player-detail>
+}@else if(activeGameApiendpoint === 'nfl'){
+  <app-nfl-signle-player-detail    [selectedPlayerId]="selectedPlayer"
+    [selectedPlayerDetail]="selectedPlayerDetail"
+    [selectedSport]="activeGameApiendpoint"
+    (onClose)="showPlayerDetail = false; selectedPlayer = 0"></app-nfl-signle-player-detail>
 } @else {
 <app-single-player-detail
   [selectedPlayerId]="selectedPlayer"

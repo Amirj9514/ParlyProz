@@ -20,6 +20,7 @@ import { debounceTime, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NhlSinglePlayerDetailComponent } from '../nhl-single-player-detail/nhl-single-player-detail.component';
 import { MlbSinglePlayerDetailComponent } from "../mlb-single-player-detail/mlb-single-player-detail.component";
+import { NflSignlePlayerDetailComponent } from "../nfl-signle-player-detail/nfl-signle-player-detail.component";
 
 @Component({
   selector: 'app-player-list',
@@ -37,7 +38,8 @@ import { MlbSinglePlayerDetailComponent } from "../mlb-single-player-detail/mlb-
     ReactiveFormsModule,
     CommonModule,
     NhlSinglePlayerDetailComponent,
-    MlbSinglePlayerDetailComponent
+    MlbSinglePlayerDetailComponent,
+    NflSignlePlayerDetailComponent
 ],
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss',

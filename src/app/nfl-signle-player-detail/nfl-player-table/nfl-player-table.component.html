@@ -1,0 +1,79 @@
+<div class="tableStyle">
+
+    <div class="detailHead" >
+      <div class="flex justify-content-center align-items-center text-lg font-semibold py-3">
+          <div>Gamelog - Last 15 Games</div>
+      </div>
+    </div>
+    <p-table
+      [value]="players"
+      stripedRows
+    >
+      <ng-template #header>
+        <tr>
+          <th class=" text-center noBreak">Opponent</th>
+          <th class=" text-center noBreak">Date</th>
+          @for (stat of statsList; track $index) {
+          <th class=" text-center noBreak">{{stat?.name}}</th>
+          }
+          <!-- <th class=" text-center noBreak">B-WALKS</th>
+          <th class=" text-center noBreak">HITS</th>
+          <th class=" text-center noBreak">RUNS</th>
+          <th class=" text-center noBreak">RBIS</th>
+          <th class=" text-center noBreak">1B</th>
+          <th class=" text-center noBreak">2B</th>
+          <th class=" text-center noBreak">3B</th>
+          <th class=" text-center noBreak">HR</th>
+          <th class=" text-center noBreak">STEALS</th>
+            <th class=" text-center noBreak">HIT SO</th>
+          <th class=" text-center noBreak">HA</th>
+          <th class=" text-center noBreak">P-WALKS</th>
+          <th class=" text-center noBreak">ER</th>
+            <th class=" text-center noBreak">PIT SO</th>
+          <th class=" text-center noBreak">WINS</th>
+          <th class=" text-center noBreak">PO</th>
+          <th class=" text-center noBreak">P</th>
+            <th class=" text-center noBreak">BASES</th> -->
+        </tr>
+      </ng-template>
+      <ng-template #body let-stats>
+        <tr>
+          <td class=" text-center noBreak">{{stats?.opponent ?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.date |date:'MM-dd-yyyy'}}</td>
+
+           @for (stat of statsList; track $index) {
+           <td class=" text-center noBreak">{{stats[stat?.key] ?? '-'}}</td>
+          }
+         
+          <!-- <td class=" text-center noBreak">{{stats?.hits ?? "-"}}</td>
+          <td class=" text-center noBreak">{{stats?.runs ?? '-'}}</td>
+          <td class=" text-center noBreak">{{ stats?.rbis ?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.singles?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.doubles ?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.triples ?? '-'}}</td>  
+          <td class=" text-center noBreak">{{stats?.home_runs ??  '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.stolen_bases ?? '-'}}</td>
+                <td class=" text-center noBreak">{{stats?.hitter_strike_outs ?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.hits_allowed ?? "-"}}</td>
+          <td class=" text-center noBreak">{{stats?.walks_allowed ?? '-'}}</td>
+          <td class=" text-center noBreak">{{ stats?.earned_runs_allowed ?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.pitching_strike_outs?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.pitcher_wins ?? '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.pitching_outs ?? '-'}}</td>  
+          <td class=" text-center noBreak">{{stats?.total_pitches ??  '-'}}</td>
+          <td class=" text-center noBreak">{{stats?.total_bases ??  '-'}}</td> -->
+        </tr>
+
+      </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="2">
+                  <div class="my-6 text-center">
+                    <span class="text-center text-gray-500">No data available.</span>
+                  </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+  </div>
+  

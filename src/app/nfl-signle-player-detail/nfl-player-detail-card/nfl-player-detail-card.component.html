@@ -1,0 +1,189 @@
+<div class="container fle justify-content-center mt-5">
+  <div class="card">
+    <div class="top-container">
+      <div class="profile-image">{{ getInitials(playerProfile?.name) }}</div>
+      <div class="ml-3">
+        <div class="name">
+          {{ playerProfile?.name }}
+          <span class="lightClr">( {{ playerProfile?.position }} )</span>
+        </div>
+        <div class="flex gap-2 mt-2">
+          <div class="chip1">{{ playerProfile?.team }}</div>
+          <div class="chip2" style="text-transform: uppercase;">{{selectedSport}}</div>
+          <div class="chip3">{{ playerProfile?.season }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="recent-border mt-4">
+      <span class="recent-orders">Player Max Stats</span>
+    </div>
+
+    <div class="mt-3 mb-4">
+      @if (playerDetail?.receiving_receptions) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Receptions</div>
+      <div>{{ playerDetail?.receiving_receptions ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.receiving_yards) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Receiving Yards</div>
+      <div>{{ playerDetail?.receiving_yards ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.receiving_targets) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Receiving Targets</div>
+      <div>{{ playerDetail?.receiving_targets ?? 0 }}</div>
+      </div>
+      } @if(playerDetail?.rush_rec_touchdowns) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Rush + Rec TDs</div>
+      <div>{{ playerDetail?.rush_rec_touchdowns ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.rushing_touchdowns) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Rushing TDs</div>
+      <div>{{ playerDetail?.rushing_touchdowns ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.receiving_touchdowns) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Receiving TDs</div>
+      <div>{{ playerDetail?.receiving_touchdowns ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.rushing_yards) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Rushing Yards</div>
+      <div>{{ playerDetail?.rushing_yards ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.rush_rec_yards) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Rush + Rec Yards</div>
+      <div>{{ playerDetail?.rush_rec_yards ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.rushing_longest_run) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Longest Rush</div>
+      <div>{{ playerDetail?.rushing_longest_run ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.receiving_long_reception) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Longest Reception</div>
+      <div>{{ playerDetail?.receiving_long_reception ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.passing_yards) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Passing Yards</div>
+      <div>{{ playerDetail?.passing_yards ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.passing_touchdowns) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Passing TDs</div>
+      <div>{{ playerDetail?.passing_touchdowns ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.passing_attempts) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Passing Attempts</div>
+      <div>{{ playerDetail?.passing_attempts ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.passing_completions) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Passing Completions</div>
+      <div>{{ playerDetail?.passing_completions ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.pass_rush_yards) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Pass + Rush Yards</div>
+      <div>{{ playerDetail?.pass_rush_yards ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.interceptions) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Interceptions</div>
+      <div>{{ playerDetail?.interceptions ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.passing_longest_completion) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Longest Completion</div>
+      <div>{{ playerDetail?.passing_longest_completion ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.rushing_attempts) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Rushing Attempts</div>
+      <div>{{ playerDetail?.rushing_attempts ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.kicking_points) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Kicking Points</div>
+      <div>{{ playerDetail?.kicking_points ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.defensive_sacks) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Defensive Sacks</div>
+      <div>{{ playerDetail?.defensive_sacks ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.defensive_tackles) {
+      <div
+      class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+      <div class="text-sm font-semibold lightClr">Tackles + Assists</div>
+      <div>{{ playerDetail?.defensive_tackles ?? 0 }}</div>
+      </div>
+      }
+    </div>
+
+    <div class="middle-container flex align-items-center mt-3 p-2">
+      <div class="dollar-div">
+        <div class="round-div">
+          <div
+            class="flex align-items-center justify-content-center"
+            [appSvgIcon]="'football'"
+          ></div>
+        </div>
+      </div>
+      <div class="flex flex-column ml-2">
+        <div class="current-balance">Match Played</div>
+        <div class="amount">
+          <span class="dollar-sign"></span>{{ allPlayerData.length}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
