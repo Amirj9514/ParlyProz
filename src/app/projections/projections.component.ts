@@ -28,6 +28,7 @@ import { TeamService } from '../../Shared/services/team.service';
 import { CommonService } from '../../Shared/services/common.service';
 import { NhlSinglePlayerDetailComponent } from '../nhl-single-player-detail/nhl-single-player-detail.component';
 import { MlbSinglePlayerDetailComponent } from '../mlb-single-player-detail/mlb-single-player-detail.component';
+import { NflSignlePlayerDetailComponent } from "../nfl-signle-player-detail/nfl-signle-player-detail.component";
 
 Chart.register(...registerables, ChartDataLabels);
 
@@ -51,7 +52,8 @@ Chart.register(...registerables, ChartDataLabels);
     SkeletonModule,
     NhlSinglePlayerDetailComponent,
     MlbSinglePlayerDetailComponent,
-  ],
+    NflSignlePlayerDetailComponent
+],
   templateUrl: './projections.component.html',
   styleUrl: './projections.component.scss',
 })
