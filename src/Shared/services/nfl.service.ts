@@ -419,8 +419,8 @@ export class NflService {
         name: 'Sacks',
       },
       {
-        id:'TAC + AST',
-        name: 'Tackles + Assists',
+        id:'TACKLES',
+        name: 'Tackles',
       }
       // {
       //   id: 'PM',
@@ -532,7 +532,7 @@ export class NflService {
         return { key: 'kicking_points', keyArr: ['kicking_points'] };
       case 'SACKS':
         return { key: 'defensive_sacks', keyArr: ['defensive_sacks'] };
-      case 'TAC + AST':
+      case 'TACKLES':
         return { key: 'defensive_tackles', keyArr: ['defensive_tackles'] };
       default:
         return { key: '', keyArr: [] };
@@ -561,7 +561,7 @@ export class NflService {
       rushing_attempts: 'RUSH ATT',
       kicking_points: 'KPTS',
       defensive_sacks: 'SACKS',
-      defensive_tackles: 'TAC + AST',
+      defensive_tackles: 'TACKLES',
     };
 
     return mapping[key] || null;
@@ -623,7 +623,7 @@ export class NflService {
       case 'defensive_sacks':
         return 'SACKS';
       case 'defensive_tackles':
-        return 'TAC + AST';
+        return 'TACKLES';
       default:
         return '';
     }

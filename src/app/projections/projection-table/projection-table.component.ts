@@ -35,6 +35,7 @@ export class ProjectionTableComponent implements OnChanges {
   @Input() projectionData: any[] = [];
   @Input() projectionLoader: boolean = false;
   @Input() totalRecords: number = 0;
+  @Input() statsList: any[] = [];
   @Input() filterForm!: FormGroup;
   @Input() activeGameApiendpoint: string = 'mlb';
   @Output() onPlayerClick = new EventEmitter<number>();
@@ -266,7 +267,18 @@ export class ProjectionTableComponent implements OnChanges {
 
   capatlizeStats(value: string) {
     if (!value) return '';
+
+    if(this.activeGameApiendpoint ==='nfl'){
+
+      if(this.statsList && this.statsList.length){
+        const stat = this.statsList.find((s) => s.code === value);
+        if(stat) return stat.name;
+      }
+     return value.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+      
+    }else{
     return value.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+    }
   }
 
   getInitials(fullName: string): string {
