@@ -52,7 +52,7 @@ export class CommonService {
     }
 
     if (parsedData && parsedData.userProfile?.subscription_type === "normal") {
-      this.apps = this.apps.filter((app) => app.uid !== 'fanfunded' && app.uid !== 'playerprofit');
+      this.apps = this.apps.filter((app) => app.uid !== 'fanfunded' && app.uid !== 'playerprofit' && app.uid !== 'betOnline');
     }
     return this.apps;
   }
@@ -63,7 +63,7 @@ export class CommonService {
       const data = localStorage.getItem('sharedData@parlayProz');
       const parsedData = data ? JSON.parse(data ?? '{}') : {};
       if (parsedData && parsedData.userProfile?.subscription_type === "normal") {
-        const apps = this.apps.filter((app) => app.uid !== 'fanfunded' && app.uid !== 'playerprofit');
+        const apps = this.apps.filter((app) => app.uid !== 'fanfunded' && app.uid !== 'playerprofit' && app.uid !== 'betOnline');
         return apps.map((stat: any) => stat.uid).join(',');
       }
       const apps = this.apps.map((stat: any) => stat.uid).join(',')
