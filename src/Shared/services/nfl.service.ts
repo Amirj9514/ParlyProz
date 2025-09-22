@@ -181,7 +181,6 @@ export class NflService {
         };
       }
     });
-    console.log();
     
     return results;
   }

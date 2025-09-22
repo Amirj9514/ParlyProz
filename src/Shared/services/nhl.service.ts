@@ -31,7 +31,19 @@ export class NhlService {
   };
 
   getPlayerData(numberOfPlayers: number, order: 'asc' | 'desc' = 'asc') {
-    const players = this.playerData.slice(0, numberOfPlayers);
+    let players: any[] = [];
+    if (numberOfPlayers === 2025 || numberOfPlayers === 2024) {
+      players = this.playerData.filter((player) => {
+        const playerSeason = new Date(player.date).getFullYear();
+        return playerSeason === numberOfPlayers;
+      });
+    } else if (numberOfPlayers > 30) {
+      numberOfPlayers = this.playerData.length;
+      players = this.playerData;
+    } else {
+      players = this.playerData.slice(0, numberOfPlayers);
+    }
+
     return players.sort((a, b) => {
       const diff = new Date(a.date).getTime() - new Date(b.date).getTime();
       return order === 'asc' ? diff : -diff;
@@ -95,13 +107,14 @@ export class NhlService {
     return datasets;
   }
 
-  calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
-    const ranges = [5, 10, 15, 20];
+   calculatePlayerAvgAndHR(baseLine: number | null, stats: string ) {
+    const ranges = [5, 10, 15, 20, 30, 2025 , 2024, this.playerData.length ];
     const results: any = {};
 
-    ranges.forEach((range) => {
+    ranges.forEach((range, index) => {
       let lineVal = 0;
-      const players = this.playerData.slice(0, range);
+      const players = this.getPlayerData(range);
+      // const players = this.playerData.slice(0, range);
 
       if (!baseLine) {
         const lines = this.getStatLineValuesByName(stats);
@@ -142,14 +155,33 @@ export class NhlService {
       const average = totalEntries > 0 ? totalValue / totalEntries : 0;
       const percentageAboveBaseLine =
         totalEntries > 0 ? (aboveBaseLineCount / totalEntries) * 100 : 0;
-
-      results[`L${range}`] = {
-        average: parseFloat(average.toFixed(1)),
-        percentageAboveBaseLine: parseFloat(percentageAboveBaseLine.toFixed(1)),
-        aboveBaseLineCount,
-      };
+      if(range === 2025 || range === 2024){
+        results[`${range}`] = {
+          average: parseFloat(average.toFixed(1)),
+          percentageAboveBaseLine: parseFloat(
+            percentageAboveBaseLine.toFixed(1)
+          ),
+          aboveBaseLineCount,
+        };
+      } else if (index === ranges.length - 1) {
+        results[`All`] = {
+          average: parseFloat(average.toFixed(1)),
+          percentageAboveBaseLine: parseFloat(
+            percentageAboveBaseLine.toFixed(1)
+          ),
+          aboveBaseLineCount,
+        };
+      }else  {
+        results[`L${range}`] = {
+          average: parseFloat(average.toFixed(1)),
+          percentageAboveBaseLine: parseFloat(
+            percentageAboveBaseLine.toFixed(1)
+          ),
+          aboveBaseLineCount,
+        };
+      }
     });
-
+    
     return results;
   }
 

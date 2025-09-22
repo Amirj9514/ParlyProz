@@ -12,73 +12,53 @@
   </div>
 
   <div class="p-2" [ngClass]="activeColor === 'success'?'successGrd':'dangerGrd'">
-    <div class="flex w-full justify-content-between my-1 grphHHeader">
-        <div>
-            <div class="text-xl font-semibold">{{ selectedStats?.name ?? "" }}</div>
-            <div class="mb-3">
-                <div class="text-sm lightClr pl-1 pb-1">Line</div>
-                <p-inputgroup>
-                  <p-inputgroup-addon>
-                    <p-button
-                      icon="pi pi-minus"
-                      severity="secondary"
-                      (onClick)="handelLineChange('minus')"
-                    />
-                  </p-inputgroup-addon>
-                  <!-- [(ngModel)]="lineVal"
-                      -->
-                  <input
-                    type="text"
-                    [style]="{ width: '3rem' }"
-                    (keyup)="onLineValueChange($event)"
-                    class="lineINput text-center"
-                    pInputText
-                    [(ngModel)]="thresholdValue"
-                    placeholder="line"
-                  />
-                  <p-inputgroup-addon>
-                    <p-button
-                      icon="pi pi-plus"
-                      severity="secondary"
-                      (onClick)="handelLineChange('plus')"
-                    />
-                  </p-inputgroup-addon>
-                </p-inputgroup>
-              </div>
-        </div>
-      <div>
-        <p-selectbutton
-          [options]="paymentOptions"
-          [(ngModel)]="value"
-          (ngModelChange)="onPlayerMatchChange($event)"
-        >
+     <div class="flex w-full justify-content-between  my-1 grphHHeader"
+      [ngClass]="commonS.isPremiumUser()?'flex-column':''">
+      <div class="" [ngClass]="commonS.isPremiumUser()?'flex justify-content-end':'order2'">
+        <p-selectbutton [options]="paymentOptions" [(ngModel)]="value" (ngModelChange)="onPlayerMatchChange($event)">
           <ng-template #item let-item>
             <div class="text-xs" style="text-align: left">
               <div class="font-semibold">{{ item?.name ?? "" }}</div>
-              <div
-                [ngClass]="
-                  item && item?.hr && item.hr > 50
-                    ? 'successClr'
-                    : item.hr < 40
-                    ? 'dangerClr'
-                    : 'secondaryClr'
-                "
-              >
+              <div [ngClass]="
+                    item && item?.hr && item.hr > 50
+                      ? 'successClr'
+                      : item.hr < 40
+                      ? 'dangerClr'
+                      : 'secondaryClr'
+                  ">
                 HR {{ item?.hr ?? "" }}%
               </div>
-              <div
-                [ngClass]="
-                  item && item.avg && item.avg >= thresholdValue
-                    ? 'successClr'
-                    : 'dangerClr'
-                "
-              >
+              <div [ngClass]="
+                    item && item.avg && item.avg >= thresholdValue
+                      ? 'successClr'
+                      : 'dangerClr'
+                  ">
                 Avg {{ item?.avg ?? "" }}
               </div>
             </div>
           </ng-template>
         </p-selectbutton>
       </div>
+      <div class="flex gap-3 items-center" [ngClass]="commonS.isPremiumUser()?'':'order1'">
+        <div>
+          <div class="text-xl font-semibold">{{ selectedStats?.name ?? "" }}</div>
+          <div class="mb-3">
+            <div class="text-sm lightClr pl-1 pb-1">Line</div>
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <p-button icon="pi pi-minus" severity="secondary" (onClick)="handelLineChange('minus')" />
+              </p-inputgroup-addon>
+              <input type="text" [style]="{ width: '3rem' }" (keyup)="onLineValueChange($event)"
+                class="lineINput text-center" pInputText [(ngModel)]="thresholdValue" placeholder="line" />
+              <p-inputgroup-addon>
+                <p-button icon="pi pi-plus" severity="secondary" (onClick)="handelLineChange('plus')" />
+              </p-inputgroup-addon>
+            </p-inputgroup>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
   

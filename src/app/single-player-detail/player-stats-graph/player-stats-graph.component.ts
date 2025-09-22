@@ -10,6 +10,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { debounceTime, Subject } from 'rxjs';
+import { CommonService } from '../../../Shared/services/common.service';
 
 @Component({
   selector: 'app-player-stats-graph',
@@ -45,9 +46,19 @@ export class PlayerStatsGraphComponent {
     { name: 'L20', value: 4, avg: 0, hr: 0 },
   ];
 
-  constructor(private PlayerStatsS: PlayerStatsService) {}
+  constructor(private PlayerStatsS: PlayerStatsService , public commonS:CommonService) {}
 
   ngOnInit() {
+    
+ if (this.commonS.isPremiumUser()) {
+      this.paymentOptions = [
+        ...this.paymentOptions,
+        { name: 'L30', value: 6, avg: 0, hr: 0 },
+        { name: 'All', value: 7, avg: 0, hr: 0 },
+        { name: '2025', value: 2025, avg: 0, hr: 0 },
+        { name: '2024', value: 2024, avg: 0, hr: 0 },
+      ];
+    }
     setTimeout(() => {
       this.statsList = this.PlayerStatsS.getStatsList();
       if (this.selectedSport === 'wnba') {
@@ -127,7 +138,12 @@ export class PlayerStatsGraphComponent {
   }
 
   onPlayerMatchChange(event: any) {
-    const numberOfStats = event * 5;
+   let numberOfStats = 0;
+    if (event == 2024 || event == 2025) {
+      numberOfStats = event;
+    } else {
+      numberOfStats = event * 5;
+    }
     this.getStatsList(
       this.selectedStats.id,
       numberOfStats,
