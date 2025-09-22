@@ -69,4 +69,14 @@ export class CommonService {
       team_a: value.first_competitor_abbreviation ?? '',
     };
   }
+
+
+  isPremiumUser() {
+    const data = localStorage.getItem('sharedData@parlayProz');
+    const parsedData = data ? JSON.parse(data ?? '{}') : {};
+    if (parsedData && parsedData.userProfile?.subscription_type === "normal") {
+      return false;
+    }
+    return true;
+  }
 }
