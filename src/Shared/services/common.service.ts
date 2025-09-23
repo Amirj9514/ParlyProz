@@ -96,7 +96,7 @@ export class CommonService {
     const data = localStorage.getItem('sharedData@parlayProz');
     const parsedData = data ? JSON.parse(data ?? '{}') : {};
     if (parsedData && parsedData.userProfile?.subscription_type === "normal") {
-      return true;
+      return false;
     }
     return true;
   }
