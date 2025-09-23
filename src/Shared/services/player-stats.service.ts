@@ -74,13 +74,21 @@ export class PlayerStatsService {
     this.playerStats = data;
   }
 
- getPlayerData(numberOfPlayers: number, order: 'asc' | 'desc' = 'asc') {
+   getPlayerData(
+    numberOfPlayers: number,
+    order: 'asc' | 'desc' = 'asc',
+    opponent?: any
+  ) {
     let players: any[] = [];
     if (numberOfPlayers === 2025 || numberOfPlayers === 2024) {
       players = this.playerStats.filter((player) => {
         const playerSeason = new Date(player.date).getFullYear();
         return playerSeason === numberOfPlayers;
       });
+    } else if (opponent) {
+      players = this.playerStats.filter(
+        (player) => player.opponent === opponent
+      );
     } else if (numberOfPlayers > 30) {
       numberOfPlayers = this.playerStats.length;
       players = this.playerStats;
@@ -94,8 +102,17 @@ export class PlayerStatsService {
     });
   }
 
-  preparePlayerStatsGraphData(stats: string, numberOfPlayers: number, lineVal: number) {
-    const players = this.getPlayerData(numberOfPlayers);
+ preparePlayerStatsGraphData(
+    stats: string,
+    numberOfPlayers: number,
+    opponent?: any
+  ) {
+    let players: any[] = [];
+    if (numberOfPlayers === 100) {
+      players = this.getPlayerData(numberOfPlayers, 'asc', opponent);
+    } else {
+      players = this.getPlayerData(numberOfPlayers);
+    }
     const key = this.getStatsKeyByStatsId(stats);
 
     const datasets = players.map((player: any) => {
@@ -153,13 +170,18 @@ export class PlayerStatsService {
   }
 
 
-  calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
-    const ranges = [5, 10, 15, 20, 30, 2025 , 2024, this.playerStats.length ];
+  calculatePlayerAvgAndHR(baseLine: number | null, stats: string , opponent: any) {
+    const ranges = [5, 10, 15, 20, 30, 2025 , 2024,'H2H', this.playerStats.length ];
     const results: any = {};
 
-    ranges.forEach((range , index) => {
+    ranges.forEach((range:any , index) => {
       let lineVal = 0;
-      const players = this.getPlayerData(range);
+      let players: any[] = [];
+      if (range === 'H2H') {
+        players = this.getPlayerData(range, 'asc', opponent);
+      } else {
+        players = this.getPlayerData(range);
+      }
       // const players = this.playerStats.slice(0, range);
 
       if (!baseLine) {

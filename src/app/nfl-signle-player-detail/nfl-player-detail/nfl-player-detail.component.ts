@@ -34,7 +34,7 @@ export class NflPlayerDetailComponent {
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
-  value: number = 2;
+  value: any = 2;
   debounceSubject = new Subject<number>();
   activeColor: string = 'success';
 
@@ -58,6 +58,7 @@ export class NflPlayerDetailComponent {
         { name: 'All', value: 7, avg: 0, hr: 0 },
         { name: '2025', value: 2025, avg: 0, hr: 0 },
         { name: '2024', value: 2024, avg: 0, hr: 0 },
+        { name: 'H2H', value: 'H2H', avg: 0, hr: 0 },
       ];
     }
 
@@ -80,8 +81,6 @@ export class NflPlayerDetailComponent {
           if (newStatsList.length && newStatsList.length == 1) {
             const line = this.nhlService.returnShortName(statName.key);
             this.defaultSelect = line;
-
-            console.log('line', line);
           }
           newStatsList.push(stat);
         }
@@ -131,16 +130,17 @@ export class NflPlayerDetailComponent {
       const lines = this.nhlService.getStatLineValuesByName(activeStats);
       this.thresholdValue = lines.length ? lines[0] : 0;
     }
+    
     this.graphData = this.nhlService.preparePlayerStatsGraphData(
       activeStats,
       numberOfStats,
-      this.thresholdValue
+      this.selectedPlayerDetail?.opponent
     );
 
     const calStats = this.nhlService.calculatePlayerAvgAndHR(
       this.thresholdValue,
       activeStats,
-      numberOfStats
+      this.selectedPlayerDetail?.opponent
     );
 
     this.paymentOptions.map((option) => {
@@ -395,14 +395,25 @@ export class NflPlayerDetailComponent {
 
   onStatsChange(event: any) {
     this.selectedStats = event;
-    this.getStatsList(event.id, this.value * 5);
+     let numberOfStats = 0;
+    if (this.value == 2024 || event == 2025) {
+      numberOfStats = event;
+    }else if(this.value === 'H2H') {
+      numberOfStats = 100;
+    } else {
+      numberOfStats = event * 5;
+    }
+
+    this.getStatsList(event.id, numberOfStats);
   }
 
   onPlayerMatchChange(event: any) {
     let numberOfStats = 0;
     if (event == 2024 || event == 2025) {
       numberOfStats = event;
-    } else {
+    }else if(event=== 'H2H') {
+      numberOfStats = 100;  
+    }else{
       numberOfStats = event * 5;
     }
     this.getStatsList(

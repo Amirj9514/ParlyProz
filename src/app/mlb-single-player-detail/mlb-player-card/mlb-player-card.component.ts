@@ -34,7 +34,7 @@ export class MlbPlayerCardComponent {
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
-  value: number = 2;
+  value: any = 2;
   debounceSubject = new Subject<number>();
   activeColor: string = 'success';
 
@@ -46,16 +46,17 @@ export class MlbPlayerCardComponent {
     { name: 'L20', value: 4, avg: 0, hr: 0 },
   ];
 
-  constructor(private nhlService: MlbService, public commonS:CommonService) {}
+  constructor(private nhlService: MlbService, public commonS: CommonService) {}
 
   ngOnInit() {
-        if (this.commonS.isPremiumUser()) {
+    if (this.commonS.isPremiumUser()) {
       this.paymentOptions = [
         ...this.paymentOptions,
         { name: 'L30', value: 6, avg: 0, hr: 0 },
         { name: 'All', value: 7, avg: 0, hr: 0 },
         { name: '2025', value: 2025, avg: 0, hr: 0 },
         { name: '2024', value: 2024, avg: 0, hr: 0 },
+        { name: 'H2H', value: 'H2H', avg: 0, hr: 0 },
       ];
     }
     setTimeout(() => {
@@ -119,21 +120,19 @@ export class MlbPlayerCardComponent {
       this.thresholdValue = line;
     } else {
       const lines = this.nhlService.getStatLineValuesByName(activeStats);
-     
-      console.log('lines', lines);
-      
-      
+
       this.thresholdValue = lines.length ? lines[0] : 0;
     }
-    this.graphData = this.nhlService.preparePlayerStatsGraphData(
+   this.graphData = this.nhlService.preparePlayerStatsGraphData(
       activeStats,
       numberOfStats,
-      this.thresholdValue
+      this.selectedPlayerDetail?.opponent
     );
 
     const calStats = this.nhlService.calculatePlayerAvgAndHR(
       this.thresholdValue,
-      activeStats
+      activeStats,
+      this.selectedPlayerDetail?.opponent
     );
 
     this.paymentOptions.map((option) => {
@@ -388,13 +387,24 @@ export class MlbPlayerCardComponent {
 
   onStatsChange(event: any) {
     this.selectedStats = event;
-    this.getStatsList(event.id, this.value * 5);
+    let numberOfStats = 0;
+    if (this.value == 2024 || event == 2025) {
+      numberOfStats = event;
+    } else if (this.value === 'H2H') {
+      numberOfStats = 100;
+    } else {
+      numberOfStats = event * 5;
+    }
+
+    this.getStatsList(event.id, numberOfStats);
   }
 
   onPlayerMatchChange(event: any) {
-       let numberOfStats = 0;
+    let numberOfStats = 0;
     if (event == 2024 || event == 2025) {
       numberOfStats = event;
+    } else if (event === 'H2H') {
+      numberOfStats = 100;
     } else {
       numberOfStats = event * 5;
     }

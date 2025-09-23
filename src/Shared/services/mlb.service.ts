@@ -30,19 +30,28 @@ export class MlbService {
     this.playerData = data;
   };
 
-  getPlayerData(numberOfPlayers: number, order: 'asc' | 'desc' = 'asc') {
-       let players: any[] = [];
+  getPlayerData(
+    numberOfPlayers: number,
+    order: 'asc' | 'desc' = 'asc',
+    opponent?: any
+  ) {
+    let players: any[] = [];
     if (numberOfPlayers === 2025 || numberOfPlayers === 2024) {
       players = this.playerData.filter((player) => {
         const playerSeason = new Date(player.date).getFullYear();
         return playerSeason === numberOfPlayers;
       });
+    } else if (opponent) {
+      players = this.playerData.filter(
+        (player) => player.opponent === opponent
+      );
     } else if (numberOfPlayers > 30) {
       numberOfPlayers = this.playerData.length;
       players = this.playerData;
     } else {
       players = this.playerData.slice(0, numberOfPlayers);
     }
+
     return players.sort((a, b) => {
       const diff = new Date(a.date).getTime() - new Date(b.date).getTime();
       return order === 'asc' ? diff : -diff;
@@ -56,10 +65,14 @@ export class MlbService {
   preparePlayerStatsGraphData(
     stats: string,
     numberOfPlayers: number,
-    lineVal: number
+    opponent?: any
   ) {
-    const players = this.getPlayerData(numberOfPlayers);
-
+    let players: any[] = [];
+    if (numberOfPlayers === 100) {
+      players = this.getPlayerData(numberOfPlayers, 'asc', opponent);
+    } else {
+      players = this.getPlayerData(numberOfPlayers);
+    }
     const key = this.getStatsKeyByStatsId(stats);
     const datasets = players.map((player: any) => {
       const date = new Date(player.date);
@@ -106,13 +119,32 @@ export class MlbService {
     return datasets;
   }
 
-   calculatePlayerAvgAndHR(baseLine: number | null, stats: string) {
-    const ranges = [5, 10, 15, 20, 30, 2025 , 2024, this.playerData.length ];
+  calculatePlayerAvgAndHR(
+    baseLine: number | null,
+    stats: string,
+    opponent: string
+  ) {
+    const ranges = [
+      5,
+      10,
+      15,
+      20,
+      30,
+      2025,
+      2024,
+      'H2H',
+      this.playerData.length,
+    ];
     const results: any = {};
 
-    ranges.forEach((range, index) => {
+    ranges.forEach((range: any, index) => {
       let lineVal = 0;
-      const players = this.getPlayerData(range);
+      let players: any[] = [];
+      if (range === 'H2H') {
+        players = this.getPlayerData(range, 'asc', opponent);
+      } else {
+        players = this.getPlayerData(range);
+      }
       // const players = this.playerData.slice(0, range);
 
       if (!baseLine) {
@@ -154,7 +186,7 @@ export class MlbService {
       const average = totalEntries > 0 ? totalValue / totalEntries : 0;
       const percentageAboveBaseLine =
         totalEntries > 0 ? (aboveBaseLineCount / totalEntries) * 100 : 0;
-      if(range === 2025 || range === 2024){
+      if (range === 2025 || range === 2024) {
         results[`${range}`] = {
           average: parseFloat(average.toFixed(1)),
           percentageAboveBaseLine: parseFloat(
@@ -170,8 +202,8 @@ export class MlbService {
           ),
           aboveBaseLineCount,
         };
-      }else  {
-        results[`L${range}`] = {
+      } else {
+        results[range === 'H2H' ? 'H2H' : `L${range}`] = {
           average: parseFloat(average.toFixed(1)),
           percentageAboveBaseLine: parseFloat(
             percentageAboveBaseLine.toFixed(1)
@@ -180,8 +212,7 @@ export class MlbService {
         };
       }
     });
-    console.log();
-    
+
     return results;
   }
 

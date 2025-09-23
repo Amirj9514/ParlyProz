@@ -34,7 +34,7 @@ export class PlayerStatsGraphComponent {
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
-  value: number = 2;
+  value: any = 2;
   debounceSubject = new Subject<number>();
   activeColor: string = 'success';
 
@@ -51,12 +51,13 @@ export class PlayerStatsGraphComponent {
   ngOnInit() {
     
  if (this.commonS.isPremiumUser()) {
-      this.paymentOptions = [
+     this.paymentOptions = [
         ...this.paymentOptions,
         { name: 'L30', value: 6, avg: 0, hr: 0 },
         { name: 'All', value: 7, avg: 0, hr: 0 },
         { name: '2025', value: 2025, avg: 0, hr: 0 },
         { name: '2024', value: 2024, avg: 0, hr: 0 },
+        { name: 'H2H', value: 'H2H', avg: 0, hr: 0 },
       ];
     }
     setTimeout(() => {
@@ -106,7 +107,8 @@ export class PlayerStatsGraphComponent {
 
     const calStats = this.PlayerStatsS.calculatePlayerAvgAndHR(
       this.thresholdValue,
-      activeStats
+      activeStats,
+      this.selectedPlayerDetail?.opponent
     );
 
     this.paymentOptions.map((option) => {
@@ -132,16 +134,27 @@ export class PlayerStatsGraphComponent {
     this.createChart();
   }
 
-  onStatsChange(tab: any) {
-    this.selectedStats = tab;
-    this.getStatsList(tab.id, this.value * 5);
+ onStatsChange(event: any) {
+    this.selectedStats = event;
+     let numberOfStats = 0;
+    if (this.value == 2024 || event == 2025) {
+      numberOfStats = event;
+    }else if(this.value === 'H2H') {
+      numberOfStats = 100;
+    } else {
+      numberOfStats = event * 5;
+    }
+
+    this.getStatsList(event.id, numberOfStats);
   }
 
   onPlayerMatchChange(event: any) {
-   let numberOfStats = 0;
+    let numberOfStats = 0;
     if (event == 2024 || event == 2025) {
       numberOfStats = event;
-    } else {
+    }else if(event=== 'H2H') {
+      numberOfStats = 100;  
+    }else{
       numberOfStats = event * 5;
     }
     this.getStatsList(
