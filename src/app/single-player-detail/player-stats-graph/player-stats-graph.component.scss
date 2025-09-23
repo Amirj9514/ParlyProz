@@ -44,3 +44,25 @@
     flex-direction: column;
   }
 }
+
+
+  ::ng-deep{
+    .p-selectbutton{
+      overflow: auto !important;
+
+      p-togglebutton{
+        button{
+          min-width: 93px !important;
+        }
+      }
+    }
+  }
+
+
+  .order1{
+    order: 1;
+  }
+
+  .order2{
+    order: 2;
+  }

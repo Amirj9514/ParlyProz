@@ -10,21 +10,22 @@ import { debounceTime, Subject } from 'rxjs';
 // import { NhlService } from '../../../Shared/services/nhl.service';
 import * as d3 from 'd3';
 import { NflService } from '../../../Shared/services/nfl.service';
+import { CommonService } from '../../../Shared/services/common.service';
 
 @Component({
   selector: 'app-nfl-player-detail',
   standalone: true,
-    imports: [
-      TabsModule,
-      SelectButtonModule,
-      CommonModule,
-      FormsModule,
-      InputGroupModule,
-      InputGroupAddonModule,
-      ButtonModule,
-    ],
+  imports: [
+    TabsModule,
+    SelectButtonModule,
+    CommonModule,
+    FormsModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    ButtonModule,
+  ],
   templateUrl: './nfl-player-detail.component.html',
-  styleUrl: './nfl-player-detail.component.scss'
+  styleUrl: './nfl-player-detail.component.scss',
 })
 export class NflPlayerDetailComponent {
   @ViewChild('chart', { static: true }) chartContainer!: ElementRef;
@@ -33,7 +34,7 @@ export class NflPlayerDetailComponent {
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;
-  value: number = 2;
+  value: any = 2;
   debounceSubject = new Subject<number>();
   activeColor: string = 'success';
 
@@ -47,35 +48,42 @@ export class NflPlayerDetailComponent {
     { name: 'L20', value: 4, avg: 0, hr: 0 },
   ];
 
-  constructor(private nhlService: NflService) {}
+  constructor(private nhlService: NflService, public commonS: CommonService) {}
 
   ngOnInit() {
+    if (this.commonS.isPremiumUser()) {
+      this.paymentOptions = [
+        ...this.paymentOptions,
+        { name: 'L30', value: 6, avg: 0, hr: 0 },
+        { name: 'All', value: 7, avg: 0, hr: 0 },
+        { name: '2025', value: 2025, avg: 0, hr: 0 },
+        { name: '2024', value: 2024, avg: 0, hr: 0 },
+        { name: 'H2H', value: 'H2H', avg: 0, hr: 0 },
+      ];
+    }
+
     setTimeout(() => {
       this.statsList = this.nhlService.getStatsList();
       let newStatsList: any[] = [];
       const playersStats: any[] = this.nhlService.getPlayerData(20) ?? [];
-      this.statsList.map((stat , index) => {
+      this.statsList.map((stat, index) => {
         // if (stat.id !== 'H+R+RBI') {
-          const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
-          let isStatFound = false;
-          for (const player of playersStats) {
-            if (player[statName.key] || player[statName.key] === 0) {
-              isStatFound = true;
-              break;
-            }
+        const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
+        let isStatFound = false;
+        for (const player of playersStats) {
+          if (player[statName.key] || player[statName.key] === 0) {
+            isStatFound = true;
+            break;
           }
+        }
 
-          if (isStatFound) {
-
-            if(newStatsList.length && newStatsList.length == 1){
+        if (isStatFound) {
+          if (newStatsList.length && newStatsList.length == 1) {
             const line = this.nhlService.returnShortName(statName.key);
-            this.defaultSelect = line
-
-            console.log('line', line);
-            
-            }
-            newStatsList.push(stat);
+            this.defaultSelect = line;
           }
+          newStatsList.push(stat);
+        }
         // }
       });
 
@@ -92,12 +100,13 @@ export class NflPlayerDetailComponent {
 
       const statsId =
         this.nhlService.getStatsIdByKey(this.selectedPlayerDetail?.field) ??
-        this.defaultSelect ?? 'REC';
+        this.defaultSelect ??
+        'REC';
       this.selectedStats = this.statsList.find((stat) => stat.id === statsId);
       const line = this.selectedPlayerDetail?.line ?? 0;
 
       this.thresholdValue = this.selectedPlayerDetail?.line ?? 0;
-      this.getStatsList(statsId ||  this.defaultSelect || 'REC', 10, line);
+      this.getStatsList(statsId || this.defaultSelect || 'REC', 10, line);
     }, 100);
 
     //
@@ -119,26 +128,24 @@ export class NflPlayerDetailComponent {
       this.thresholdValue = line;
     } else {
       const lines = this.nhlService.getStatLineValuesByName(activeStats);
-     
-      console.log('lines', lines);
-      
-      
       this.thresholdValue = lines.length ? lines[0] : 0;
     }
+    
     this.graphData = this.nhlService.preparePlayerStatsGraphData(
       activeStats,
       numberOfStats,
-      this.thresholdValue
+      this.selectedPlayerDetail?.opponent
     );
 
     const calStats = this.nhlService.calculatePlayerAvgAndHR(
       this.thresholdValue,
-      activeStats
+      activeStats,
+      this.selectedPlayerDetail?.opponent
     );
 
     this.paymentOptions.map((option) => {
-      option.avg = calStats[option.name].average;
-      option.hr = calStats[option.name].percentageAboveBaseLine;
+      option.avg = calStats[option.name]?.average ?? 0;
+      option.hr = calStats[option.name]?.percentageAboveBaseLine ?? 0;
     });
 
     const hr = this.paymentOptions[this.value - 1]?.hr ?? 0;
@@ -388,11 +395,27 @@ export class NflPlayerDetailComponent {
 
   onStatsChange(event: any) {
     this.selectedStats = event;
-    this.getStatsList(event.id, this.value * 5);
+     let numberOfStats = 0;
+    if (this.value == 2024 || event == 2025) {
+      numberOfStats = event;
+    }else if(this.value === 'H2H') {
+      numberOfStats = 100;
+    } else {
+      numberOfStats = event * 5;
+    }
+
+    this.getStatsList(event.id, numberOfStats);
   }
 
   onPlayerMatchChange(event: any) {
-    const numberOfStats = event * 5;
+    let numberOfStats = 0;
+    if (event == 2024 || event == 2025) {
+      numberOfStats = event;
+    }else if(event=== 'H2H') {
+      numberOfStats = 100;  
+    }else{
+      numberOfStats = event * 5;
+    }
     this.getStatsList(
       this.selectedStats.id,
       numberOfStats,
