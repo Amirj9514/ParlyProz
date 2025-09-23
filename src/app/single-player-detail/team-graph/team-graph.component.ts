@@ -108,7 +108,7 @@ export class TeamGraphComponent implements OnInit , OnChanges {
     );
 
     this.paymentOptions.map((option) => {
-      option.avg = calStats[option.name].average;
+      option.avg = calStats[option.name]?.average;
       option.hr = calStats[option.name].percentageAboveBaseLine;
     });
 

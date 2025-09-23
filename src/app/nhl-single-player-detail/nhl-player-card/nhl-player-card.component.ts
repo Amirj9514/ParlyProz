@@ -105,8 +105,8 @@ export class NhlPlayerCardComponent {
     );
 
     this.paymentOptions.map((option) => {
-      option.avg = calStats[option.name].average;
-      option.hr = calStats[option.name].percentageAboveBaseLine;
+      option.avg = calStats[option.name]?.average;
+      option.hr = calStats[option.name]?.percentageAboveBaseLine;
     });
 
     const hr = this.paymentOptions[this.value - 1]?.hr ?? 0;

@@ -119,7 +119,7 @@ export class MlbTeamGraphComponent {
     );
 
     this.paymentOptions.map((option) => {
-      option.avg = calStats[option.name].average;
+      option.avg = calStats[option.name]?.average;
       option.hr = calStats[option.name].percentageAboveBaseLine;
     });
 

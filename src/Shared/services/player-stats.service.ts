@@ -110,6 +110,8 @@ export class PlayerStatsService {
     let players: any[] = [];
     if (numberOfPlayers === 100) {
       players = this.getPlayerData(numberOfPlayers, 'asc', opponent);
+      console.log(players);
+      
     } else {
       players = this.getPlayerData(numberOfPlayers);
     }
@@ -264,7 +266,7 @@ export class PlayerStatsService {
           aboveBaseLineCount,
         };
       }else  {
-        results[`L${range}`] = {
+        results[range === 'H2H' ? 'H2H' : `L${range}`] = {
           average: parseFloat(average.toFixed(1)),
           percentageAboveBaseLine: parseFloat(
             percentageAboveBaseLine.toFixed(1)
