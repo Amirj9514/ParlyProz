@@ -388,12 +388,12 @@ export class MlbPlayerCardComponent {
   onStatsChange(event: any) {
     this.selectedStats = event;
     let numberOfStats = 0;
-    if (this.value == 2024 || event == 2025) {
-      numberOfStats = event;
+    if (this.value == 2024 || this.value == 2025) {
+      numberOfStats = this.value;
     } else if (this.value === 'H2H') {
       numberOfStats = 100;
     } else {
-      numberOfStats = event * 5;
+      numberOfStats = this.value * 5;
     }
 
     this.getStatsList(event.id, numberOfStats);

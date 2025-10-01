@@ -50,6 +50,8 @@ export class NflSignlePlayerDetailComponent {
             if (lineStatsRes.status === 200 && playerDetailRes.status === 200) {
               this.nhlService.setLineStats(lineStatsRes.body);
               this.playerDetail = playerDetailRes.body ?? [];
+              console.log(playerDetailRes.body);
+              
     
               this.nhlService.setPlayerData(this.playerDetail);
               // this.playerStatsS.setPlayerData(this.playerDetail);
