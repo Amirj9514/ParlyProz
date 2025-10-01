@@ -74,12 +74,13 @@ export class PlayerStatsService {
     this.playerStats = data;
   }
 
-   getPlayerData(
+  getPlayerData(
     numberOfPlayers: number,
     order: 'asc' | 'desc' = 'asc',
     opponent?: any
   ) {
     let players: any[] = [];
+
     if (numberOfPlayers === 2025 || numberOfPlayers === 2024) {
       players = this.playerStats.filter((player) => {
         const playerSeason = new Date(player.date).getFullYear();
@@ -91,12 +92,13 @@ export class PlayerStatsService {
       );
     } else if (numberOfPlayers > 30) {
       numberOfPlayers = this.playerStats.length;
-      players = this.playerStats;
+      players = [...this.playerStats]; // clone instead of reference
     } else {
       players = this.playerStats.slice(0, numberOfPlayers);
     }
 
-    return players.sort((a, b) => {
+    // clone before sorting to avoid mutating original array
+    return [...players].sort((a, b) => {
       const diff = new Date(a.date).getTime() - new Date(b.date).getTime();
       return order === 'asc' ? diff : -diff;
     });

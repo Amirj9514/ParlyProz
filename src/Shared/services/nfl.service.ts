@@ -20,7 +20,7 @@ export class NflService {
   lineData: any[] = [];
   playerData: any[] = [];
   teamData: any[] = [];
-  constructor() { }
+  constructor() {}
 
   // =======================================================================
   // Player data  Methods
@@ -36,6 +36,7 @@ export class NflService {
     opponent?: any
   ) {
     let players: any[] = [];
+
     if (numberOfPlayers === 2025 || numberOfPlayers === 2024) {
       players = this.playerData.filter((player) => {
         const playerSeason = new Date(player.date).getFullYear();
@@ -47,12 +48,13 @@ export class NflService {
       );
     } else if (numberOfPlayers > 30) {
       numberOfPlayers = this.playerData.length;
-      players = this.playerData;
+      players = [...this.playerData]; // clone instead of reference
     } else {
       players = this.playerData.slice(0, numberOfPlayers);
     }
 
-    return players.sort((a, b) => {
+    // clone before sorting to avoid mutating original array
+    return [...players].sort((a, b) => {
       const diff = new Date(a.date).getTime() - new Date(b.date).getTime();
       return order === 'asc' ? diff : -diff;
     });
@@ -105,8 +107,9 @@ export class NflService {
       });
 
       return {
-        category: `${formattedDate}_${player?.opponent ?? ''}_${player?.date ?? ''
-          }`,
+        category: `${formattedDate}_${player?.opponent ?? ''}_${
+          player?.date ?? ''
+        }`,
         values,
         data: {
           date: formattedDate,
@@ -266,8 +269,9 @@ export class NflService {
       });
 
       return {
-        category: `${formattedDate}_${player?.opponent_tricode ?? ''}_${player?.match_datetime ?? ''
-          }`,
+        category: `${formattedDate}_${player?.opponent_tricode ?? ''}_${
+          player?.match_datetime ?? ''
+        }`,
         values,
         data: {
           date: formattedDate,

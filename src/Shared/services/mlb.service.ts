@@ -30,12 +30,13 @@ export class MlbService {
     this.playerData = data;
   };
 
-  getPlayerData(
+   getPlayerData(
     numberOfPlayers: number,
     order: 'asc' | 'desc' = 'asc',
     opponent?: any
   ) {
     let players: any[] = [];
+
     if (numberOfPlayers === 2025 || numberOfPlayers === 2024) {
       players = this.playerData.filter((player) => {
         const playerSeason = new Date(player.date).getFullYear();
@@ -47,12 +48,13 @@ export class MlbService {
       );
     } else if (numberOfPlayers > 30) {
       numberOfPlayers = this.playerData.length;
-      players = this.playerData;
+      players = [...this.playerData]; // clone instead of reference
     } else {
       players = this.playerData.slice(0, numberOfPlayers);
     }
 
-    return players.sort((a, b) => {
+    // clone before sorting to avoid mutating original array
+    return [...players].sort((a, b) => {
       const diff = new Date(a.date).getTime() - new Date(b.date).getTime();
       return order === 'asc' ? diff : -diff;
     });
