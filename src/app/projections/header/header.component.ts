@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit {
       api: 'wnba',
       constant: false,
     },
-    { label: 'NHL', icon: 'hockey', value: 'NHL', api: 'nhl', constant: true },
+    { label: 'NHL', icon: 'hockey', value: 'NHL', api: 'nhl', constant: false },
     {
       label: 'NBA',
       icon: 'basketball',
