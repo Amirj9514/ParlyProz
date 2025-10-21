@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
       icon: 'basketball',
       value: 'NBA',
       api: 'mlb',
-      constant: true,
+      constant: false,
     },
     
     {
