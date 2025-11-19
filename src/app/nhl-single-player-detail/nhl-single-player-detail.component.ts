@@ -22,7 +22,7 @@ import { NhlTeamGraphComponent } from "./nhl-team-graph/nhl-team-graph.component
 export class NhlSinglePlayerDetailComponent {
   @Input() selectedPlayerId: number = 0;
   @Input() selectedPlayerDetail: any;
-  @Input() selectedSport: string = 'mlb';
+  @Input() selectedSport: string = 'nba';
   @Output() onClose = new EventEmitter();
   @Input() selectedPlayer: any;
   playerDetail: any[] = [];

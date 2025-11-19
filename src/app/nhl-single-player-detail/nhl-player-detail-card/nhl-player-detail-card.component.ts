@@ -12,7 +12,7 @@ import { SvgIconDirective } from '../../../Shared/directives/svg-icon.directive'
   styleUrl: './nhl-player-detail-card.component.scss'
 })
 export class NhlPlayerDetailCardComponent implements OnInit {
- @Input()selectedSport:string = 'mlb';
+ @Input()selectedSport:string = 'nba';
   playerProfile:any;
   playerDetail:any;
   allPlayerData:any[] = [];

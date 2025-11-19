@@ -46,7 +46,7 @@ import { NflSignlePlayerDetailComponent } from "../nfl-signle-player-detail/nfl-
 })
 export class PlayerListComponent implements OnInit {
   @ViewChild('scrollObserver', { static: false }) scrollObserver!: ElementRef;
-  selectedGame: string = 'mlb';
+  selectedGame: string = 'nba';
   playerList: any[] = [];
   playerListLoader: boolean = false;
   showComingSoon: boolean = false;
@@ -77,7 +77,7 @@ export class PlayerListComponent implements OnInit {
 
   getDefaultGame() {
     this.sharedS.getData().pipe(take(1)).subscribe((data: any) => {
-      this.selectedGame = data?.game.api ?? 'mlb';
+      this.selectedGame = data?.game.api ?? 'nba';
     });
   }
 

@@ -29,7 +29,7 @@ export class AuthComponent implements OnInit {
     const path = window.location.search.replace('?token=', '');
     const decodedString=path;
    
-    this.sharedS.sendGetRequest('mlb/stat/fields' , decodedString).subscribe({
+    this.sharedS.sendGetRequest('nba/stat/fields' , decodedString).subscribe({
       next:(res:any)=>{
         if(res.status === 200) {
           let token = {key:'token' , val:decodedString};

@@ -30,7 +30,7 @@ import { CommonService } from '../../../Shared/services/common.service';
 export class PlayerStatsGraphComponent {
   @ViewChild('chart', { static: true }) chartContainer!: ElementRef;
   @Input() selectedPlayerDetail: any;
-  @Input() selectedSport: string = 'mlb';
+  @Input() selectedSport: string = 'nba';
   thresholdValue: number = 0;
   statsList: any[] = [];
   selectedStats: any;

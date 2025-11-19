@@ -19,7 +19,7 @@ import { NflPlayerTableComponent } from "./nfl-player-table/nfl-player-table.com
 export class NflSignlePlayerDetailComponent {
     @Input() selectedPlayerId: number = 0;
     @Input() selectedPlayerDetail: any;
-    @Input() selectedSport: string = 'mlb';
+    @Input() selectedSport: string = 'nba';
     @Output() onClose = new EventEmitter();
     @Input() selectedPlayer: any;
     playerDetail: any[] = [];

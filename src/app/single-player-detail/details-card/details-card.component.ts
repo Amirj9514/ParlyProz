@@ -11,7 +11,7 @@ import { SharedService } from '../../../Shared/services/shared.service';
   styleUrl: './details-card.component.scss'
 })
 export class DetailsCardComponent {
-  @Input()selectedSport:string = 'mlb';
+  @Input()selectedSport:string = 'nba';
   playerProfile:any;
   playerDetail:any;
   constructor(private playerS:PlayerService , private sharedS:SharedService) { }

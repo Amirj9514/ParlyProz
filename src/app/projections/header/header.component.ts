@@ -19,23 +19,6 @@ export class HeaderComponent implements OnInit {
   selectedGame: string = 'NBA';
 
   games: any[] = [
-    
-    {
-      label: 'MLB',
-      icon: 'baseball',
-      value: 'MLB',
-      api: 'mlb',
-      constant: false,
-    },
-    { label: 'NFL', icon: 'football', value: 'NFL', api: 'nfl', constant: false },
-    {
-      label: 'WNBA',
-      icon: 'basketball',
-      value: 'wnba',
-      api: 'wnba',
-      constant: false,
-    },
-    { label: 'NHL', icon: 'hockey', value: 'NHL', api: 'nhl', constant: false },
     {
       label: 'NBA',
       icon: 'basketball',
@@ -43,7 +26,24 @@ export class HeaderComponent implements OnInit {
       api: 'nba',
       constant: false,
     },
-    
+   
+    { label: 'NFL', icon: 'football', value: 'NFL', api: 'nfl', constant: false },
+  
+    { label: 'NHL', icon: 'hockey', value: 'NHL', api: 'nhl', constant: false },
+    {
+      label: 'WNBA',
+      icon: 'basketball',
+      value: 'wnba',
+      api: 'wnba',
+      constant: true,
+    },
+    {
+      label: 'MLB',
+      icon: 'baseball',
+      value: 'MLB',
+      api: 'mlb',
+      constant: true,
+    },
     {
       label: 'Soccer',
       icon: 'soccer',

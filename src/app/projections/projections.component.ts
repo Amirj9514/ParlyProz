@@ -65,7 +65,7 @@ export class ProjectionsComponent implements OnInit {
   projectionData: any[] = [];
   projectionLoader: boolean = false;
   stopFormTrigger: boolean = true;
-  activeGameApiendpoint: string = 'mlb';
+  activeGameApiendpoint: string = 'nba';
   comingSoon: boolean = false;
   selectedPlayer: number = NaN;
   showPlayerDetail: boolean = false;
@@ -104,7 +104,7 @@ export class ProjectionsComponent implements OnInit {
       .getData()
       .pipe(take(1))
       .subscribe((data: any) => {
-        this.activeGameApiendpoint = data?.game?.api ?? 'mlb';
+        this.activeGameApiendpoint = data?.game?.api ?? 'nba';
       });
   }
 

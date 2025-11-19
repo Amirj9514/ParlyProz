@@ -13,7 +13,7 @@ import { MlbService } from '../../../Shared/services/mlb.service';
   styleUrl: './mlb-player-detail-card.component.scss'
 })
 export class MlbPlayerDetailCardComponent {
-@Input()selectedSport:string = 'mlb';
+@Input()selectedSport:string = 'nba';
   playerProfile:any;
   playerDetail:any;
   allPlayerData:any[] = [];
