@@ -24,6 +24,7 @@ export class SharedService {
     } else if (error.status === 401) {
       errorMessage = 'Unauthorized (401)';
       window.location.href = 'https://parlayproz.com/';
+      
     } else {
       errorMessage = `Error: ${error.message}`;
     }
