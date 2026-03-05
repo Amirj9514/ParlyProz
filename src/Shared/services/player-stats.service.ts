@@ -71,7 +71,76 @@ export class PlayerStatsService {
   //====================================================================
 
   setPlayerData(data: any) {
-    this.playerStats = data;
+    const currentSeason = '2025-26';
+    const filtered = data.filter((player: any) => {
+      if (player.season && player.season !== currentSeason) {
+        return false;
+      }
+      return true;
+    });
+
+    this.playerStats = filtered.map((player: any) => {
+      if (player.minutes) {
+        player.minutes = this.formatMinutesString(player.minutes);
+        player.minutes_normalized = this.normalizeMinutes(player.minutes);
+      }
+
+      const numericFields = [
+        'field_goals_made', 'field_goals_attempted',
+        'three_pointers_made', 'three_pointers_attempted',
+        'offensive_rebounds', 'defensive_rebounds', 'rebounds',
+        'assists', 'steals', 'blocks', 'turnovers', 'points',
+        'free_throws_made', 'free_throws_attempted', 'fouls_personal'
+      ];
+      numericFields.forEach((f) => {
+        if (player[f] !== undefined) {
+          const n = parseFloat(player[f]);
+          player[f] = isNaN(n) ? 0 : n;
+        }
+      });
+
+      return player;
+    });
+  }
+
+  private normalizeMinutes(minutesStr: any): number {
+    if (typeof minutesStr !== 'string') {
+      return 0;
+    }
+
+    // handle MM:SS
+    if (minutesStr.includes(':')) {
+      const [mins, secs] = minutesStr.split(':').map(s => parseFloat(s) || 0);
+      return mins + Math.min(secs, 59) / 60;
+    }
+
+    // handle ISO duration e.g. PT11M27.00S
+    if (minutesStr.startsWith('PT')) {
+      const match = minutesStr.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:([\d.]+)S)?/);
+      if (match) {
+        const hrs = parseInt(match[1] || '0', 10);
+        const mins = parseInt(match[2] || '0', 10);
+        const secs = parseFloat(match[3] || '0');
+        return hrs * 60 + mins + secs / 60;
+      }
+    }
+
+    return 0;
+  }
+
+  private formatMinutesString(raw: any): string {
+    const decimal = this.normalizeMinutes(raw);
+    let mins = Math.floor(decimal);
+    let secs = Math.round((decimal - mins) * 60);
+    if (secs > 30) {
+      mins += 1;
+      secs = 0;
+    }
+    if (secs >= 60) {
+      mins += 1;
+      secs = 0;
+    }
+    return `${mins}:${String(secs).padStart(2, '0')}`;
   }
 
   getPlayerData(
