@@ -85,12 +85,16 @@
     </div>
 
     <div class="playerCard" (scroll)="onScroll()">
-      @for (player of projectionData; track $index) {
       <app-player-card
         (onPlayerClick)="openPlayerDetail($event)"
-        [player]="player"
+        [projectionData]="projectionData"
+        [projectionLoader]="statsLoader"
+        [totalRecords]="totalRecords"
+        [statsList]="statsList"
+        [activeGameApiendpoint]="activeGameApiendpoint"
+        [filterForm]="filterForm"
       ></app-player-card>
-      } @if(!projectionLoader){
+      @if(!projectionLoader){
       <div #scrollObserver class="loading-spinner text-center p-2">
         <p style="visibility: hidden">Loading more players...</p>
       </div>

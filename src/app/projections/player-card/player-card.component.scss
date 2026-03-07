@@ -26,6 +26,7 @@
     align-items: center;
     flex-direction: column;
     height: 50px;
+    width: 100%;
   }
 
   .lineStats {
@@ -34,3 +35,25 @@
     font-weight: 600;
   }
 }
+
+.statIcon{
+    border: 1px solid #9233DF;
+    cursor: pointer;
+    background-color: #F1F5F9;
+    border-radius: 10px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .emptyMessage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 323px);
+  }
