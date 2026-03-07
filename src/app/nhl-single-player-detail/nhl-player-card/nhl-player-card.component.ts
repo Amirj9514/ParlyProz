@@ -319,7 +319,7 @@ export class NhlPlayerCardComponent {
       .attr('transform', `translate(0,${height})`)
       .call(d3.axisBottom(xScale).tickFormat(() => ''))
       .selectAll('text')
-      .attr('class', 'hide')
+      // .attr('class', 'hide')
       .attr('text-anchor', 'middle')
       .each(function (d: any) {
         const [date, team] = d.split('_');
