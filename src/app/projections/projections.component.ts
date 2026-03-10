@@ -87,6 +87,7 @@ export class ProjectionsComponent implements OnInit {
     this.apps = this.commonS.getApps();
     this.filterForm = new FormGroup({
       search: new FormControl(''),
+      line: new FormControl(''),
       stats: new FormControl(''),
       match: new FormControl(null),
       apps: new FormControl(this.apps),
@@ -189,14 +190,16 @@ export class ProjectionsComponent implements OnInit {
 
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
+    const line = formValue.line;
     // const fixture_slug =this.commonS.getTeams(formValue.match);
     const selectedApp = this.commonS.getSelectedApp(formValue.apps);
-    this.getProjections(stats, search, fixture_slug, selectedApp);
+    this.getProjections(stats, search, line, fixture_slug, selectedApp);
   }
 
   getProjections(
     stats: string,
     search: string,
+    line: number | string | null,
     fixture_slug: any,
     apps: string,
     loader: boolean = false
@@ -214,11 +217,13 @@ export class ProjectionsComponent implements OnInit {
       this.page = 1;
     }
 
+    const lineStr = line != null ? String(line).trim() : '';
+    const lineParam = lineStr !== '' && !isNaN(Number(lineStr)) ? Number(lineStr) : '';
     this.sharedS
       .sendGetRequest(
         `${this.activeGameApiendpoint}/dashboard/stats?name=${
           search ?? ''
-        }&stat_fields=${stats ?? ''}&team_a=${
+        }&stat_fields=${stats ?? ''}&line=${lineParam}&team_a=${
           fixture_slug.team_a ?? ''
         }&team_b=${fixture_slug.team_b ?? ''}&limit=${50}&offset=${
           this.page
@@ -288,6 +293,11 @@ export class ProjectionsComponent implements OnInit {
     this.showPlayerDetail = true;
   }
 
+  onChildDataFetched(event: { data: any[]; totalRecords: number }) {
+    this.projectionData = event.data;
+    this.totalRecords = event.totalRecords;
+  }
+
   onGameChange(endpoint: string | null) {
     if (!endpoint) {
       this.comingSoon = true;
@@ -297,6 +307,7 @@ export class ProjectionsComponent implements OnInit {
 
     this.filterForm.controls['match'].setValue(null);
     this.filterForm.controls['search'].setValue('');
+    this.filterForm.controls['line'].setValue('');
     this.filterForm.controls['stats'].setValue(null);
     this.comingSoon = false;
     this.activeGameApiendpoint = endpoint;
@@ -341,10 +352,11 @@ export class ProjectionsComponent implements OnInit {
       };
       const stats = formValue.stats.map((stat: any) => stat.code).join(',');
       const search = formValue.search;
+      const line = formValue.line;
       // const fixture_slug =this.commonS.getTeams(formValue.match);
       const apps = this.commonS.getSelectedApp(formValue.apps);
 
-      this.getProjections(stats, search, fixture_slug, apps, true);
+      this.getProjections(stats, search, line, fixture_slug, apps, true);
     }
   }
 

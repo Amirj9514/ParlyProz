@@ -4,7 +4,7 @@
   @if (!comingSoon) {
   <div class="projection-container">
     <form class="m-0 mt-2 p-0 grid" [formGroup]="filterForm">
-      <div class="col-7 pb-1">
+      <div class="col-4 pb-1">
         <p-iconfield>
           <p-inputicon styleClass="pi pi-search" />
           <input
@@ -17,7 +17,21 @@
           />
         </p-iconfield>
       </div>
-      <div class="col-5 pb-1">
+      <div class="col-4 pb-1">
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            id="line-search"
+            class="w-full Tableinput"
+            formControlName="line"
+            type="text"
+            inputmode="numeric"
+            pInputText
+            placeholder="Search player by line..."
+          />
+        </p-iconfield>
+      </div>
+      <div class="col-4 pb-1">
         <!-- <p-floatlabel class="w-full" variant="on"> -->
         <p-multiselect
           [options]="apps"
@@ -81,6 +95,7 @@
         [activeGameApiendpoint]="activeGameApiendpoint"
         [filterForm]="filterForm"
         (onPlayerClick)="openPlayerDetail($event)"
+        (onDataFetched)="onChildDataFetched($event)"
       ></app-projection-table>
     </div>
 
@@ -93,6 +108,7 @@
         [statsList]="statsList"
         [activeGameApiendpoint]="activeGameApiendpoint"
         [filterForm]="filterForm"
+        (onDataFetched)="onChildDataFetched($event)"
       ></app-player-card>
       @if(!projectionLoader){
       <div #scrollObserver class="loading-spinner text-center p-2">

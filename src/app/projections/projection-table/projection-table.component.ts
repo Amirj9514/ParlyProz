@@ -40,12 +40,14 @@ export class ProjectionTableComponent implements OnChanges {
   @Input() activeGameApiendpoint: string = 'nba';
   @Output() onPlayerClick = new EventEmitter<number>();
   @Output() onPagination = new EventEmitter<{ pageNo: number; rows: number }>();
+  @Output() onDataFetched = new EventEmitter<{ data: any[]; totalRecords: number }>();
   @ViewChild('projectionTable') projectionTable!: Table;
   first: number = 0;
   rows: number = 50;
   page: number = 1;
   pageCount: number = 0;
   sortCol: { field: string | null; order: number } = { field: null, order: -1 };
+  private skipPaginatorReset = false;
 
   tableColumns: any[] = [
     {
@@ -114,12 +116,18 @@ export class ProjectionTableComponent implements OnChanges {
       }
     }
 
-    setTimeout(() => {
-      this.projectionTable.reset();
-      this.projectionTable.sortField = 'average_last_10_line_diff';
-      this.projectionTable.sortOrder = -1;
+    if (this.skipPaginatorReset) {
+      this.skipPaginatorReset = false;
+      return;
+    }
 
-      this.first = 0;
+    setTimeout(() => {
+      if (this.projectionTable) {
+        this.projectionTable.reset();
+        this.projectionTable.sortField = 'average_last_10_line_diff';
+        this.projectionTable.sortOrder = -1;
+        this.first = 0;
+      }
     }, 0);
   }
 
@@ -193,9 +201,9 @@ export class ProjectionTableComponent implements OnChanges {
     }
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    // const fixture_slug =this.commonS.getTeams(formValue.match);
+    const line = formValue.line;
     const apps = this.commonS.getSelectedApp(formValue.apps);
-    this.getProjections(stats, search , fixture_slug ,apps);
+    this.getProjections(stats, search, line, fixture_slug, apps);
   }
 
   onPageChange(event: any) {
@@ -227,19 +235,21 @@ export class ProjectionTableComponent implements OnChanges {
     }
     const stats = formValue.stats.map((stat: any) => stat.code).join(',');
     const search = formValue.search;
-    // const fixture_slug =this.commonS.getTeams(formValue.match);
+    const line = formValue.line;
     const apps = this.commonS.getSelectedApp(formValue.apps);
-    this.getProjections(stats, search , fixture_slug , apps);
+    this.getProjections(stats, search, line, fixture_slug, apps);
   }
 
-  getProjections(stats: string, search: string , fixture_slug: any , apps: string) {
+  getProjections(stats: string, search: string, line: number | string | null, fixture_slug: any, apps: string) {
     this.projectionLoader = true;
+    const lineStr = line != null ? String(line).trim() : '';
+    const lineParam = lineStr !== '' && !isNaN(Number(lineStr)) ? Number(lineStr) : '';
     const order_field = this.sortCol?.field ?? 'average_last_10_line_diff';
     this.sharedS
       .sendGetRequest(
         `${this.activeGameApiendpoint}/dashboard/stats?name=${
           search ?? ''
-        }&stat_fields=${stats ?? ''}&limit=${this.rows}&offset=${
+        }&stat_fields=${stats ?? ''}&line=${lineParam}&limit=${this.rows}&offset=${
           this.page
         }&order_field=${order_field}&order=${this.sortCol.order}&team_a=${
           fixture_slug.team_a ?? ''
@@ -251,8 +261,12 @@ export class ProjectionTableComponent implements OnChanges {
         next: (res: any) => {
           this.projectionLoader = false;
           if (res.status == 200) {
-            this.totalRecords = res.body?.page_info?.total_records ?? 120;
-            this.projectionData = res.body.stats ?? [];
+            const totalRecords = res.body?.page_info?.total_records ?? 120;
+            const data = res.body.stats ?? [];
+            this.totalRecords = totalRecords;
+            this.projectionData = data;
+            this.skipPaginatorReset = true;
+            this.onDataFetched.emit({ data, totalRecords });
           }
         },
         error: (err: any) => {
