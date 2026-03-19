@@ -28,21 +28,19 @@ export class NflPlayerTableComponent {
     let statsKey: string = '';
     let newStatsList: any[] = [];
 
-    statsList.map((stat) => {
-      if (stat.id !== 'H+R+RBI') {
-        const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
-        let isStatFound = false;
-        for (const player of this.players) {
-          if (player[statName.key] || player[statName.key] === 0) {
-            statsKey = statName.key;
-            isStatFound = true;
-            break;
-          }
+    statsList.forEach((stat) => {
+      const statName = this.nhlService.getStatsKeyByStatsId(stat.id);
+      let isStatFound = false;
+      for (const player of this.players) {
+        if (player[statName.key] || player[statName.key] === 0) {
+          statsKey = statName.key;
+          isStatFound = true;
+          break;
         }
+      }
 
-        if (isStatFound) {
-          newStatsList.push({ name: stat.id, key: statsKey });
-        }
+      if (isStatFound) {
+        newStatsList.push({ name: stat.id, key: statsKey });
       }
     });
     this.statsList = newStatsList;

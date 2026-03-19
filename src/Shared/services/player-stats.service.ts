@@ -76,6 +76,10 @@ export class PlayerStatsService {
       if (player.season && player.season !== currentSeason) {
         return false;
       }
+      const parsedMins = this.normalizeMinutes(player.minutes);
+      if (parsedMins === 0) {
+        return false;
+      }
       return true;
     });
 

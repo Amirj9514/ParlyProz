@@ -27,7 +27,16 @@ export class NflService {
   // =======================================================================
 
   setPlayerData = (data: any) => {
-    this.playerData = data;
+    this.playerData = data.filter((player: any) => {
+      const engagements = 
+        (parseFloat(player.receiving_targets) || 0) +
+        (parseFloat(player.rushing_attempts) || 0) +
+        (parseFloat(player.passing_attempts) || 0) +
+        (parseFloat(player.defensive_tackles) || 0) +
+        (parseFloat(player.kicking_points) || 0);
+      // Omit games where player logged exactly 0 attempts/targets/tackles
+      return engagements !== 0;
+    });
   };
 
   getPlayerData(

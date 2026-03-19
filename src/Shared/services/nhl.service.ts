@@ -27,7 +27,15 @@ export class NhlService {
   // =======================================================================
 
   setPlayerData = (data: any) => {
-    this.playerData = data;
+    this.playerData = data.filter((player: any) => {
+      const rawTOI = player.time_on_ice;
+      if (!rawTOI) return false;
+      const parsed = parseFloat(String(rawTOI));
+      if (isNaN(parsed) || parsed === 0) {
+        return false;
+      }
+      return true;
+    });
   };
 
   getPlayerData(

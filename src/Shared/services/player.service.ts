@@ -63,8 +63,35 @@ export class PlayerService {
     return totalVal;
   };
   setPlayerData = (data: any) => {
-    this.playerData = data;
+    this.playerData = data.filter((player: any) => {
+      if (!player.minutes) return false;
+      const parsedMins = this.normalizeMinutes(player.minutes);
+      return parsedMins !== 0;
+    });
   };
+
+  private normalizeMinutes(minutesStr: any): number {
+    if (typeof minutesStr !== 'string') {
+      return parseFloat(String(minutesStr)) || 0;
+    }
+
+    if (minutesStr.includes(':')) {
+      const [mins, secs] = minutesStr.split(':').map(s => parseFloat(s) || 0);
+      return mins + Math.min(secs, 59) / 60;
+    }
+
+    if (minutesStr.startsWith('PT')) {
+      const match = minutesStr.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:([\d.]+)S)?/);
+      if (match) {
+        const hrs = parseInt(match[1] || '0', 10);
+        const mins = parseInt(match[2] || '0', 10);
+        const secs = parseFloat(match[3] || '0');
+        return hrs * 60 + mins + secs / 60;
+      }
+    }
+
+    return parseFloat(minutesStr) || 0;
+  }
   getPlayers = (numberOfPlayers: number) => {
     const players = this.playerData.slice(0, numberOfPlayers);
     const sortPlayers = players.sort(
