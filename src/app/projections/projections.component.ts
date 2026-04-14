@@ -117,14 +117,14 @@ export class ProjectionsComponent implements OnInit {
         switchMap((res: any) => {
           if (res.status === 200) {
             this.statsList = res.body ?? [];
-            this.getGameList();
+            const selectedApp = this.commonS.getSelectedApp(
+              this.filterForm.get('apps')?.value
+            );
+            this.getGameList(selectedApp);
             this.filterForm.get('stats')?.setValue(this.statsList);
             const stats = this.statsList
               .map((stat: any) => stat.code)
               .join(',');
-            const selectedApp = this.commonS.getSelectedApp(
-              this.filterForm.get('apps')?.value
-            );
             return this.sharedS.sendGetRequest(
               `${
                 this.activeGameApiendpoint
@@ -251,10 +251,10 @@ export class ProjectionsComponent implements OnInit {
       });
   }
 
-  getGameList() {
+  getGameList(selectedApp: string) {
     this.gameListLoader = true;
     this.sharedS
-      .sendGetRequest(`${this.activeGameApiendpoint}/matches`)
+      .sendGetRequest(`${this.activeGameApiendpoint}/matches?bookie=${selectedApp}`)
       .subscribe({
         next: (res: any) => {
           this.gameList = [];
