@@ -225,7 +225,7 @@ export class PlayerService {
         return { key: 'rebounds', keyArr: ['rebounds'] };
 
       case 'BS':
-        return { key: 'blocks_steals', keyArr: ['blocks', 'steals'] };
+        return { key: 'steals_blocks', keyArr: ['blocks', 'steals'] };
       case '3PM':
         return {
           key: 'three_pointers_made',
@@ -243,7 +243,7 @@ export class PlayerService {
       case 'PR':
         return { key: 'points_rebounds', keyArr: ['points', 'rebounds'] };
       case 'RA':
-        return { key: 'rebounds_assists', keyArr: ['rebounds', 'assists'] };
+        return { key: 'assists_rebounds', keyArr: ['rebounds', 'assists'] };
       case 'PRA':
         return {
           key: 'points_rebounds_assists',

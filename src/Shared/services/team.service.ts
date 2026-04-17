@@ -198,11 +198,13 @@ export class TeamService {
       blocks: 'BLKS',
       assists: 'ASTS',
       rebounds: 'REBS',
+      steals_blocks: 'BS',
       blocks_steals: 'BS',
       three_pointers_made: '3PM',
       three_pointers_attempted: '3PA',
       points_assists: 'PA',
       points_rebounds: 'PR',
+      assists_rebounds: 'RA',
       rebounds_assists: 'RA',
       points_assists_rebounds: 'PRA',
       field_goals_made: 'FGM',
@@ -236,7 +238,7 @@ export class TeamService {
         return { key: 'rebounds', keyArr: ['rebounds'] };
 
       case 'BS':
-        return { key: 'blocks_steals', keyArr: ['blocks', 'steals'] };
+        return { key: 'steals_blocks', keyArr: ['blocks', 'steals'] };
       case '3PM':
         return {
           key: 'three_pointers_made',
@@ -254,7 +256,7 @@ export class TeamService {
       case 'PR':
         return { key: 'points_rebounds', keyArr: ['points', 'rebounds'] };
       case 'RA':
-        return { key: 'rebounds_assists', keyArr: ['rebounds', 'assists'] };
+        return { key: 'assists_rebounds', keyArr: ['rebounds', 'assists'] };
       case 'PRA':
         return {
           key: 'points_rebounds_assists',
