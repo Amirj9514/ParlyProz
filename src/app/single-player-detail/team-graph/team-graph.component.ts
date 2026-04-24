@@ -75,7 +75,7 @@ export class TeamGraphComponent implements OnInit , OnChanges {
       });
     }
     this.selectedStats = this.statsList[0];
-    this.getStatsList('PTS', 10);
+    this.getStatsList(this.selectedStats?.id ?? 'PTS', 10);
     this.debounceSubject.pipe(debounceTime(500)).subscribe((val) => {
       this.thresholdValue = val ? val : 0;
       this.getStatsList(
