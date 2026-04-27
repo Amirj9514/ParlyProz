@@ -21,6 +21,8 @@
           <th class="text-center">SHOTS</th>
           <th class="text-center">HIT</th>
           <th class="text-center">BLOCKED SHOTS</th>
+          <th class="text-center">FOW</th>
+          <th class="text-center">FOA</th>
           <th class="text-center">SAVES</th>
           <th class="text-center">GA</th>
         </tr>
@@ -36,6 +38,8 @@
           <td class="text-center">{{stats?.shots_on_goal ?? '-'}}</td>
           <td class="text-center">{{stats?.hits ?? '-'}}</td>
           <td class="text-center">{{stats?.blocked_shots ?? '-'}}</td>  
+          <td class="text-center">{{stats?.face_off_wins ?? '-'}}</td>
+          <td class="text-center">{{stats?.face_off_attempts ?? '-'}}</td>
           <td class="text-center">{{stats?.saves ??  '-'}}</td>
           <td class="text-center">{{stats?.goals_against ?? '-'}}</td>
         </tr>

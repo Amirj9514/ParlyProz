@@ -84,7 +84,6 @@ export class NhlService {
     } else {
       players = this.getPlayerData(numberOfPlayers);
     }
-    const key = this.getStatsKeyByStatsId(stats);
     const datasets = players.map((player: any) => {
       const date = new Date(player.date);
       const localDate = new Date(
@@ -97,22 +96,7 @@ export class NhlService {
         2,
         '0'
       )}-${String(finalDateObj.getDate()).padStart(2, '0')}`;
-      const values: Record<string, number> = {};
-      const valueArray: any[] = [];
-
-      key.keyArr.forEach((k: string) => {
-        let value = player[k];
-        if (typeof value === 'string') {
-          value = parseFloat(value);
-        }
-        const shortName = this.returnShortName(k);
-        values[shortName] = value || 0;
-        // if (shortName === '3PM' || shortName === '3PA') {
-        //   valueArray.push({ name: shortName, value: value || 0 });
-        // } else {
-        valueArray.push({ name: k, value: value || 0 });
-        // }
-      });
+      const { values, valueArray } = this.buildGraphStatValues(stats, player);
 
       return {
         category: `${formattedDate}_${player?.opponent ?? ''}_${
@@ -166,22 +150,9 @@ export class NhlService {
         lineVal = baseLine;
       }
 
-      let totalArry: any[] = [];
-      const key = this.getStatsKeyByStatsId(stats);
-
-      key.keyArr.forEach((item) => {
-        let prevArry: any[] = [];
-        players.forEach((player: any) => {
-          const value = player[item] ? parseFloat(player[item]) : 0;
-          prevArry.push(value);
-        });
-        totalArry.push(prevArry);
-      });
-
-      let combinedArry: any[] = [];
-      if (totalArry.length > 0) {
-        combinedArry = totalArry.reduce((acc, arr) => this.addArrays(acc, arr));
-      }
+      const combinedArry = players.map((player: any) =>
+        this.getGraphComparisonValue(stats, player)
+      );
 
       let aboveBaseLineCount = 0;
       let totalValue = 0;
@@ -232,6 +203,66 @@ export class NhlService {
     return arr1.map((num: number, index: number) => num + (arr2[index] || 0));
   }
 
+  private buildGraphStatValues(
+    stats: string,
+    row: any
+  ): { values: Record<string, number>; valueArray: any[] } {
+    if (stats === 'FOW') {
+      const wins = this.toNumber(row?.face_off_wins);
+      const attempts = this.toNumber(row?.face_off_attempts);
+      const remainingAttempts = Math.max(attempts - wins, 0);
+
+      return {
+        values: {
+          FOW: wins,
+          FOA: remainingAttempts,
+        },
+        valueArray: [
+          { name: 'FOA', value: attempts },
+          { name: 'FOW', value: wins },
+        ],
+      };
+    }
+
+    const key = this.getStatsKeyByStatsId(stats);
+    const values: Record<string, number> = {};
+    const valueArray: any[] = [];
+
+    key.keyArr.forEach((k: string) => {
+      const value = this.toNumber(row?.[k]);
+      const shortName = this.returnShortName(k);
+      values[shortName] = value;
+      valueArray.push({ name: k, value });
+    });
+
+    return { values, valueArray };
+  }
+
+  private getGraphComparisonValue(stats: string, row: any): number {
+    if (stats === 'FOW') {
+      return this.toNumber(row?.face_off_wins);
+    }
+
+    const key = this.getStatsKeyByStatsId(stats);
+    return key.keyArr.reduce(
+      (sum, item) => sum + this.toNumber(row?.[item]),
+      0
+    );
+  }
+
+  private toNumber(value: any): number {
+    if (typeof value === 'number') {
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    if (typeof value === 'string') {
+      const parsed = parseFloat(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    return 0;
+  }
+
   // =======================================================================
   // Team data  Methods
   // =======================================================================
@@ -254,7 +285,6 @@ export class NhlService {
     lineVal: number
   ) {
     const players = this.getTeamData(numberOfPlayers);
-    const key = this.getStatsKeyByStatsId(stats);
     const datasets = players.map((player: any) => {
       const date = new Date(player.match_datetime);
       const localDate = new Date(
@@ -264,18 +294,7 @@ export class NhlService {
         2,
         '0'
       )}-${String(localDate.getDate()).padStart(2, '0')}`;
-      const values: Record<string, number> = {};
-      const valueArray: any[] = [];
-
-      key.keyArr.forEach((k: string) => {
-        let value = player[k];
-        if (typeof value === 'string') {
-          value = parseFloat(value);
-        }
-        const shortName = this.returnShortName(k);
-        values[shortName] = value || 0;
-        valueArray.push({ name: k, value: value || 0 });
-      });
+      const { values, valueArray } = this.buildGraphStatValues(stats, player);
 
       return {
         category: `${formattedDate}_${player?.opponent_tricode ?? ''}_${
@@ -303,30 +322,8 @@ export class NhlService {
 
       lineVal = baseLine || 0;
 
-      let totalArry: any[] = [];
-      if (stats !== '3PM') {
-        const key = this.getStatsKeyByStatsId(stats);
-        key.keyArr.forEach((item) => {
-          let prevArry: any[] = [];
-          players.forEach((player: any) => {
-            const value = player[item] ? parseFloat(player[item]) : 0;
-            prevArry.push(value);
-          });
-          totalArry.push(prevArry);
-        });
-      } else {
-        let prevArry: any[] = [];
-        players.forEach((player: any) => {
-          const value = player['three_pointers_made']
-            ? parseFloat(player['three_pointers_made'])
-            : 0;
-          prevArry.push(value);
-        });
-        totalArry.push(prevArry);
-      }
-
-      const combinedArry = totalArry.reduce((acc, arr) =>
-        this.addArrays(acc, arr)
+      const combinedArry = players.map((player: any) =>
+        this.getGraphComparisonValue(stats, player)
       );
 
       let aboveBaseLineCount = 0;
@@ -436,6 +433,14 @@ export class NhlService {
         name: 'Blocked Shots',
       },
       {
+        id: 'FOW',
+        name: 'Faceoff Wins',
+      },
+      {
+        id: 'FOA',
+        name: 'Faceoff Attempts',
+      },
+      {
         id: 'SAVES',
         name: 'Saves',
       },
@@ -481,6 +486,14 @@ export class NhlService {
         name: 'Blocked Shots',
       },
       {
+        id: 'FOW',
+        name: 'Faceoff Wins',
+      },
+      {
+        id: 'FOA',
+        name: 'Faceoff Attempts',
+      },
+      {
         id: 'SAVES',
         name: 'Saves',
       },
@@ -509,6 +522,10 @@ export class NhlService {
         return { key: 'hits', keyArr: ['hits'] };
       case 'BLOCKED SHOTS':
         return { key: 'blocked_shots', keyArr: ['blocked_shots'] };
+      case 'FOW':
+        return { key: 'face_off_wins', keyArr: ['face_off_wins'] };
+      case 'FOA':
+        return { key: 'face_off_attempts', keyArr: ['face_off_attempts'] };
       case 'SAVES':
         return { key: 'saves', keyArr: ['saves'] };
       case 'GA':
@@ -531,6 +548,8 @@ export class NhlService {
       shots_on_goal: 'SHOTS',
       hits: 'HIT',
       blocked_shots: 'BLOCKED SHOTS',
+      face_off_wins: 'FOW',
+      face_off_attempts: 'FOA',
       saves: 'SAVES',
       goals_against: 'GA',
       plus_minus: 'PM',
@@ -568,6 +587,10 @@ export class NhlService {
         return 'SHOTS';
       case 'blocked_shots':
         return 'BLOCKED SHOTS';
+      case 'face_off_wins':
+        return 'FOW';
+      case 'face_off_attempts':
+        return 'FOA';
       case 'saves':
         return 'SAVES';
       case 'goals_against':

@@ -182,6 +182,8 @@ export class NhlTeamGraphComponent {
     const allKeys = Array.from(
       new Set(data.flatMap((d) => Object.keys(d.values)))
     );
+    const isFaceoffStack =
+      allKeys.includes('FOA') && allKeys.includes('FOW');
     const maxYValue =
       d3.max(data, (d) => d3.sum(allKeys, (key) => d.values[key])) || 0;
 
@@ -198,6 +200,7 @@ export class NhlTeamGraphComponent {
         let yOffset = height;
         const x = xScale(d.category)!;
         const totalValue = d3.sum(allKeys, (key) => d.values[key]);
+        const comparisonValue = isFaceoffStack ? d.values['FOW'] ?? 0 : totalValue;
 
         if (totalValue === 0) {
           d3.select(this)
@@ -232,16 +235,27 @@ export class NhlTeamGraphComponent {
         const colorAbove = d3
           .scaleOrdinal()
           .domain(allKeys)
-          .range(['#2ecc71', '#27ae60', '#1e8449']);
+          .range(
+            isFaceoffStack
+              ? ['#2ECC71', '#80808033']
+              : ['#2ecc71', '#27ae60', '#1e8449']
+          );
         const colorBelow = d3
           .scaleOrdinal()
           .domain(allKeys)
-          .range(['#e74c3c', '#c0392b', '#922b21']);
+          .range(
+            isFaceoffStack
+              ? ['red', '#80808033']
+              : ['#e74c3c', '#c0392b', '#922b21']
+          );
 
         allKeys.forEach((key, index) => {
        
           const value = d.values[key];
           if (value === 0) return;
+          const displayLabel = key;
+          const displayValue =
+            isFaceoffStack && key === 'FOA' ? totalValue : value;
 
           let barHeight = (value / maxYValue) * height;
           // barHeight = Math.max(barHeight, 10); // Ensure minimum visibility
@@ -252,7 +266,7 @@ export class NhlTeamGraphComponent {
           const nonZeroStacks = allKeys.filter((key) => d.values[key] > 0);
           const isLastStack = key === nonZeroStacks[nonZeroStacks.length - 1]; // Check if this is the topmost stack
           const barColor =
-            totalValue >= lineValue ? colorAbove(key) : colorBelow(key);
+            comparisonValue >= lineValue ? colorAbove(key) : colorBelow(key);
 
             const barPath = isLastStack
             ? `M ${x},${y + barRadius} 
@@ -304,7 +318,7 @@ export class NhlTeamGraphComponent {
 
           d3.select(this)
             .append('text')
-            .text(`${value} ${key}`)
+            .text(`${displayValue} ${displayLabel}`)
             .attr('x', x + xScale.bandwidth() / 2)
             .attr('y', y + barHeight / 2 + 5)
             .attr('text-anchor', 'middle')
@@ -326,6 +340,7 @@ export class NhlTeamGraphComponent {
           .attr('fill', 'white')
           .attr('font-size', '12px')
           .attr('font-weight', 'bold')
+          .style('display', isFaceoffStack ? 'none' : 'block')
           // .style('display', allKeys.length > 1 ? 'block' : 'none');
       });
 

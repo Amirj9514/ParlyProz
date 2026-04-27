@@ -61,6 +61,20 @@
         <div class="text-sm font-semibold lightClr">Hits</div>
         <div>{{ playerDetail?.hits ?? 0 }}</div>
       </div>
+      } @if (playerDetail?.face_off_wins) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">FOW</div>
+        <div>{{ playerDetail?.face_off_wins ?? 0 }}</div>
+      </div>
+      } @if (playerDetail?.face_off_attempts) {
+      <div
+        class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
+      >
+        <div class="text-sm font-semibold lightClr">FOA</div>
+        <div>{{ playerDetail?.face_off_attempts ?? 0 }}</div>
+      </div>
       } @if (playerDetail?.saves) {
       <div
         class="flex gap-2 justify-content-between border-bottom-1 pt-2 pr-2 borderClr"
